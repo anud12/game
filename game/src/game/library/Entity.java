@@ -3,25 +3,8 @@ package game.library;
 public class Entity
 {
 
-    char character;
+    private char character;
     
-    public Entity()
-    {
-        rectangle = new Rectangle();
-    }
-    private Rectangle rectangle;
-
-    public Rectangle getRectangle()
-    {
-        return rectangle;
-    }
-
-    public void setRectangle(Rectangle rectangle)
-    {
-        this.rectangle = rectangle;
-    }
-
-
     public void setCharacter(char ch)
     {
         character = ch;
@@ -29,5 +12,35 @@ public class Entity
     public char getCharacter()
     {
         return character;
+    }
+    
+    private Point location;
+    
+    public void setLocation(int x ,int y)
+    {
+        location.setX(x);
+        location.setY(y);
+    }
+    public void setLocation(Point point)
+    {
+        location.setX(point.getX());
+        location.setY(point.getY());
+    }
+    
+    private Rectangle rectangle;
+ 
+    public Rectangle getRectangle()
+    {
+        return rectangle;
+    }
+    public void setRectangle(Rectangle rectangle)
+    {
+        this.rectangle = rectangle;
+    }
+    
+    public Entity()
+    {
+        location = new Point();
+        rectangle = new Rectangle();
     }
 }
