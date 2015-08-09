@@ -14,6 +14,18 @@ public class Entity
         return character;
     }
     
+    private Point location;
+    
+    public void setLocation(int x ,int y)
+    {
+        location.setX(x);
+        location.setY(y);
+    }
+    public void setLocation(Point point)
+    {
+        location.setX(point.getX());
+        location.setY(point.getY());
+    }
     
     private Rectangle rectangle;
  
@@ -28,6 +40,7 @@ public class Entity
     
     public Entity()
     {
+        location = new Point();
         rectangle = new Rectangle();
     }
 }
