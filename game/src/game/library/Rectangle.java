@@ -1,14 +1,19 @@
 package game.library;
 
+import java.awt.Point;
+
 public class Rectangle
 {
-    private Point vertices[];   
+    private Point vertices[];
+    private Point center;
     
+    //get @cele 4 puncte care alcatuiesc dreptunghiul
     public Point[] getVertices()
     {
         return vertices;
     }
     
+    //set Rectangle width/height
     public void setWidth(int width)
     {
          vertices[0].y = center.y - width/2;
@@ -16,7 +21,6 @@ public class Rectangle
          vertices[2].y = center.y + width/2;    
          vertices[3].y = center.y - width/2;        
     }
-    
     public void setHeight(int height)
     {
         vertices[0].x = center.x + height/2;
@@ -24,18 +28,21 @@ public class Rectangle
         vertices[2].x = center.x - height/2;
         vertices[3].x = center.x - height/2;
     }
-    private Point center;
     
+    //get Rectangle origin/center
     public Point getCenter()
     {
         return center;
     }
     
-    public Rectangle(int width, int height)
+    //constructor Rectangle
+    //am adaugat 'origin' aici.
+    public Rectangle(int width, int height,Point origin)
     {
          vertices = new Point[4];
          
-         center = new Point();
+         //center = new Point();
+         center = origin;
          
          vertices[0] = new Point();
          vertices[0].x = center.x + height/2;
@@ -54,6 +61,7 @@ public class Rectangle
          vertices[3].y = center.y - width/2;
     }
     
+    /*
     public Rectangle()
     {
         vertices = new Point[4];
@@ -65,6 +73,7 @@ public class Rectangle
             vertices[i] = new Point();
         }
     }
+    */
     
     public void transformMove(int x, int y)
     {
