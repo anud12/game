@@ -75,7 +75,7 @@ public class Rectangle
     }
     */
     
-    public void transformMove(int x, int y)
+    public void translate(int x, int y)
     {
         center.x += x;
         center.y += y;
@@ -85,5 +85,21 @@ public class Rectangle
             vertices[i].x += x;
             vertices[i].y += y;
         }
+    }
+    public void rotate(double deg)
+    {
+    	int x;
+    	int y;
+    	
+    	double rad = Math.toRadians(deg);
+    	
+    	for(int i = 0 ; i < 4 ; i++)
+    	{
+    		x = (int) ( Math.cos(rad) * vertices[i].x - Math.sin(rad) * vertices[i].y );
+    		y = (int) ( Math.sin(rad) * vertices[i].x + Math.cos(rad) * vertices[i].y );
+    		
+    		vertices[i].x = x;
+    		vertices[i].y = y;
+    	}
     }
 }
