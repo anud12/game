@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class World {
-	
+	/*
 	//'World' va contine lista tuturor entitatilor din cadrul unui sector
 	// vom considera coordonatele x:0 y:0 in punctul din stanga sus @ map.
 	
@@ -22,13 +22,13 @@ public class World {
 			Collections.sort(entities);
 		}
 	}
-	
+	/*
 	public void spawnEntity(int width,int lenght,Point origin)
 	{
 		Entity e = new Entity(width, lenght, origin);
 		entities.add(e);
 		this.sort();
 	}
-
+*/
 
 }

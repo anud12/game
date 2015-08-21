@@ -11,5 +11,5 @@ package game.gameLoop;
  */
 public interface IGameLoopAction
 {
-    public void execute();
+    public boolean execute(double deltaTime);
 }
