@@ -1,15 +1,25 @@
 package game.gameLoop;
 import game.library.*;
+import util.WindowLog;
+
 import java.awt.Point;
 
 public class TestAction implements IGameLoopAction
 {
 	Entity entity;
 	Point location;
+	WindowLog log;
 	
 	public TestAction(Entity entity)
 	{
 		this.entity = entity;
+	}
+	
+	public TestAction(Entity entity, WindowLog log)
+	{
+		this.entity = entity;
+		this.log = log;
+		log.setTitle(this.toString());
 	}
 	
 	public TestAction(Entity entity, Point location)
@@ -26,13 +36,12 @@ public class TestAction implements IGameLoopAction
 	@Override
 	public boolean execute(double deltaTime) 
 	{
-		System.out.print(deltaTime+ " ");
-		
 		if(entity.getPosition() != this.location)
 		{
 			
 			entity.getRectangle().translatef(1*(int)deltaTime, 1*(int)deltaTime);
-			System.out.println("X: " + entity.getPosition().x + " Y: " + entity.getPosition().y);
+			if(log != null)
+				log.println(deltaTime+ " " + "X: " + entity.getPosition().x + " Y: " + entity.getPosition().y);
 			
 		}
 			
