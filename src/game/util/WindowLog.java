@@ -1,4 +1,4 @@
-package util;
+package game.util;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;

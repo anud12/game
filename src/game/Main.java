@@ -3,7 +3,7 @@ package game;
 import game.gameLoop.GameLoop;
 import game.gameLoop.TestAction;
 import game.library.Entity;
-import util.WindowLog;
+import game.util.WindowLog;
 
 import java.awt.Point;
 

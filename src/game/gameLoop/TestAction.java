@@ -1,6 +1,6 @@
 package game.gameLoop;
 import game.library.*;
-import util.WindowLog;
+import game.util.WindowLog;
 
 import java.awt.Point;
 
