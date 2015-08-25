@@ -2,7 +2,6 @@ package util;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
 
 import java.awt.GridLayout;
 
@@ -10,13 +9,18 @@ import javax.swing.*;
 
 public class WindowLog extends JFrame 
 {
+	private static final long serialVersionUID = 1L;
+	
 	private JPanel panel;
 	private JScrollPane scroll;
 	private JTextArea textArea;
 	private GridLayout layout;
+	private int inputNr;
 	
 	public WindowLog ()
 	{
+		inputNr = 0;
+		
 		panel = new JPanel();
 		panel.setVisible(true);
 		
@@ -33,14 +37,17 @@ public class WindowLog extends JFrame
 		
 		this.add(panel);
 		this.setVisible(true);
-		this.setSize(300, 300);
+		this.setSize(200, 200);
 	}
 	
 	
 	public void println(String args)
 	{
 		textArea.insert("\n", 0);
+		textArea.insert(" ", 0);
 		textArea.insert(args, 0);
+		textArea.insert(inputNr + ": ", 0);
+		inputNr++;
 	}
 	public void clear()
 	{
