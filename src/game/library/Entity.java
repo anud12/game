@@ -1,13 +1,15 @@
 package game.library;
 
-import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
-public class Entity implements Comparable
+public class Entity
 {
 
     //Attributes:
 	private char character;
-    private Rectangle rectangle;
+    private Rectangle2D.Float rectangle;
+    private Point2D.Float center;
     
     
     //Methods:
@@ -22,34 +24,35 @@ public class Entity implements Comparable
     }
    
     //get/set rectangle 
-    public Rectangle getRectangle()
+    public Rectangle2D.Float getRectangle()
     {
         return rectangle;
     }
-    public void setRectangle(Rectangle rectangle)
+    public void setRectangle(Rectangle2D.Float rectangle)
     {
         this.rectangle = rectangle;
     }
     
     //gets the location of our entity
-    public Point getPosition()
+    public Point2D.Float getPosition()
     {
-    	return this.rectangle.getCenter();
+    	return this.center;
     }
-   
-    //constructor implicit 
-    /*
-    public Entity()
-    {
-        rectangle = new Rectangle();
-    } 
-    */  
     //constructor Entity
-    public Entity(int width,int lenght,Point origin)
+    public Entity(int width,int height,Point2D.Float origin)
     {
-    	rectangle = new Rectangle(width,lenght,origin);
+    	rectangle = new Rectangle2D.Float();
+    	
+    	rectangle.x = origin.x;
+    	rectangle.y = origin.y;
+    	
+    	this.center = new Point2D.Float(origin.x,origin.y);
+    	
+    	rectangle.width = width;
+    	rectangle.height = height;
     }
     
+    /*
 	@Override
     public int compareTo(Object o) {
 	try{
@@ -68,5 +71,5 @@ public class Entity implements Comparable
 		return 0;
 	}
 	}
-
+	*/
 }

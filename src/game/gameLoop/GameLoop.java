@@ -10,7 +10,7 @@ public class GameLoop
     
     //Total time elapsed
     long time;
-    
+    int deltaTime;
     //Initializations
     public GameLoop()
     {
@@ -37,8 +37,25 @@ public class GameLoop
     
     
     //Update the game
-    void update()
+    void update() 
     {
+    	deltaTime = ( int )( System.nanoTime() - time );
+    	
+    	
+    	if(deltaTime < 5000)
+    	{
+    		
+    		try
+    		{
+    			Thread.sleep(0, 5000 - deltaTime);
+    			deltaTime = 5000;
+    		}
+    		catch(Exception e)
+    		{
+    			
+    		}
+    	}
+    	
     	//Grab iterator for the action lists
         Iterator<IGameLoopAction> actionIterator = actions.iterator();
         
@@ -50,7 +67,7 @@ public class GameLoop
             
             //Execute action with time difference & convert from nanoseconds to milliseconds
             
-            action.execute( ( System.nanoTime() - time ) / 1000000.0 );
+            action.execute( deltaTime / 1000000.0 );
         }
         
         //Update time to current

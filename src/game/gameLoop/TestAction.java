@@ -3,11 +3,12 @@ import game.library.*;
 import game.util.WindowLog;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 public class TestAction implements IGameLoopAction
 {
 	Entity entity;
-	Point location;
+	Point2D.Float location;
 	WindowLog log;
 	
 	public TestAction(Entity entity)
@@ -22,13 +23,13 @@ public class TestAction implements IGameLoopAction
 		log.setTitle(this.toString());
 	}
 	
-	public TestAction(Entity entity, Point location)
+	public TestAction(Entity entity, Point2D.Float location)
 	{
 		this.entity = entity;
 		this.location = location;
 	}
 	
-	public void setLocation(Point location)
+	public void setLocation(Point2D.Float location)
 	{
 		this.location = location;
 	}
@@ -39,9 +40,11 @@ public class TestAction implements IGameLoopAction
 		if(entity.getPosition() != this.location)
 		{
 			
-			entity.getRectangle().translatef(1*(int)deltaTime, 1*(int)deltaTime);
+			entity.getRectangle().x += 1 * deltaTime;
+			entity.getRectangle().y += 1 * deltaTime;
+			
 			if(log != null)
-				log.println(deltaTime+ " " + "X: " + entity.getPosition().x + " Y: " + entity.getPosition().y);
+				log.println(deltaTime+ " " + "X: " + entity.getRectangle().x + " Y: " + entity.getRectangle().y);
 			
 		}
 			
