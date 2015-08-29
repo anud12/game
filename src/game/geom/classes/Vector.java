@@ -24,19 +24,40 @@ public class Vector implements IVector
 	public void setX(double X) 
 	{
 		this.x = X;
+		length = Math.sqrt(x*x + y*y);
 	}
 
 	@Override
 	public void setY(double Y) 
 	{
 		this.y = Y;
+		length = Math.sqrt(x*x + y*y);
 	}
 
 	@Override
 	public void normalize() 
 	{
-		length = Math.sqrt(x*x + y*y);
+		
 		x = x / length;
 		y = y / length;
+	}
+
+	@Override
+	public void multiplyByScalar(double scalar) {
+		x = x * scalar;
+		y = y * scalar;
+		length = Math.sqrt(x*x + y*y);
+	}
+
+	@Override
+	public void equal(IVector vector) {
+		this.x = vector.getX();
+		this.y = vector.getY();
+		this.length = vector.getLength();
+	}
+
+	@Override
+	public double getLength() {
+		return length;
 	}
 }

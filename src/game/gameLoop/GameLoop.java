@@ -15,13 +15,13 @@ public class GameLoop
     public GameLoop()
     {
         actions = new LinkedList<IGameLoopAction>();
-        time = System.nanoTime();
     }
     
     
     //Start engine loop
     public void start()
     {
+    	time = System.nanoTime();
     	while(true)
     	{
     		update();

@@ -17,7 +17,7 @@ public class Main
     	Pawn pawn = new Pawn(10, 40, point);
     	pawn.setMovementSpeed(0.1f);
     	
-    	point = new Point2D.Float(10,20);
+    	point = new Point2D.Float(30,30);
     	
     	GameLoop gl = new GameLoop();
     	
