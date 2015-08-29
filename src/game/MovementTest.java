@@ -8,7 +8,7 @@ import game.util.WindowLog;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-public class Main
+public class MovementTest
 {
     public static void main(String[] args)
     {
@@ -29,6 +29,22 @@ public class Main
     	log = new WindowLog();
     	
     	MoveAction move = new MoveAction(pawn, point, log);
+    	
+    	gl.addAction(move);
+    	
+
+
+    	
+    	point = new Point2D.Float(0,0);
+    	
+    	pawn = new Pawn(10, 40, point);
+    	pawn.setMovementSpeed(0.1f);
+    	
+    	point = new Point2D.Float(400,0);
+    	
+    	log = new WindowLog();
+    	
+    	move = new MoveAction(pawn, point, log);
     	
     	gl.addAction(move);
     	
