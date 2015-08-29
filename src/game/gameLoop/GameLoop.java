@@ -22,6 +22,7 @@ public class GameLoop
     public void start()
     {
     	time = System.nanoTime();
+    	
     	while(true)
     	{
     		update();
@@ -39,20 +40,20 @@ public class GameLoop
     //Update the game
     void update() 
     {
+    	//Get the time between frames
     	deltaTime = ( int )( System.nanoTime() - time );
     	
-    	
+    	//Check the frequency of the calls
     	if(deltaTime < 900000)
     	{
-    		
     		try
     		{
+    			//Wait until the minimum amout of calls
     			Thread.sleep(0, 900000 - deltaTime);
     			deltaTime = 900000;
     		}
     		catch(Exception e)
     		{
-    			
     		}
     	}
     	
@@ -61,12 +62,10 @@ public class GameLoop
         
         //For each action call .execute(time passed in milliseconds)
         while(actionIterator.hasNext())
-        {
-        	
+        {	
             IGameLoopAction action = actionIterator.next();
             
             //Execute action with time difference & convert from nanoseconds to milliseconds
-            
             action.execute( deltaTime / 1000000.0 );
         }
         

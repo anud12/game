@@ -1,7 +1,7 @@
 package game;
 
 import game.gameLoop.GameLoop;
-import game.gameLoop.TestAction;
+import game.gameLoop.MoveAction;
 import game.library.*;
 import game.util.WindowLog;
 
@@ -12,13 +12,6 @@ public class Main
 {
     public static void main(String[] args)
     {
-    	Point2D.Float point = new Point2D.Float(0,0);
-    	
-    	Pawn pawn = new Pawn(10, 40, point);
-    	pawn.setMovementSpeed(0.1f);
-    	
-    	point = new Point2D.Float(30,30);
-    	
     	GameLoop gl = new GameLoop();
     	
     	WindowLog log = new WindowLog();
@@ -26,10 +19,19 @@ public class Main
     	log.println("Hello");
     	log.println("World");
     	
+    	Point2D.Float point = new Point2D.Float(0,0);
+    	
+    	Pawn pawn = new Pawn(10, 40, point);
+    	pawn.setMovementSpeed(0.1f);
+    	
+    	point = new Point2D.Float(300,300);
+    	
     	log = new WindowLog();
-    	TestAction move = new TestAction(pawn, log);
-    	move.setLocation(point);
+    	
+    	MoveAction move = new MoveAction(pawn, point, log);
+    	
     	gl.addAction(move);
+    	
     	gl.start();
     }
     
