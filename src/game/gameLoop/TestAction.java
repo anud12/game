@@ -1,4 +1,6 @@
 package game.gameLoop;
+import game.geom.IVector;
+import game.geom.classes.Vector;
 import game.library.*;
 import game.util.WindowLog;
 
@@ -7,44 +9,58 @@ import java.awt.geom.Point2D;
 
 public class TestAction implements IGameLoopAction
 {
-	Entity entity;
-	Point2D.Float location;
+	Pawn pawn;
+	Point2D.Float destination;
+	IVector direction;
 	WindowLog log;
 	
-	public TestAction(Entity entity)
+	public TestAction(Pawn entity)
 	{
-		this.entity = entity;
+		this.pawn = entity;
+		direction = new Vector();
 	}
 	
-	public TestAction(Entity entity, WindowLog log)
+	public TestAction(Pawn entity, WindowLog log)
 	{
-		this.entity = entity;
+		this.pawn = entity;
 		this.log = log;
 		log.setTitle(this.toString());
+		
+		direction = new Vector();
 	}
 	
-	public TestAction(Entity entity, Point2D.Float location)
+	public TestAction(Pawn entity, Point2D.Float location)
 	{
-		this.entity = entity;
-		this.location = location;
+		this.pawn = entity;
+		this.destination = location;
 	}
 	
 	public void setLocation(Point2D.Float location)
 	{
-		this.location = location;
+		this.destination = location;
 	}
 	
 	@Override
 	public boolean execute(double deltaTime) 
 	{
-		if(entity.getPosition() != this.location)
+		
+		if(pawn.getCenter().distance(this.destination) > 0)
 		{
+			direction.setX(destination.getX() - pawn.getRectangle().getX());
+			direction.setY(destination.getY() - pawn.getRectangle().getY());
+			direction.normalize();
 			
-			entity.getRectangle().x += 1 * deltaTime;
-			entity.getRectangle().y += 1 * deltaTime;
+			
+			pawn.getRectangle().x += pawn.getMovementSpeed() * direction.getX() * deltaTime;
+			pawn.getRectangle().y += pawn.getMovementSpeed() * direction.getY() * deltaTime;
+			
+			pawn.setCenter(pawn.getRectangle().x , pawn.getRectangle().y);
 			
 			if(log != null)
-				log.println(deltaTime+ " " + "X: " + entity.getRectangle().x + " Y: " + entity.getRectangle().y);
+			{
+				log.println("Delta time: " + deltaTime + " " + "X: " + pawn.getRectangle().x + " Y: " + pawn.getRectangle().y + " Direction X: " + direction.getX() + " Y:" + direction.getY());
+			}
+				
 			
 		}
 			

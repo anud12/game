@@ -42,13 +42,13 @@ public class GameLoop
     	deltaTime = ( int )( System.nanoTime() - time );
     	
     	
-    	if(deltaTime < 5000)
+    	if(deltaTime < 900000)
     	{
     		
     		try
     		{
-    			Thread.sleep(0, 5000 - deltaTime);
-    			deltaTime = 5000;
+    			Thread.sleep(0, 900000 - deltaTime);
+    			deltaTime = 900000;
     		}
     		catch(Exception e)
     		{

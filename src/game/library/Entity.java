@@ -34,9 +34,14 @@ public class Entity
     }
     
     //gets the location of our entity
-    public Point2D.Float getPosition()
+    public Point2D.Float getCenter()
     {
     	return this.center;
+    }
+    public void setCenter(float x , float y)
+    {
+    	this.center.x = x;
+    	this.center.y = y;
     }
     //constructor Entity
     public Entity(int width,int height,Point2D.Float origin)
