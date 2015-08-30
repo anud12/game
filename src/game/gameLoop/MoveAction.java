@@ -4,7 +4,6 @@ import game.geom.classes.Vector;
 import game.library.*;
 import game.util.WindowLog;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 
 public class MoveAction implements IGameLoopAction

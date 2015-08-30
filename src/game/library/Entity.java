@@ -2,8 +2,26 @@ package game.library;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 
-public class Entity
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import game.util.ISerializableXML;
+
+public class Entity implements ISerializableXML
 {
 
     //Attributes:
@@ -56,6 +74,50 @@ public class Entity
     	rectangle.width = width;
     	rectangle.height = height;
     }
+    
+    //ISerializableXML
+    @Override
+	public void appendAllXML(Document doc) 
+	{
+		Element rootElement = doc.createElement("entity");
+    	
+    	appendChildXML(doc, rootElement);
+    	Element docRoot = doc.getDocumentElement();
+    	docRoot.appendChild(rootElement);
+    	
+	}
+	@Override
+	public void appendChildXML(Document doc, Element rootElement) {
+		Element attribute = doc.createElement("character");
+    	attribute.setTextContent(this.character + "");
+    			
+    	rootElement.appendChild(attribute);
+    	
+    	attribute = doc.createElement("width");
+    	attribute.setTextContent(this.getRectangle().width + "");
+    			
+    	rootElement.appendChild(attribute);
+    	
+    	attribute = doc.createElement("height");
+    	attribute.setTextContent(this.getRectangle().height + "");
+    			
+    	rootElement.appendChild(attribute);
+    	
+    	Element position = doc.createElement("position");
+    			
+    	rootElement.appendChild(position);
+    	
+    	attribute = doc.createElement("x");
+    	attribute.setTextContent(this.center.x + "");
+    			
+    	position.appendChild(attribute);
+    	
+    	attribute = doc.createElement("y");
+    	attribute.setTextContent(this.center.y + "");
+    			
+    	position.appendChild(attribute);
+	}
+    
     
     /*
 	@Override
