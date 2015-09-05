@@ -37,19 +37,19 @@ public class XMLTest {
     	//??
     	DOMSource source = new DOMSource(doc);
     	
-    	
+    	//Initializations
+    	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0));
+    	ent.setCharacter('E');
+    	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0));
+    	pawn.setMovementSpeed(5);
+    	pawn.setCharacter('P');
     	
     	//Create root element
     	Element root = doc.createElement("root");
     	doc.appendChild(root);
     	
-    	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0));
-    	ent.setCharacter('E');
+    	//Transform to xml
     	ent.appendObjectToXML(doc);
-    	
-    	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0));
-    	pawn.setMovementSpeed(5);
-    	pawn.setCharacter('P');
     	pawn.appendObjectToXML(doc);
     	
     	
