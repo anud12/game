@@ -77,17 +77,17 @@ public class Entity implements ISerializableXML
     
     //ISerializableXML
     @Override
-	public void appendAllXML(Document doc) 
+	public void appendObjectToXML(Document doc) 
 	{
 		Element rootElement = doc.createElement("entity");
     	
-    	appendChildXML(doc, rootElement);
+    	appendDataToXML(doc, rootElement);
     	Element docRoot = doc.getDocumentElement();
     	docRoot.appendChild(rootElement);
     	
 	}
 	@Override
-	public void appendChildXML(Document doc, Element rootElement) {
+	public void appendDataToXML(Document doc, Element rootElement) {
 		Element attribute = doc.createElement("character");
     	attribute.setTextContent(this.character + "");
     			

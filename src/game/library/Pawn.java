@@ -28,20 +28,20 @@ public class Pawn extends Entity implements ISerializableXML{
 	}
 	
 	@Override
-	public void appendAllXML(Document doc) 
+	public void appendObjectToXML(Document doc) 
 	{
 		Element docRoot = doc.getDocumentElement();
 		Element rootElement = doc.createElement("pawn");
 		docRoot.appendChild(rootElement);
 		
-		super.appendChildXML(doc, rootElement);
-		appendChildXML(doc, rootElement);
+		super.appendDataToXML(doc, rootElement);
+		appendDataToXML(doc, rootElement);
 		
 		
 	}
 	
 	@Override
-	public void appendChildXML(Document doc, Element rootElement)
+	public void appendDataToXML(Document doc, Element rootElement)
 	{
 		Element attribute = doc.createElement("movementSpeed");
     	attribute.setTextContent(this.getRectangle().width + "");

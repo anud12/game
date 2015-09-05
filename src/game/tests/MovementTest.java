@@ -1,4 +1,4 @@
-package game;
+package game.tests;
 
 import game.gameLoop.GameLoop;
 import game.gameLoop.MoveAction;

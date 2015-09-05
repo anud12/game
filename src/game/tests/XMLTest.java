@@ -1,4 +1,4 @@
-package game;
+package game.tests;
 
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -16,8 +16,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import game.*;
 import game.library.*;
+import game.tests.*;
 
 public class XMLTest {
 
@@ -45,12 +45,12 @@ public class XMLTest {
     	
     	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0));
     	ent.setCharacter('E');
-    	ent.appendAllXML(doc);
+    	ent.appendObjectToXML(doc);
     	
     	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0));
     	pawn.setMovementSpeed(5);
     	pawn.setCharacter('P');
-    	pawn.appendAllXML(doc);
+    	pawn.appendObjectToXML(doc);
     	
     	
     	//Set the output file

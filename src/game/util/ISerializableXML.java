@@ -5,6 +5,6 @@ import org.w3c.dom.Element;
 
 public interface ISerializableXML 
 {
-	public void appendAllXML(Document doc);
-	public void appendChildXML(Document doc, Element rootElement);
+	public void appendObjectToXML(Document doc);
+	public void appendDataToXML(Document doc, Element rootElement);
 }
