@@ -1,6 +1,8 @@
 package game.library;
 
-import java.awt.geom.Point2D.Float;
+import java.awt.geom.Point2D;
+
+import javax.management.modelmbean.XMLParseException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,11 +13,15 @@ public class Pawn extends Entity implements ISerializableXML{
 
 	protected float movementSpeed;
 	
-	public Pawn(int width, int height, Float origin) {
+	public Pawn(int width, int height, Point2D.Float origin) {
 		super(width, height, origin);
 		// TODO Auto-generated constructor stub
 	}
-	
+	public Pawn(Element element) throws XMLParseException
+	{
+		super(element);
+		readFromXML(element);
+	}
 	
 	public float getMovementSpeed()
 	{
@@ -46,5 +52,11 @@ public class Pawn extends Entity implements ISerializableXML{
 		Element attribute = doc.createElement("movementSpeed");
     	attribute.setTextContent(this.getRectangle().width + "");
     	rootElement.appendChild(attribute);
+	}
+	
+	public void readFromXML(Element element) throws XMLParseException
+	{
+		super.readFromXML(element);
+		this.movementSpeed = java.lang.Float.parseFloat( element.getElementsByTagName("movementSpeed").item(0).getTextContent());
 	}
 }

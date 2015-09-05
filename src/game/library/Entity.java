@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 
+import javax.management.modelmbean.XMLParseException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,21 +26,11 @@ public class Entity implements ISerializableXML
 {
 
     //Attributes:
-	private char character;
     private Rectangle2D.Float rectangle;
     private Point2D.Float center;
     
     
     //Methods:
-    //get/set character [?]
-    public void setCharacter(char ch)
-    {
-        character = ch;
-    }
-    public char getCharacter()
-    {
-        return character;
-    }
    
     //get/set rectangle 
     public Rectangle2D.Float getRectangle()
@@ -61,8 +52,17 @@ public class Entity implements ISerializableXML
     	this.center.x = x;
     	this.center.y = y;
     }
+    
     //constructor Entity
-    public Entity(int width,int height,Point2D.Float origin)
+    public Entity(Element element) throws XMLParseException
+    {
+    	rectangle = new Rectangle2D.Float();
+    	this.center = new Point2D.Float();
+    	
+    	readFromXML(element);
+    }
+    
+    public Entity(int width, int height, Point2D.Float origin)
     {
     	rectangle = new Rectangle2D.Float();
     	
@@ -88,10 +88,7 @@ public class Entity implements ISerializableXML
 	}
 	@Override
 	public void appendDataToXML(Document doc, Element rootElement) {
-		Element attribute = doc.createElement("character");
-    	attribute.setTextContent(this.character + "");
-    			
-    	rootElement.appendChild(attribute);
+		Element attribute ;
     	
     	attribute = doc.createElement("width");
     	attribute.setTextContent(this.getRectangle().width + "");
@@ -116,6 +113,19 @@ public class Entity implements ISerializableXML
     	attribute.setTextContent(this.center.y + "");
     			
     	position.appendChild(attribute);
+	}
+	@Override
+	public void readFromXML(Element element) throws XMLParseException 
+	{
+				
+		this.rectangle.width = Float.parseFloat( element.getElementsByTagName("width").item(0).getTextContent() );
+		this.rectangle.height = Float.parseFloat( element.getElementsByTagName("height").item(0).getTextContent() );
+		
+		//Get position -> get X & Y
+		Element position = (Element) element.getElementsByTagName("position").item(0);
+		this.center.x = Float.parseFloat( position.getElementsByTagName("x").item(0).getTextContent() );
+		this.center.y = Float.parseFloat( position.getElementsByTagName("y").item(0).getTextContent() );
+		
 	}
     
     

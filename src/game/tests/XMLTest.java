@@ -39,10 +39,8 @@ public class XMLTest {
     	
     	//Initializations
     	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0));
-    	ent.setCharacter('E');
     	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0));
     	pawn.setMovementSpeed(5);
-    	pawn.setCharacter('P');
     	
     	//Create root element
     	Element root = doc.createElement("root");
@@ -54,7 +52,7 @@ public class XMLTest {
     	
     	
     	//Set the output file
-    	StreamResult result = new StreamResult(new File("entity.xml"));
+    	StreamResult result = new StreamResult(new File("test.xml"));
     	
     	//Write to disk
     	transformer.transform(source, result);
