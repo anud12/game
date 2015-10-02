@@ -41,7 +41,11 @@ public class MoveAction implements IGameLoopAction
 	public MoveAction(Pawn entity, Point2D.Float destination)
 	{
 		this.pawn = entity;
+				
 		this.destination = destination;
+		
+		direction = new Vector();
+		step = new Vector();
 	}
 	//Setters
 	public void setLocation(Point2D.Float location)
@@ -52,44 +56,56 @@ public class MoveAction implements IGameLoopAction
 	
 	//Functions from IGameLoop
 	@Override
-	public boolean execute(double deltaTime) 
+	public void execute(double deltaTime) 
 	{
-		//Check if the destination is reached
-		if(pawn.getCenter().distance(this.destination) > 0)
+		//Calculate the direction
+		direction.setX(destination.getX() - pawn.getRectangle().getX());
+		direction.setY(destination.getY() - pawn.getRectangle().getY());
+		direction.normalize();
+		
+		//Calculate the next step to go towards  the destination
+		step.equal(direction);
+		step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
+		
+		//Check if the step is over the destination
+		if(pawn.getCenter().distance(this.destination) < step.getLength())
 		{
-			//Calculate the direction
-			direction.setX(destination.getX() - pawn.getRectangle().getX());
-			direction.setY(destination.getY() - pawn.getRectangle().getY());
-			direction.normalize();
-			
-			//Calculate the next step to go towards  the destination
-			step.equal(direction);
-			step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
-			
-			//Check if the step is over the destination
-			if(pawn.getCenter().distance(this.destination) < step.getLength())
-			{
-				//Move directly on top
-				pawn.getRectangle().x = destination.x;
-				pawn.getRectangle().y = destination.y;
-			}
-			else
-			{
-				//Make the step
-				pawn.getRectangle().x += step.getX();
-				pawn.getRectangle().y += step.getY();
-			}
-			//Artifact needed to be implemented in Entity
-			pawn.setCenter(pawn.getRectangle().x , pawn.getRectangle().y);
-			
-			//Print message
-			if(log != null)
-			{
-				log.clear();
-				log.println("Delta time: " + deltaTime + " Step:"+ step.getLength() + " X: " + pawn.getRectangle().x + " Y: " + pawn.getRectangle().y + " Direction X: " + direction.getX() + " Y:" + direction.getY());
-			}
-			return false;
+			//Move directly on top
+			pawn.getRectangle().x = destination.x;
+			pawn.getRectangle().y = destination.y;
 		}
+		else
+		{
+			//Make the step
+			pawn.getRectangle().x += step.getX();
+			pawn.getRectangle().y += step.getY();
+		}
+		//Artifact needed to be implemented in Entity
+		pawn.setCenter(pawn.getRectangle().x , pawn.getRectangle().y);
+		
+		//Print message
+		if(log != null)
+		{
+			log.clear();
+			log.println("Delta time: " + deltaTime + "\nStep:"+ step.getLength() + "\nPosition \nX: " + pawn.getRectangle().x + "\nY: " + pawn.getRectangle().y + "\nDirection \nX: " + direction.getX() + "\nY:" + direction.getY());
+		}
+	}
+
+	@Override
+	public boolean isCompleted() {
+		if(pawn.getCenter().distance(this.destination) > 0)
+			return false;
+		return true;
+	}
+
+	@Override
+	public void onComplete() {
+		
+		System.out.println(this + " completed!");
+	}
+
+	@Override
+	public boolean isRemovable() {
 		return true;
 	}
 }

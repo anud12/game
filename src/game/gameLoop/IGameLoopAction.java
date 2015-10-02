@@ -11,5 +11,16 @@ package game.gameLoop;
  */
 public interface IGameLoopAction
 {
-    public boolean execute(double deltaTime);
+	//To do each frame
+    public void execute(double deltaTime);
+    
+    
+    //Check if its action is completed
+    public boolean isCompleted();
+    
+    //Check if the action is removable from the action list
+    public boolean isRemovable();
+    
+    //Actions to do when its completed
+    public void onComplete();
 }

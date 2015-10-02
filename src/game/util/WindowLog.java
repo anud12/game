@@ -30,10 +30,10 @@ public class WindowLog extends JFrame
 		textArea.setVisible(true);
 		textArea.setEditable(false);
 		scroll = new JScrollPane(textArea);
+		scroll.setAutoscrolls(true);
 		
 		panel.add(scroll);
 		panel.setLayout(layout);
-		panel.setAutoscrolls(true);
 		
 		this.add(panel);
 		this.setVisible(true);
