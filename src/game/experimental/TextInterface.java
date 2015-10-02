@@ -70,12 +70,12 @@ public class TextInterface extends JFrame implements Runnable
 		while(true)
 		{
 			textArea.setText("");
-			textArea.append("┬>Name = " + target + "\n");
-			textArea.append("├┬>Location\n");
-			textArea.append("│├─>X = " + target.getCenter().x + "\n");
-			textArea.append("│└─>Y = " + target.getCenter().y + "\n");
-			textArea.append("├─>Speed = " + target.getMovementSpeed() + "\n");
-			textArea.append("└─>Queue = " + target.getActionSize() + "\n");
+			textArea.append(">Name = " + target + "\n");
+			textArea.append("->Location\n");
+			textArea.append("-->X = " + target.getCenter().x + "\n");
+			textArea.append("-->Y = " + target.getCenter().y + "\n");
+			textArea.append("->Speed = " + target.getMovementSpeed() + "\n");
+			textArea.append("->Queue = " + target.getActionSize() + "\n");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
