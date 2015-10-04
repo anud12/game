@@ -3,6 +3,8 @@ package game.library;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.management.modelmbean.XMLParseException;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +30,30 @@ public class Entity implements ISerializableXML
     //Attributes:
     private Rectangle2D.Float rectangle;
     private Point2D.Float center;
+    private List<String> keywords;
+
+    //constructor Entity
+    public Entity(Element element) throws XMLParseException
+    {
+    	rectangle = new Rectangle2D.Float();
+    	this.center = new Point2D.Float();
+    	
+    	readFromXML(element);
+    }
     
+    public Entity(int width, int height, Point2D.Float origin)
+    {
+    	rectangle = new Rectangle2D.Float();
+    	
+    	rectangle.x = origin.x;
+    	rectangle.y = origin.y;
+    	
+    	this.center = new Point2D.Float(origin.x,origin.y);
+    	
+    	rectangle.width = width;
+    	rectangle.height = height;
+    	this.keywords = new ArrayList<String>();
+    }
     
     //Methods:
    
@@ -53,28 +78,15 @@ public class Entity implements ISerializableXML
     	this.center.y = y;
     }
     
-    //constructor Entity
-    public Entity(Element element) throws XMLParseException
+    //set/get Keyword
+    public void addKeyword(String keyword)
     {
-    	rectangle = new Rectangle2D.Float();
-    	this.center = new Point2D.Float();
-    	
-    	readFromXML(element);
+    	this.keywords.add(keyword);
     }
-    
-    public Entity(int width, int height, Point2D.Float origin)
+    public boolean containsKeyword(String keyword)
     {
-    	rectangle = new Rectangle2D.Float();
-    	
-    	rectangle.x = origin.x;
-    	rectangle.y = origin.y;
-    	
-    	this.center = new Point2D.Float(origin.x,origin.y);
-    	
-    	rectangle.width = width;
-    	rectangle.height = height;
+    	return this.keywords.contains(keyword);
     }
-    
     //ISerializableXML
     @Override
 	public void appendObjectToXML(Document doc) 

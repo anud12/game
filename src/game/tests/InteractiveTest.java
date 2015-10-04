@@ -7,10 +7,13 @@ import java.util.concurrent.Executors;
 
 import com.sun.glass.ui.Window;
 
+import game.experimental.ExperimentalWorld;
 import game.experimental.TextInterface;
 import game.gameLoop.GameLoop;
 import game.gameLoop.MoveAction;
+import game.library.Entity;
 import game.library.Pawn;
+import game.library.interfaces.IWorld;
 import game.util.WindowLog;
 
 public class InteractiveTest 
@@ -19,12 +22,14 @@ public class InteractiveTest
 	public static void main(String args[])
 	{
 		gl = new GameLoop();
+		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
 		
 		for(int i = 0 ; i < 1 ; i++)
 		{
+			
 			Point2D.Float point = new Point2D.Float(0,0);
 	    	
 	    	Pawn pawn = new Pawn(10, 40, point);
@@ -35,9 +40,19 @@ public class InteractiveTest
 			executor.execute(inter);
 			
 			gl.addAction(pawn);
+			
+			world.addEntity(pawn);
 		}
 		
-		for(int i = 0 ; i < 200000 ; i++)
+		Entity ent = new Entity(0, 1, new Point2D.Float(0,0));
+		
+		ent.addKeyword("resource");
+		
+		world.addEntity(ent);
+		
+		System.out.println("Find " + world.getClosest("resource"));
+		
+		for(int i = 0 ; i < 0 ; i++)
 		{
 			Point2D.Float point = new Point2D.Float(0,0);
 	    	
