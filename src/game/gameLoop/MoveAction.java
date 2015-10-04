@@ -36,6 +36,11 @@ public class MoveAction implements IGameLoopAction
 		
 		direction = new Vector();
 		step = new Vector();
+		
+		//Calculate the direction
+		direction.setX(destination.getX() - pawn.getRectangle().getX());
+		direction.setY(destination.getY() - pawn.getRectangle().getY());
+		direction.normalize();
 	}
 	
 	public MoveAction(Pawn entity, Point2D.Float destination)
@@ -46,11 +51,20 @@ public class MoveAction implements IGameLoopAction
 		
 		direction = new Vector();
 		step = new Vector();
+		
+		//Calculate the direction
+		direction.setX(destination.getX() - pawn.getRectangle().getX());
+		direction.setY(destination.getY() - pawn.getRectangle().getY());
+		direction.normalize();
 	}
 	//Setters
-	public void setLocation(Point2D.Float location)
+	public void setDestination(Point2D.Float destination)
 	{
-		this.destination = location;
+		this.destination = destination;
+		//Calculate the direction
+		direction.setX(destination.getX() - pawn.getRectangle().getX());
+		direction.setY(destination.getY() - pawn.getRectangle().getY());
+		direction.normalize();
 	}
 	
 	
@@ -58,11 +72,6 @@ public class MoveAction implements IGameLoopAction
 	@Override
 	public void execute(double deltaTime) 
 	{
-		//Calculate the direction
-		direction.setX(destination.getX() - pawn.getRectangle().getX());
-		direction.setY(destination.getY() - pawn.getRectangle().getY());
-		direction.normalize();
-		
 		//Calculate the next step to go towards  the destination
 		step.equal(direction);
 		step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
