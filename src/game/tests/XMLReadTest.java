@@ -21,8 +21,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import game.experimental.ExperimentalWorld;
 import game.library.Entity;
 import game.library.Pawn;
+import game.library.interfaces.IWorld;
 
 public class XMLReadTest 
 {
@@ -39,11 +41,13 @@ public class XMLReadTest
 		
 		NodeList list = rootElement.getElementsByTagName("entity");
 		
+		IWorld world = new ExperimentalWorld();
+		
 		Entity entity[] = new Entity[list.getLength()];
 		
 		for(int i = 0 ; i < list.getLength() ; i++)
 		{
-			entity[i] = new Entity((Element) list.item(0));
+			entity[i] = new Entity((Element) list.item(0), world);
 		}
 		
 		NodeList list2 = rootElement.getElementsByTagName("pawn");
@@ -52,7 +56,7 @@ public class XMLReadTest
 		
 		for(int i = 0 ; i < list.getLength() ; i++)
 		{
-			pawn[i] = new Pawn((Element) list2.item(0));
+			pawn[i] = new Pawn((Element) list2.item(0), world);
 		}
 		
 		

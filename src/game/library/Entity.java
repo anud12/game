@@ -22,6 +22,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import game.library.interfaces.IWorld;
 import game.util.ISerializableXML;
 
 public class Entity implements ISerializableXML
@@ -31,18 +32,25 @@ public class Entity implements ISerializableXML
     private Rectangle2D.Float rectangle;
     private Point2D.Float center;
     private List<String> keywords;
-
+    private IWorld world;
+    
     //constructor Entity
-    public Entity(Element element) throws XMLParseException
+    public Entity(Element element, IWorld world) throws XMLParseException
     {
+    	world.addEntity(this);
+    	this.world = world;
+    	
     	rectangle = new Rectangle2D.Float();
     	this.center = new Point2D.Float();
     	
     	readFromXML(element);
     }
     
-    public Entity(int width, int height, Point2D.Float origin)
+    public Entity(int width, int height, Point2D.Float origin, IWorld world)
     {
+    	world.addEntity(this);
+    	this.world = world;
+    	
     	rectangle = new Rectangle2D.Float();
     	
     	rectangle.x = origin.x;
@@ -86,6 +94,10 @@ public class Entity implements ISerializableXML
     public boolean containsKeyword(String keyword)
     {
     	return this.keywords.contains(keyword);
+    }
+    //get IWorld
+    public IWorld getWorld(){
+    	return world;
     }
     //ISerializableXML
     @Override

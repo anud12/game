@@ -74,10 +74,10 @@ public class GameLoop implements Runnable
             
             action.execute( deltaTime / 1000000.0 );
             
-            if(action.isCompleted())
+            if(action.isCompleted(action))
             {
-            	action.onComplete();
-            	if(action.isRemovable())
+            	action.onComplete(action);
+            	if(action.isRemovable(action))
             		actionIterator.remove();
             }
         }

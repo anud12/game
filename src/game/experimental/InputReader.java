@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 
 import game.gameLoop.MoveAction;
 import game.library.Pawn;
+import game.library.behaviour.Harvester;
 import javafx.scene.input.KeyCode;
 
 public class InputReader extends KeyAdapter
@@ -41,7 +42,13 @@ public class InputReader extends KeyAdapter
 							pawn.addAction(new MoveAction(pawn, point2d));
 							field.setText("");
 						}
+						break;
 						
+					}
+					case "harvest":
+					{
+						pawn.setBehavior(new Harvester(pawn));
+						break;
 					}
 				}
 		 }

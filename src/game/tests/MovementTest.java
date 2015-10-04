@@ -1,8 +1,10 @@
 package game.tests;
 
+import game.experimental.ExperimentalWorld;
 import game.gameLoop.GameLoop;
 import game.gameLoop.MoveAction;
 import game.library.*;
+import game.library.interfaces.IWorld;
 import game.util.WindowLog;
 
 import java.awt.geom.Point2D;
@@ -13,6 +15,7 @@ public class MovementTest
 {
     public static void main(String[] args)
     {
+    	IWorld world = new ExperimentalWorld();
     	GameLoop gl = new GameLoop();
     	
     	WindowLog log = new WindowLog();
@@ -24,7 +27,7 @@ public class MovementTest
     	{
     		Point2D.Float point = new Point2D.Float(0,0);
         	
-        	Pawn pawn = new Pawn(10, 40, point);
+        	Pawn pawn = new Pawn(10, 40, point, world);
         	pawn.setMovementSpeed(0.1f);
         	
         	point = new Point2D.Float(300,300);
@@ -52,7 +55,7 @@ public class MovementTest
     	
     	Point2D.Float point = new Point2D.Float(0,0);
     	
-    	Pawn pawn = new Pawn(10, 40, point);
+    	Pawn pawn = new Pawn(10, 40, point, world);
     	pawn.setMovementSpeed(0.1f);
     	
     	point = new Point2D.Float(200,0);

@@ -10,22 +10,25 @@ import org.w3c.dom.Element;
 
 import game.gameLoop.IGameLoopAction;
 import game.library.interfaces.IGameLoopEntity;
+import game.library.interfaces.IPawnBehaviour;
+import game.library.interfaces.IWorld;
 import game.util.ISerializableXML;
 
 public class Pawn extends Entity implements ISerializableXML, IGameLoopEntity{
 
 	protected float movementSpeed;
+	protected IPawnBehaviour behaviour;
 	
 	//Active Entity inteface
 	LinkedList<IGameLoopAction>actions;
 	
-	public Pawn(int width, int height, Point2D.Float origin) {
-		super(width, height, origin);
+	public Pawn(int width, int height, Point2D.Float origin, IWorld world) {
+		super(width, height, origin, world);
 		actions = new LinkedList<IGameLoopAction>();
 	}
-	public Pawn(Element element) throws XMLParseException
+	public Pawn(Element element, IWorld world) throws XMLParseException
 	{
-		super(element);
+		super(element, world);
 		actions = new LinkedList<IGameLoopAction>();
 		readFromXML(element);
 	}
@@ -40,6 +43,14 @@ public class Pawn extends Entity implements ISerializableXML, IGameLoopEntity{
 		this.movementSpeed = movementSpeed;
 	}
 	
+	public void setBehavior(IPawnBehaviour behaviour)
+	{
+		this.behaviour = behaviour;
+	}
+	public IPawnBehaviour getBehavior()
+	{
+		return behaviour;
+	}
 	@Override
 	public void appendObjectToXML(Document doc) 
 	{
@@ -71,21 +82,33 @@ public class Pawn extends Entity implements ISerializableXML, IGameLoopEntity{
 	
 	@Override
 	public void execute(double deltaTime) {
+		if(behaviour != null){
+			behaviour.execute(deltaTime);
+			return;
+		}
 		if(actions.isEmpty())
 			return;
 		actions.getFirst().execute(deltaTime);
 	}
 	@Override
-	public boolean isCompleted() {
+	public boolean isCompleted(IGameLoopAction action) {
+		if(behaviour != null){
+			return behaviour.isCompleted(action);
+		}
+		
 		if(actions.isEmpty())
 			return true;
-		return actions.getFirst().isCompleted();
+		return actions.getFirst().isCompleted(action);
 	}
 	@Override
-	public void onComplete() {
+	public void onComplete(IGameLoopAction action) {
+		if(behaviour != null){
+			behaviour.onComplete(action);
+			return;
+		}
 		if(actions.isEmpty())
 			return;
-		actions.getFirst().onComplete();
+		actions.getFirst().onComplete(action);
 		actions.removeFirst();
 	}
 	@Override
@@ -102,7 +125,7 @@ public class Pawn extends Entity implements ISerializableXML, IGameLoopEntity{
 		actions.clear();
 	}
 	@Override
-	public boolean isRemovable() {
+	public boolean isRemovable(IGameLoopAction action) {
 		return false;
 	}
 	public int getActionSize()

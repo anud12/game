@@ -16,7 +16,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import game.experimental.ExperimentalWorld;
 import game.library.*;
+import game.library.interfaces.IWorld;
 import game.tests.*;
 
 public class XMLTest {
@@ -38,8 +40,10 @@ public class XMLTest {
     	DOMSource source = new DOMSource(doc);
     	
     	//Initializations
-    	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0));
-    	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0));
+    	IWorld world = new ExperimentalWorld();
+    	
+    	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0), world);
+    	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0), world);
     	pawn.setMovementSpeed(5);
     	
     	//Create root element

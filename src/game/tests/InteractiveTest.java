@@ -29,34 +29,42 @@ public class InteractiveTest
 		
 		for(int i = 0 ; i < 1 ; i++)
 		{
-			
 			Point2D.Float point = new Point2D.Float(0,0);
 	    	
-	    	Pawn pawn = new Pawn(10, 40, point);
-	    	pawn.setMovementSpeed(0.001f);
+	    	Pawn pawn = new Pawn(10, 40, point, world);
+	    	pawn.setMovementSpeed(0.002f);
 	    	
 			TextInterface inter = new TextInterface(pawn);
 			
 			executor.execute(inter);
 			
 			gl.addAction(pawn);
-			
-			world.addEntity(pawn);
 		}
 		
-		Entity ent = new Entity(0, 1, new Point2D.Float(0,0));
+		Point2D.Float point = new Point2D.Float(0,0);
+    	
+    	Pawn pawn = new Pawn(10, 40, point, world);
+    	pawn.setMovementSpeed(0.001f);
+    	pawn.addKeyword("dropOff");
+    	
+		TextInterface inter = new TextInterface(pawn);
+		
+		executor.execute(inter);
+		
+		gl.addAction(pawn);
+		
+		
+		Entity ent = new Entity(0, 5, new Point2D.Float(0,5), world);
 		
 		ent.addKeyword("resource");
-		
-		world.addEntity(ent);
 		
 		System.out.println("Find " + world.getClosest("resource"));
 		
 		for(int i = 0 ; i < 0 ; i++)
 		{
-			Point2D.Float point = new Point2D.Float(0,0);
+			point = new Point2D.Float(0,0);
 	    	
-	    	Pawn pawn = new Pawn(10, 40, point);
+	    	pawn = new Pawn(10, 40, point, world);
 	    	pawn.setMovementSpeed(0.00001f);
 	    	point = new Point2D.Float(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	MoveAction action = new MoveAction(pawn, point);

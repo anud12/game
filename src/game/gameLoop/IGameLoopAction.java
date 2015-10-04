@@ -16,11 +16,11 @@ public interface IGameLoopAction
     
     
     //Check if its action is completed
-    public boolean isCompleted();
+    public boolean isCompleted(IGameLoopAction action);
     
     //Check if the action is removable from the action list
-    public boolean isRemovable();
+    public boolean isRemovable(IGameLoopAction action);
     
     //Actions to do when its completed
-    public void onComplete();
+    public void onComplete(IGameLoopAction action);
 }

@@ -101,20 +101,20 @@ public class MoveAction implements IGameLoopAction
 	}
 
 	@Override
-	public boolean isCompleted() {
+	public boolean isCompleted(IGameLoopAction action) {
 		if(pawn.getCenter().distance(this.destination) > 0)
 			return false;
 		return true;
 	}
 
 	@Override
-	public void onComplete() {
+	public void onComplete(IGameLoopAction action) {
 		
 		System.out.println(this + " completed!");
 	}
 
 	@Override
-	public boolean isRemovable() {
+	public boolean isRemovable(IGameLoopAction action) {
 		return true;
 	}
 }
