@@ -1,4 +1,4 @@
-package game.library.behaviour;
+package game.library.pawnOrder;
 
 import java.awt.geom.Point2D;
 
@@ -6,9 +6,9 @@ import game.gameLoop.IGameLoopAction;
 import game.gameLoop.MoveAction;
 import game.library.Entity;
 import game.library.Pawn;
-import game.library.interfaces.IPawnBehaviour;
+import game.library.interfaces.IPawnOrder;
 
-public class Harvester implements IPawnBehaviour 
+public class Harvest implements IPawnOrder 
 {
 	protected Pawn pawn;
 	
@@ -23,7 +23,7 @@ public class Harvester implements IPawnBehaviour
 	protected boolean hasDropOff;
 	protected boolean hasResource;
 	
-	public  Harvester (Pawn pawn){
+	public  Harvest (Pawn pawn){
 		this.pawn = pawn;
 		isLoaded = false;
 		

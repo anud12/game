@@ -39,7 +39,7 @@ public class InteractiveTest
 			
 			executor.execute(inter);
 			
-			gl.addAction(pawn);
+			gl.addAction(pawn.getController());
 		}
 		
 		Point2D.Float point = new Point2D.Float(50,100);
@@ -52,7 +52,7 @@ public class InteractiveTest
 		
 		executor.execute(inter);
 		
-		gl.addAction(pawn);
+		gl.addAction(pawn.getController());
 		
 		Entity ent = new Entity(2, 2, new Point2D.Float(50,20), world);
 		ent.setColor(new Color(139,69,19));

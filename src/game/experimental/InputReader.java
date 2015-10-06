@@ -11,8 +11,10 @@ import javax.swing.JTextField;
 import game.gameLoop.MoveAction;
 import game.library.Entity;
 import game.library.Pawn;
-import game.library.behaviour.Harvester;
 import game.library.interfaces.IWorld;
+import game.library.pawnOrder.Harvest;
+import game.library.pawnOrder.Move;
+import game.library.pawnOrder.None;
 import game.tests.InteractiveTest;
 import javafx.scene.input.KeyCode;
 
@@ -42,6 +44,12 @@ public class InputReader extends KeyAdapter
 			 String text[] = this.field.getText().split(" ");
 			 switch(text[0])
 				{
+					case "stop":
+					{
+						pawn.getController().setOrder(new None());
+						field.setText("");
+						break;
+					}
 					case "move":
 					{
 						if(text.length > 2)
@@ -50,8 +58,7 @@ public class InputReader extends KeyAdapter
 							float y = Float.parseFloat(text[2]);
 							
 							Point2D.Float point2d = new Point2D.Float(x, y);
-							pawn.clearActionList();
-							pawn.addAction(new MoveAction(pawn, point2d));
+							pawn.getController().setOrder(new Move(pawn, point2d));
 							field.setText("");
 						}
 						break;
@@ -59,7 +66,7 @@ public class InputReader extends KeyAdapter
 					}
 					case "harvest":
 					{
-						pawn.setBehavior(new Harvester(pawn));
+						pawn.getController().setOrder(new Harvest(pawn));
 						field.setText("");
 						break;
 					}
@@ -89,7 +96,7 @@ public class InputReader extends KeyAdapter
 									
 									executor.execute(inter);
 									
-									InteractiveTest.gl.addAction(pawn);
+									InteractiveTest.gl.addAction(pawn.getController());
 									break;
 								}
 								case "dropOff":

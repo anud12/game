@@ -80,8 +80,7 @@ public class TextInterface extends JFrame implements Runnable
 			textArea.append("-->X = " + target.getCenter().x + "\n");
 			textArea.append("-->Y = " + target.getCenter().y + "\n");
 			textArea.append("->Speed = " + target.getMovementSpeed() + "\n");
-			textArea.append("->Queue = " + target.getActionSize() + "\n");
-			textArea.append("->Order = " + target.getBehavior() + "\n");
+			textArea.append("->Order = " + target.getController().getFirst() + "\n");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
