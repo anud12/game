@@ -1,6 +1,7 @@
 package game.experimental;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -34,6 +35,17 @@ public class ExperimentalWorld implements IWorld
 		}
 		
 		return null;
+	}
+
+	@Override
+	public Iterator<Entity> getIterator() 
+	{
+		return list.iterator();
+	}
+
+	@Override
+	public int getSize() {
+		return list.size();
 	}
 
 }

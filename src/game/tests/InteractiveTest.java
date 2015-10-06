@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import com.sun.glass.ui.Window;
 
 import game.experimental.ExperimentalWorld;
+import game.experimental.GLView;
 import game.experimental.TextInterface;
 import game.gameLoop.GameLoop;
 import game.gameLoop.MoveAction;
@@ -31,8 +32,8 @@ public class InteractiveTest
 		{
 			Point2D.Float point = new Point2D.Float(0,0);
 	    	
-	    	Pawn pawn = new Pawn(10, 40, point, world);
-	    	pawn.setMovementSpeed(0.002f);
+	    	Pawn pawn = new Pawn(10, 10, point, world);
+	    	pawn.setMovementSpeed(0.010f);
 	    	
 			TextInterface inter = new TextInterface(pawn);
 			
@@ -43,8 +44,8 @@ public class InteractiveTest
 		
 		Point2D.Float point = new Point2D.Float(0,0);
     	
-    	Pawn pawn = new Pawn(10, 40, point, world);
-    	pawn.setMovementSpeed(0.001f);
+    	Pawn pawn = new Pawn(20, 20, point, world);
+    	pawn.setMovementSpeed(0.005f);
     	pawn.addKeyword("dropOff");
     	
 		TextInterface inter = new TextInterface(pawn);
@@ -53,8 +54,7 @@ public class InteractiveTest
 		
 		gl.addAction(pawn);
 		
-		
-		Entity ent = new Entity(0, 5, new Point2D.Float(0,5), world);
+		Entity ent = new Entity(2, 2, new Point2D.Float(50,20), world);
 		
 		ent.addKeyword("resource");
 		
@@ -72,21 +72,7 @@ public class InteractiveTest
 			gl.addAction(action);
 		}
 		
-		/*
-		WindowLog log;
-		Point2D.Float point = new Point2D.Float(0,0);
-    	
-    	Pawn pawn = new Pawn(10, 40, point);
-    	pawn.setMovementSpeed(0.001f);
-    	
-    	point = new Point2D.Float(Float.MAX_VALUE , Float.MAX_VALUE);
-    	
-    	log = new WindowLog();
-    	
-    	MoveAction move = new MoveAction(pawn, point, log);
-    	gl.addAction(move);
-    	*/
 		executor.execute(gl);
-		
+		executor.execute(new GLView(world));
 	}
 }
