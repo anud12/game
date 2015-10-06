@@ -3,7 +3,6 @@ package game.library.pawnOrder;
 import java.awt.geom.Point2D;
 
 import game.gameLoop.IGameLoopAction;
-import game.gameLoop.MoveAction;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IPawnOrder;
@@ -15,9 +14,7 @@ public class Harvest implements IPawnOrder
 	protected Entity resourceEntity;
 	protected Entity dropOffEntity;
 	
-	protected Point2D.Float returnPoint;
-	
-	protected MoveAction move;
+	protected Move move;
 	
 	protected boolean isLoaded;
 	protected boolean hasDropOff;
@@ -29,6 +26,7 @@ public class Harvest implements IPawnOrder
 		
 		resourceEntity = pawn.getWorld().getClosest("resource");
 		dropOffEntity = pawn.getWorld().getClosest("dropOff");
+		
 		hasResource = true;
 		hasDropOff = true;
 		
@@ -41,10 +39,10 @@ public class Harvest implements IPawnOrder
 			hasDropOff = false;
 		}
 		
-		System.out.println(resourceEntity.getCenter());
-		System.out.println(hasDropOff + " " + hasResource);
-		move = new MoveAction(pawn, resourceEntity.getCenter());
-		returnPoint = new Point2D.Float(pawn.getCenter().x, pawn.getCenter().y);
+		System.out.println(resourceEntity.getCenter() + " <-> " + dropOffEntity.getCenter());
+		
+		move = new Move(pawn, resourceEntity.getCenter());
+		
 	}
 	@Override
 	public void execute(double deltaTime) {
@@ -52,23 +50,24 @@ public class Harvest implements IPawnOrder
 		{
 			if(hasDropOff)
 			{
-				move.setDestination(dropOffEntity.getCenter());
+				move.setDestination(resourceEntity.getCenter());
+				
+				move.execute(deltaTime);
 			}
 		}
 		else
 		{
 			if(hasResource)
 			{
-				move.setDestination(resourceEntity.getCenter());
+				move.setDestination(dropOffEntity.getCenter());
+				move.execute(deltaTime);
 			}
 		}
-		move.execute(deltaTime);
 	}
 
 	@Override
 	public boolean isCompleted(IGameLoopAction action) {
 		return move.isCompleted(action);
-		
 	}
 
 	@Override
@@ -79,24 +78,26 @@ public class Harvest implements IPawnOrder
 
 	@Override
 	public void onComplete(IGameLoopAction action) {
+		
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
 			{
-				move.setDestination(dropOffEntity.getCenter());
-				isLoaded = true;
 				System.out.println("Loaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
+				
+				move.setDestination(dropOffEntity.getCenter());
 			}
 		}
 		else
 		{
 			if(hasResource)
 			{
-				move.setDestination(resourceEntity.getCenter());
-				isLoaded = false;
 				System.out.println("Unloaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
+				
+				move.setDestination(resourceEntity.getCenter());
 			}
 		}
+		isLoaded = !isLoaded;	
 	}
 
 }

@@ -63,6 +63,6 @@ public class PawnController implements IGameLoopAction
 		if(orders.isEmpty())
 			return;
 		orders.get(0).onComplete(action);
-		orders.remove(0);
+		//orders.remove(0);
 	}
 }

@@ -10,10 +10,10 @@ import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
 import game.experimental.TextInterface;
 import game.gameLoop.GameLoop;
-import game.gameLoop.MoveAction;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IWorld;
+import game.library.pawnOrder.Move;
 import game.util.WindowLog;
 import java.awt.Color;
 
@@ -66,9 +66,9 @@ public class InteractiveTest
 	    	pawn = new Pawn(10, 40, point, world);
 	    	pawn.setMovementSpeed(0.00001f);
 	    	point = new Point2D.Float(Float.MAX_VALUE , Float.MAX_VALUE);
-	    	MoveAction action = new MoveAction(pawn, point);
+	    	pawn.getController().setOrder(new Move(pawn, point));
 	    	
-			gl.addAction(action);
+			gl.addAction(pawn.getController());
 		}
 		
 		executor.execute(gl);

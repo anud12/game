@@ -18,11 +18,12 @@ public class Move implements IPawnOrder{
 		IVector step;
 		IVector direction;
 		
+		boolean completedPremature;
 		//Constructors
 		
-		public Move(Pawn entity, Point2D.Float destination)
+		public Move(Pawn pawn, Point2D.Float destination)
 		{
-			this.pawn = entity;
+			this.pawn = pawn;
 					
 			this.destination = destination;
 			
@@ -36,8 +37,9 @@ public class Move implements IPawnOrder{
 		}
 		//Setters
 		public void setDestination(Point2D.Float destination)
-		{
+		{			
 			this.destination = destination;
+			
 			//Calculate the direction
 			direction.setX(destination.getX() - pawn.getRectangle().getX());
 			direction.setY(destination.getY() - pawn.getRectangle().getY());
@@ -74,9 +76,10 @@ public class Move implements IPawnOrder{
 
 		@Override
 		public boolean isCompleted(IGameLoopAction action) {
-			if(pawn.getCenter().distance(this.destination) > 0)
-				return false;
-			return true;
+			
+			if(pawn.getCenter().distance(this.destination) == 0)
+				return true;
+			return false;
 		}
 
 		@Override

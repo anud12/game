@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorService;
 
 import javax.swing.JTextField;
 
-import game.gameLoop.MoveAction;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IWorld;

@@ -53,13 +53,13 @@ public class GameLoop implements Runnable
     	actionIterator = actions.iterator();
     	
     	//Check the frequency of the calls
-    	if(deltaTime < 90000)
+    	if(deltaTime < 900000)
     	{
     		try
     		{
     			//Wait until the minimum amout of calls
-    			Thread.sleep(0 ,(int) (90000 - deltaTime) );
-    			deltaTime = 90000;
+    			Thread.sleep(0 ,(int) (900000 - deltaTime) );
+    			deltaTime = 900000;
     		}
     		catch(Exception e)
     		{
