@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowListener;
+import java.util.concurrent.ExecutorService;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import javax.swing.BoxLayout;
 
 import game.library.Entity;
 import game.library.Pawn;
+import game.library.interfaces.IWorld;
 import javafx.scene.text.Font;
 
 public class TextInterface extends JFrame implements Runnable
@@ -30,9 +32,12 @@ public class TextInterface extends JFrame implements Runnable
 	
 	private Pawn target;
 	
-	public TextInterface (Pawn target)
+	private ExecutorService executor;
+	
+	public TextInterface (Pawn target, ExecutorService executor)
 	{
 		this.target = target;
+		this.executor = executor;
 		
 		inputNr = 0;
 		
@@ -61,7 +66,7 @@ public class TextInterface extends JFrame implements Runnable
 		this.add(panel);
 		this.setVisible(true);
 		this.setSize(200, 200);
-		textField.addKeyListener(new InputReader(textField, target));
+		textField.addKeyListener(new InputReader(textField, target, target.getWorld(), executor));
 		
 	}
 

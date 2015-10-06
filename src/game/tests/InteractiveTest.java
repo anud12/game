@@ -5,7 +5,6 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.sun.glass.ui.Window;
 
 import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
@@ -35,7 +34,7 @@ public class InteractiveTest
 	    	Pawn pawn = new Pawn(10, 10, point, world);
 	    	pawn.setMovementSpeed(0.010f);
 	    	
-			TextInterface inter = new TextInterface(pawn);
+			TextInterface inter = new TextInterface(pawn, executor);
 			
 			executor.execute(inter);
 			
@@ -48,7 +47,7 @@ public class InteractiveTest
     	pawn.setMovementSpeed(0.005f);
     	pawn.addKeyword("dropOff");
     	
-		TextInterface inter = new TextInterface(pawn);
+		TextInterface inter = new TextInterface(pawn, executor);
 		
 		executor.execute(inter);
 		
@@ -58,7 +57,6 @@ public class InteractiveTest
 		
 		ent.addKeyword("resource");
 		
-		System.out.println("Find " + world.getClosest("resource"));
 		
 		for(int i = 0 ; i < 0 ; i++)
 		{
