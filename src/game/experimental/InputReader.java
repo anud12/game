@@ -1,5 +1,6 @@
 package game.experimental;
 
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
@@ -75,12 +76,14 @@ public class InputReader extends KeyAdapter
 									Entity ent = new Entity(2, 2, new Point2D.Float(x,y), world);
 									
 									ent.addKeyword("resource");
+									ent.setColor(new Color(139,69,19));
 									break;
 								}
 								case "smallShip":
 								{
 									Pawn pawn = new Pawn(10, 10, new Point2D.Float(x,y), world);
 							    	pawn.setMovementSpeed(0.010f);
+							    	pawn.setColor(Color.white);
 							    	
 									TextInterface inter = new TextInterface(pawn, executor);
 									
@@ -94,6 +97,7 @@ public class InputReader extends KeyAdapter
 							    	Pawn pawn = new Pawn(20, 20, new Point2D.Float(x,y), world);
 							    	pawn.setMovementSpeed(0.005f);
 							    	pawn.addKeyword("dropOff");
+							    	pawn.setColor(Color.gray);
 							    	
 									TextInterface inter = new TextInterface(pawn, executor);
 									

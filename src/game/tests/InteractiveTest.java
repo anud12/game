@@ -15,6 +15,7 @@ import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IWorld;
 import game.util.WindowLog;
+import java.awt.Color;
 
 public class InteractiveTest 
 {
@@ -29,11 +30,11 @@ public class InteractiveTest
 		
 		for(int i = 0 ; i < 1 ; i++)
 		{
-			Point2D.Float point = new Point2D.Float(0,0);
+			Point2D.Float point = new Point2D.Float(10,30);
 	    	
 	    	Pawn pawn = new Pawn(10, 10, point, world);
 	    	pawn.setMovementSpeed(0.010f);
-	    	
+	    	pawn.setColor(Color.white);
 			TextInterface inter = new TextInterface(pawn, executor);
 			
 			executor.execute(inter);
@@ -41,12 +42,12 @@ public class InteractiveTest
 			gl.addAction(pawn);
 		}
 		
-		Point2D.Float point = new Point2D.Float(0,0);
+		Point2D.Float point = new Point2D.Float(50,100);
     	
     	Pawn pawn = new Pawn(20, 20, point, world);
     	pawn.setMovementSpeed(0.005f);
     	pawn.addKeyword("dropOff");
-    	
+    	pawn.setColor(Color.gray);
 		TextInterface inter = new TextInterface(pawn, executor);
 		
 		executor.execute(inter);
@@ -54,7 +55,7 @@ public class InteractiveTest
 		gl.addAction(pawn);
 		
 		Entity ent = new Entity(2, 2, new Point2D.Float(50,20), world);
-		
+		ent.setColor(new Color(139,69,19));
 		ent.addKeyword("resource");
 		
 		

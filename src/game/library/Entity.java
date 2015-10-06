@@ -1,5 +1,6 @@
 package game.library;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -33,6 +34,7 @@ public class Entity implements ISerializableXML
     private Point2D.Float center;
     private List<String> keywords;
     private IWorld world;
+    protected Color color;
     
     //constructor Entity
     public Entity(Element element, IWorld world) throws XMLParseException
@@ -61,10 +63,21 @@ public class Entity implements ISerializableXML
     	rectangle.width = width;
     	rectangle.height = height;
     	this.keywords = new ArrayList<String>();
+    	
+    	color = Color.white;
     }
     
     //Methods:
    
+    //get/set Color
+    public void setColor (Color color)
+    {
+    	 this.color = color;
+    }
+    public Color getColor ()
+    {
+    	return color;
+    }
     //get/set rectangle 
     public Rectangle2D.Float getRectangle()
     {

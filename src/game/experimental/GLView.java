@@ -57,12 +57,17 @@ public class GLView implements Runnable{
 	        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);  
 	        
 	        // set the color of the quad (R,G,B,A)
-	        GL11.glColor3f(1f,1f,1f);
+	       
 	        
 	        Iterator<Entity> iterator = world.getIterator();
 	        while(iterator.hasNext())
 	        {
 	        	Entity ent = iterator.next();
+	        	float red = ent.getColor().getRed() / 255f;
+	        	float blue = ent.getColor().getBlue() / 255f;
+	        	float green = ent.getColor().getGreen() / 255f;
+	        	
+	        	GL11.glColor3d(red, green, blue);
 	        	GL11.glBegin(GL11.GL_QUADS);
 	        	GL11.glVertex2f(
 	        			ent.getRectangle().x + position.x,
