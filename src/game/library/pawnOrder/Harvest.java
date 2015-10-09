@@ -2,7 +2,7 @@ package game.library.pawnOrder;
 
 import java.awt.geom.Point2D;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IPawnOrder;
@@ -39,7 +39,7 @@ public class Harvest implements IPawnOrder
 			hasDropOff = false;
 		}
 		
-		System.out.println(resourceEntity.getCenter() + " <-> " + dropOffEntity.getCenter());
+		//System.out.println(resourceEntity.getCenter() + " <-> " + dropOffEntity.getCenter());
 		
 		move = new Move(pawn, resourceEntity.getCenter());
 		
@@ -66,24 +66,24 @@ public class Harvest implements IPawnOrder
 	}
 
 	@Override
-	public boolean isCompleted(IGameLoopAction action) {
+	public boolean isCompleted(IEngineAction action) {
 		return move.isCompleted(action);
 	}
 
 	@Override
-	public boolean isRemovable(IGameLoopAction action) {
+	public boolean isRemovable(IEngineAction action) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void onComplete(IGameLoopAction action) {
+	public void onComplete(IEngineAction action) {
 		
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
 			{
-				System.out.println("Loaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
+				//System.out.println("Loaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
 				
 				move.setDestination(dropOffEntity.getCenter());
 			}
@@ -92,7 +92,7 @@ public class Harvest implements IPawnOrder
 		{
 			if(hasResource)
 			{
-				System.out.println("Unloaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
+				//System.out.println("Unloaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
 				
 				move.setDestination(resourceEntity.getCenter());
 			}

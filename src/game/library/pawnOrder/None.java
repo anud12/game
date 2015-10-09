@@ -1,6 +1,6 @@
 package game.library.pawnOrder;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 import game.library.interfaces.IPawnOrder;
 
 public class None implements IPawnOrder
@@ -13,19 +13,19 @@ public class None implements IPawnOrder
 	}
 
 	@Override
-	public boolean isCompleted(IGameLoopAction action) {
+	public boolean isCompleted(IEngineAction action) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public boolean isRemovable(IGameLoopAction action) {
+	public boolean isRemovable(IEngineAction action) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public void onComplete(IGameLoopAction action) {
+	public void onComplete(IEngineAction action) {
 		// TODO Auto-generated method stub
 		
 	}

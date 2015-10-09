@@ -8,7 +8,7 @@ import javax.management.modelmbean.XMLParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 import game.library.Controllers.PawnController;
 import game.library.interfaces.IPawnOrder;
 import game.library.interfaces.IWorld;
@@ -20,18 +20,18 @@ public class Pawn extends Entity implements ISerializableXML{
 	protected PawnController controller;
 	
 	//Active Entity inteface
-	LinkedList<IGameLoopAction>actions;
+	LinkedList<IEngineAction>actions;
 	
 	public Pawn(int width, int height, Point2D.Float origin, IWorld world) {
 		super(width, height, origin, world);
-		actions = new LinkedList<IGameLoopAction>();
+		actions = new LinkedList<IEngineAction>();
 		
 		controller = new PawnController(this);
 	}
 	public Pawn(Element element, IWorld world) throws XMLParseException
 	{
 		super(element, world);
-		actions = new LinkedList<IGameLoopAction>();
+		actions = new LinkedList<IEngineAction>();
 		readFromXML(element);
 	}
 	

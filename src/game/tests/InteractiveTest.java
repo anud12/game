@@ -5,50 +5,42 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+import game.engine.Engine;
 import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
 import game.experimental.TextInterface;
-import game.gameLoop.GameLoop;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.interfaces.IWorld;
+import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
 import game.util.WindowLog;
 import java.awt.Color;
 
 public class InteractiveTest 
 {
-	public static GameLoop gl;
+	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new GameLoop();
+		gl = new Engine(500000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
+		Point2D.Float point;
+    	Pawn pawn;
+    	TextInterface inter;
 		
-		for(int i = 0 ; i < 1 ; i++)
-		{
-			Point2D.Float point = new Point2D.Float(10,30);
-	    	
-	    	Pawn pawn = new Pawn(10, 10, point, world);
-	    	pawn.setMovementSpeed(0.010f);
-	    	pawn.setColor(Color.white);
-			TextInterface inter = new TextInterface(pawn, executor);
-			
-			executor.execute(inter);
-			
-			gl.addAction(pawn.getController());
-		}
-		
-		Point2D.Float point = new Point2D.Float(50,100);
     	
-    	Pawn pawn = new Pawn(20, 20, point, world);
+		
+		point = new Point2D.Float(70,100);
+    	
+    	pawn = new Pawn(20, 20, point, world);
     	pawn.setMovementSpeed(0.005f);
     	pawn.addKeyword("dropOff");
     	pawn.setColor(Color.gray);
-		TextInterface inter = new TextInterface(pawn, executor);
+    	
+		inter = new TextInterface(pawn, executor);
 		
 		executor.execute(inter);
 		
@@ -58,12 +50,25 @@ public class InteractiveTest
 		ent.setColor(new Color(139,69,19));
 		ent.addKeyword("resource");
 		
+		point = new Point2D.Float(10,30);
+    	
+    	pawn = new Pawn(10, 10, point, world);
+    	pawn.setMovementSpeed(0.010f);
+    	pawn.getController().setOrder(new Harvest(pawn));
+    	pawn.setColor(Color.white);
 		
-		for(int i = 0 ; i < 0 ; i++)
+		inter = new TextInterface(pawn, executor);
+		
+		executor.execute(inter);
+		
+		gl.addAction(pawn.getController());
+		
+		for(int i = 0 ; i < 200000 ; i++)
 		{
-			point = new Point2D.Float(0,0);
+			IWorld world2 = new ExperimentalWorld();
+			point = new Point2D.Float(-10,-10);
 	    	
-	    	pawn = new Pawn(10, 40, point, world);
+	    	pawn = new Pawn(10, 40, point, world2);
 	    	pawn.setMovementSpeed(0.00001f);
 	    	point = new Point2D.Float(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	pawn.getController().setOrder(new Move(pawn, point));
@@ -72,6 +77,6 @@ public class InteractiveTest
 		}
 		
 		executor.execute(gl);
-		executor.execute(new GLView(world));
+		//executor.execute(new GLView(world));
 	}
 }

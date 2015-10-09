@@ -2,11 +2,11 @@ package game.library.Controllers;
 
 import java.util.ArrayList;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 import game.library.Pawn;
 import game.library.interfaces.IPawnOrder;
 
-public class PawnController implements IGameLoopAction
+public class PawnController implements IEngineAction
 {
 	ArrayList<IPawnOrder> orders;
 	Pawn pawn;
@@ -36,33 +36,38 @@ public class PawnController implements IGameLoopAction
 		return orders.get(0);
 	}
 	
-	
+	public int size()
+	{
+		return orders.size();
+	}
 	//IGameLoop implementation
 	@Override
 	public void execute(double deltaTime) {
 		if(orders.isEmpty())
 			return;
 		orders.get(0).execute(deltaTime);
-		
 	}
 
 	@Override
-	public boolean isCompleted(IGameLoopAction action) {
+	public boolean isCompleted(IEngineAction action) {
 		if(orders.isEmpty())
 			return true;
 		return orders.get(0).isCompleted(action);
 	}
 
 	@Override
-	public boolean isRemovable(IGameLoopAction action) {
+	public boolean isRemovable(IEngineAction action) {
 		return false;
 	}
 
 	@Override
-	public void onComplete(IGameLoopAction action) {
+	public void onComplete(IEngineAction action) {
 		if(orders.isEmpty())
 			return;
 		orders.get(0).onComplete(action);
-		//orders.remove(0);
+		if(orders.get(0).isRemovable(action))
+		{
+			orders.remove(0);
+		}
 	}
 }

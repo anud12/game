@@ -2,7 +2,7 @@ package game.library.pawnOrder;
 
 import java.awt.geom.Point2D;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 import game.geom.IVector;
 import game.geom.classes.Vector;
 import game.library.Pawn;
@@ -75,7 +75,7 @@ public class Move implements IPawnOrder{
 		}
 
 		@Override
-		public boolean isCompleted(IGameLoopAction action) {
+		public boolean isCompleted(IEngineAction action) {
 			
 			if(pawn.getCenter().distance(this.destination) == 0)
 				return true;
@@ -83,12 +83,12 @@ public class Move implements IPawnOrder{
 		}
 
 		@Override
-		public void onComplete(IGameLoopAction action) {
+		public void onComplete(IEngineAction action) {
 			
 		}
 
 		@Override
-		public boolean isRemovable(IGameLoopAction action) {
+		public boolean isRemovable(IEngineAction action) {
 			return true;
 		}
 

@@ -29,6 +29,7 @@ public class TextInterface extends JFrame implements Runnable
 	private JScrollPane scroll;
 	private JTextArea textArea;
 	private int inputNr;
+	private StringBuffer buffer;
 	
 	private Pawn target;
 	
@@ -68,19 +69,51 @@ public class TextInterface extends JFrame implements Runnable
 		this.setSize(200, 200);
 		textField.addKeyListener(new InputReader(textField, target, target.getWorld(), executor));
 		
+		buffer = new StringBuffer();
+		
 	}
 
 	@Override
 	public void run() {
 		while(true)
 		{
-			textArea.setText("");
-			textArea.append(">Name = " + target + "\n");
-			textArea.append("->Location\n");
-			textArea.append("-->X = " + target.getCenter().x + "\n");
-			textArea.append("-->Y = " + target.getCenter().y + "\n");
-			textArea.append("->Speed = " + target.getMovementSpeed() + "\n");
-			textArea.append("->Order = " + target.getController().getFirst() + "\n");
+			buffer = buffer.delete(0, buffer.length());
+			
+			buffer.append(">Name = ");
+			buffer.append((target.toString()));
+			buffer.append("\n");
+			
+			buffer.append("->Location\n");
+			
+			buffer.append("-->X = ");
+			buffer.append(Float.toString(target.getCenter().x));
+			buffer.append("\n");
+			
+			buffer.append("-->Y = ");
+			buffer.append(Float.toString(target.getCenter().y));
+			buffer.append("\n");
+			
+			buffer.append("->Speed = ");
+			buffer.append(Float.toString(target.getMovementSpeed()));
+			buffer.append("\n");
+			
+			buffer.append("->Order = ");
+			if(target.getController().getFirst() == null)
+			{
+				buffer.append("none");
+			}
+			else
+			{
+				buffer.append(target.getController().getFirst().toString());
+			}
+			buffer.append("\n");
+			
+			buffer.append("->Order size = ");
+			buffer.append(Integer.toString(target.getController().size()));
+			buffer.append("\n");
+			
+			textArea.setText(buffer.toString());
+			
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {

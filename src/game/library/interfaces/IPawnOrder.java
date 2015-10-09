@@ -1,7 +1,7 @@
 package game.library.interfaces;
 
-import game.gameLoop.IGameLoopAction;
+import game.engine.IEngineAction;
 
-public interface IPawnOrder extends IGameLoopAction
+public interface IPawnOrder extends IEngineAction
 {
 }
