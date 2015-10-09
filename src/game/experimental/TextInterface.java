@@ -2,10 +2,6 @@ package game.experimental;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowListener;
 import java.util.concurrent.ExecutorService;
 
 import javax.swing.JFrame;
@@ -15,10 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.BoxLayout;
 
-import game.library.Entity;
 import game.library.Pawn;
-import game.library.interfaces.IWorld;
-import javafx.scene.text.Font;
 
 public class TextInterface extends JFrame implements Runnable
 {

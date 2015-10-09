@@ -1,13 +1,8 @@
 package game.engine;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 
 public class Engine implements Runnable
 {
@@ -35,8 +30,6 @@ public class Engine implements Runnable
     //in between the loop iterations
     LinkedList<IEngineAction> addBuffer;
     LinkedList<IEngineAction> removeBuffer;
-    
-    EngineLoop loop;
     
     //Initializations
     public Engine(int actionsPerThread, int maxLoops)
@@ -143,6 +136,9 @@ public class Engine implements Runnable
     	while(loopIterator.hasNext())
     	{
     		EngineLoop loop = loopIterator.next();
+    		
+    		//Slice the list of actions in smaller lists
+    		//equal in size for the loops
     		if(loopNumber == 0)
     		{
     			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1)) );
@@ -152,6 +148,8 @@ public class Engine implements Runnable
     			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1)) );
     		}
     		loopNumber++;
+    		
+    		//Set the deltaTime for the looop
     		loop.setDeltaTime(deltaTime);
     	}
     	
@@ -181,10 +179,10 @@ public class Engine implements Runnable
     			{
     				i++;
     			}
+    			Thread.sleep(1);
     		}
     	}
     	
-    	System.out.println(deltaTime);
     	//Modify the actions list with the queued changes
     	modifyActionList();
     }

@@ -1,7 +1,5 @@
 package game.library.pawnOrder;
 
-import java.awt.geom.Point2D;
-
 import game.engine.IEngineAction;
 import game.library.Entity;
 import game.library.Pawn;
@@ -38,8 +36,6 @@ public class Harvest implements IPawnOrder
 		{
 			hasDropOff = false;
 		}
-		
-		//System.out.println(resourceEntity.getCenter() + " <-> " + dropOffEntity.getCenter());
 		
 		move = new Move(pawn, resourceEntity.getCenter());
 		
@@ -82,18 +78,14 @@ public class Harvest implements IPawnOrder
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
-			{
-				//System.out.println("Loaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
-				
+			{				
 				move.setDestination(dropOffEntity.getCenter());
 			}
 		}
 		else
 		{
 			if(hasResource)
-			{
-				//System.out.println("Unloaded at :" + pawn.getCenter().x + " " + pawn.getCenter().y);
-				
+			{				
 				move.setDestination(resourceEntity.getCenter());
 			}
 		}

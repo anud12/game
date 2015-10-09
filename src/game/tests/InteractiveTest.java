@@ -1,7 +1,6 @@
 package game.tests;
 
 import java.awt.geom.Point2D;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,7 +13,6 @@ import game.library.Pawn;
 import game.library.interfaces.IWorld;
 import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
-import game.util.WindowLog;
 import java.awt.Color;
 
 public class InteractiveTest 
@@ -22,7 +20,7 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(500000, 8);
+		gl = new Engine(100000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -77,6 +75,6 @@ public class InteractiveTest
 		}
 		
 		executor.execute(gl);
-		//executor.execute(new GLView(world));
+		executor.execute(new GLView(world));
 	}
 }

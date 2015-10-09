@@ -10,7 +10,6 @@ import org.w3c.dom.Element;
 
 import game.engine.IEngineAction;
 import game.library.Controllers.PawnController;
-import game.library.interfaces.IPawnOrder;
 import game.library.interfaces.IWorld;
 import game.util.ISerializableXML;
 

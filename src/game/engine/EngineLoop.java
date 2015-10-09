@@ -1,18 +1,18 @@
 package game.engine;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.RecursiveAction;
 
 class EngineLoop extends Thread{
-	
+	//Action list
 	private List<IEngineAction> actions;
+	//Returning list of deleted actions
 	private List<IEngineAction> removeBuffer;
+	
 	private float deltaTime;
+	//Endless loop check
 	private boolean exitLoop;
+	//If loop is completed
 	private boolean waiting;
 	
 	public Object monitor;
@@ -48,10 +48,15 @@ class EngineLoop extends Thread{
 	}
 	public void run() 
 	{
+		//Single access on monitor
 		synchronized(monitor)
 		{
+			//Liveness of the thread is maintained by
+			//this endless loop that can be killed by
+			//making it stop
 			do
 			{
+				//Wait until notified by the engine
 				if(this.getState() == Thread.State.RUNNABLE)
 				{
 					try {
@@ -64,14 +69,17 @@ class EngineLoop extends Thread{
 					}
 				}
 				
-				//System.out.println(this + " " + deltaTime);
+				//Get iterator
 				Iterator<IEngineAction> iterator = actions.iterator();
 				while(iterator.hasNext())
 				{
+					//Set that the loop is running
 					waiting = false;
 					
+					//Get iterator
 					IEngineAction action = iterator.next();
 					
+					//Execute current action
 					action.execute(deltaTime);
 					
 					if(action.isCompleted(action))
@@ -80,6 +88,7 @@ class EngineLoop extends Thread{
 		            	
 		            	if(action.isRemovable(action));
 		            	{
+		            		//Single access on removeBuffer
 		            		synchronized(removeBuffer)
 			            	{
 			            		removeBuffer.add(action);	
@@ -87,7 +96,6 @@ class EngineLoop extends Thread{
 		            	}
                     }
 				}
-				
 			}
 			while(!exitLoop);
 		}

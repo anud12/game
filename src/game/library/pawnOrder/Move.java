@@ -7,7 +7,6 @@ import game.geom.IVector;
 import game.geom.classes.Vector;
 import game.library.Pawn;
 import game.library.interfaces.IPawnOrder;
-import game.util.WindowLog;
 
 public class Move implements IPawnOrder{
 
