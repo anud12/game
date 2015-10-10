@@ -14,15 +14,15 @@ class EngineLoop extends Thread{
 	private boolean exitLoop;
 	//If loop is completed
 	private boolean waiting;
-	
+	//Object used to sleep and awake the loop
 	public Object monitor;
-	
 	
 	public EngineLoop(List<IEngineAction> removeBuffer)
 	{
 		this.removeBuffer = removeBuffer;
 		exitLoop = false;
 		monitor = new Object();
+		this.setName("Main Engine");
 	}
 	
 	public void setActions(List<IEngineAction> actions)
@@ -60,9 +60,8 @@ class EngineLoop extends Thread{
 				if(this.getState() == Thread.State.RUNNABLE)
 				{
 					try {
-						waiting = true;
-						monitor.wait();
-						
+							waiting = true;
+							monitor.wait();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -86,7 +85,7 @@ class EngineLoop extends Thread{
 					{
 		            	action.onComplete(action);
 		            	
-		            	if(action.isRemovable(action));
+		            	if(action.isRemovable(action))
 		            	{
 		            		//Single access on removeBuffer
 		            		synchronized(removeBuffer)

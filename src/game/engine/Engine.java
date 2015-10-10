@@ -14,13 +14,12 @@ public class Engine implements Runnable
     //Total time elapsed
     long time;
     float deltaTime;
-    float avgDeltaTime;
     // MultiThread //
     
     //Number of actions when a new loop will be created
     int actionsToSplit; 
     //Number of maximum running parallel loops
-    int maxLoops;
+    int maxThreads;
     //Size of the sublist to be sent
     int subListSize;
     //List of loops running in parallel 
@@ -31,50 +30,52 @@ public class Engine implements Runnable
     LinkedList<IEngineAction> addBuffer;
     LinkedList<IEngineAction> removeBuffer;
     
+    
     //Initializations
-    public Engine(int actionsPerThread, int maxLoops)
+    public Engine(int actionsToSplit, int maxThreads)
     {
-    	if(actionsPerThread == 0)
+    	if(actionsToSplit == 0)
     		this.actionsToSplit = Integer.MAX_VALUE;
     	else
-    		this.actionsToSplit = actionsPerThread;
+    		this.actionsToSplit = actionsToSplit;
     	
-    	if(maxLoops == 0)
-        	this.maxLoops = Integer.MAX_VALUE;
+    	if(maxThreads == 0)
+        	this.maxThreads = Integer.MAX_VALUE;
     	else
-    		this.maxLoops = maxLoops; 	
+    		this.maxThreads = maxThreads; 	
     	
         actions = new CopyOnWriteArrayList<IEngineAction>();
         addBuffer = new LinkedList<>();
         removeBuffer = new LinkedList<>();
         
-        loops = new LinkedList<EngineLoop>();
-        
-        avgDeltaTime = 0;
-        
-        //loop = new EngineLoop(actions);
+        loops = new LinkedList<EngineLoop>();    
     }
     
     //Add to stack
     public void addAction(IEngineAction action)
     {
+    	//Add action to buffer
     	addBuffer.add(action);
     }
     
     protected void modifyActionList()
     {
+    	//Check if the buffer lists aren't empty
     	if(removeBuffer.size() ==  0  && addBuffer.size() == 0)
     	{
     		return;
     	}
+    	//Add & remove actions from the buffer
     	actions.removeAll(removeBuffer);
-    	removeBuffer =  new LinkedList<>();
     	actions.addAll(addBuffer);
+    	
+    	//Clear the buffer
+    	removeBuffer =  new LinkedList<>();
     	addBuffer = new LinkedList<>();
     	
     	//Check if it it needs to split the actions &
     	//if the maximum number of loops have been reached
-    	while((actions.size() / actionsToSplit + 1 > loops.size()) && (loops.size() < maxLoops))
+    	while((actions.size() / actionsToSplit + 1 > loops.size()) && (loops.size() < maxThreads))
 		{
     		EngineLoop loop = new EngineLoop(removeBuffer);
     		loops.add(loop);
@@ -82,6 +83,7 @@ public class Engine implements Runnable
     		loop.setName("Loop " + (loops.size() -1) );
     		loop.start();
 		}
+    	//Calculate the size of the sublists
     	subListSize = actions.size() / loops.size();
     }
     
@@ -149,7 +151,7 @@ public class Engine implements Runnable
     		}
     		loopNumber++;
     		
-    		//Set the deltaTime for the looop
+    		//Set the deltaTime for the loop
     		loop.setDeltaTime(deltaTime);
     	}
     	
@@ -161,28 +163,23 @@ public class Engine implements Runnable
     		EngineLoop loop = loopIterator.next();
     		synchronized(loop.monitor)
     		{
-    			//System.out.println(this + " " + deltaTime);
     			loop.monitor.notify();
     		}
     	}
     	
     	
     	// Asking if the loops are finished
-    	int i = 0;
-    	while(i < loops.size())
+    	
+    	Iterator<EngineLoop> iterator = loops.iterator();
+    	while(iterator.hasNext())
     	{
-    		
-    		Iterator<EngineLoop> iterator = loops.iterator();
-    		while(iterator.hasNext())
+    		EngineLoop loop = iterator.next();
+    		while(!loop.isWaiting())
     		{
-    			if(iterator.next().isWaiting())
-    			{
-    				i++;
-    			}
     			Thread.sleep(1);
     		}
+    		Thread.sleep(1);
     	}
-    	
     	//Modify the actions list with the queued changes
     	modifyActionList();
     }

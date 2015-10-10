@@ -53,6 +53,7 @@ public class PawnController implements IEngineAction
 		if(orders.isEmpty())
 			return true;
 		return orders.get(0).isCompleted(action);
+		//return false;
 	}
 
 	@Override

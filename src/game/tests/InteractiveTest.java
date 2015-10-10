@@ -29,8 +29,6 @@ public class InteractiveTest
     	Pawn pawn;
     	TextInterface inter;
 		
-    	
-		
 		point = new Point2D.Float(70,100);
     	
     	pawn = new Pawn(20, 20, point, world);
@@ -61,7 +59,7 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		for(int i = 0 ; i < 200000 ; i++)
+		for(int i = 0 ; i < 1 ; i++)
 		{
 			IWorld world2 = new ExperimentalWorld();
 			point = new Point2D.Float(-10,-10);
@@ -75,6 +73,6 @@ public class InteractiveTest
 		}
 		
 		executor.execute(gl);
-		executor.execute(new GLView(world));
+		//executor.execute(new GLView(world));
 	}
 }
