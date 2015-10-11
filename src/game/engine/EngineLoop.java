@@ -8,7 +8,7 @@ class EngineLoop extends Thread{
 	private List<IEngineAction> actions;
 	//Returning list of deleted actions
 	private List<IEngineAction> removeBuffer;
-	
+	private Iterator<IEngineAction>iterator;
 	private float deltaTime;
 	//Endless loop check
 	private boolean exitLoop;
@@ -28,6 +28,7 @@ class EngineLoop extends Thread{
 	public void setActions(List<IEngineAction> actions)
 	{
 		this.actions = actions;
+		iterator =  actions.iterator();
 	}
 	public void setRemoveBuffer(List<IEngineAction> removeBuffer)
 	{
@@ -67,33 +68,36 @@ class EngineLoop extends Thread{
 						e.printStackTrace();
 					}
 				}
-				
-				//Get iterator
-				Iterator<IEngineAction> iterator = actions.iterator();
-				while(iterator.hasNext())
+				synchronized(actions)
 				{
-					//Set that the loop is running
-					waiting = false;
-					
 					//Get iterator
-					IEngineAction action = iterator.next();
-					
-					//Execute current action
-					action.execute(deltaTime);
-					
-					if(action.isCompleted(action))
+					iterator = actions.iterator();
+					while(iterator.hasNext())
 					{
-		            	action.onComplete(action);
-		            	
-		            	if(action.isRemovable(action))
-		            	{
-		            		//Single access on removeBuffer
-		            		synchronized(removeBuffer)
+						//Set that the loop is running
+						waiting = false;
+						
+						//Get iterator
+						IEngineAction action = iterator.next();
+						
+						//Execute current action
+						action.execute(deltaTime);
+						
+						if(action.isCompleted(action))
+						{
+			            	action.onComplete(action);
+			            	
+			            	if(action.isRemovable(action))
 			            	{
-			            		removeBuffer.add(action);	
+			            		//Single access on removeBuffer
+			            		synchronized(removeBuffer)
+				            	{
+				            		removeBuffer.add(action);
+				            	}
 			            	}
-		            	}
-                    }
+	                    }
+					}
+
 				}
 			}
 			while(!exitLoop);

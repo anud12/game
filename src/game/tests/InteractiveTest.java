@@ -20,7 +20,7 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(100000, 8);
+		gl = new Engine(250000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -59,7 +59,7 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		for(int i = 0 ; i < 1 ; i++)
+		for(int i = 0 ; i < 1000000 ; i++)
 		{
 			IWorld world2 = new ExperimentalWorld();
 			point = new Point2D.Float(-10,-10);

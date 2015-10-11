@@ -2,12 +2,11 @@ package game.engine;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Engine implements Runnable
 {
 	//Action lists to do for every cycle
-	CopyOnWriteArrayList<IEngineAction> actions;
+	LinkedList<IEngineAction> actions;
 	
     Iterator<IEngineAction> actionIterator;
     
@@ -20,6 +19,8 @@ public class Engine implements Runnable
     int actionsToSplit; 
     //Number of maximum running parallel loops
     int maxThreads;
+    
+    int currentThreadNumber;
     //Size of the sublist to be sent
     int subListSize;
     //List of loops running in parallel 
@@ -40,22 +41,47 @@ public class Engine implements Runnable
     		this.actionsToSplit = actionsToSplit;
     	
     	if(maxThreads == 0)
-        	this.maxThreads = Integer.MAX_VALUE;
+        	this.maxThreads = Runtime.getRuntime().availableProcessors();
     	else
     		this.maxThreads = maxThreads; 	
     	
-        actions = new CopyOnWriteArrayList<IEngineAction>();
-        addBuffer = new LinkedList<>();
-        removeBuffer = new LinkedList<>();
+        actions = new LinkedList<IEngineAction>();
+        addBuffer = new LinkedList<IEngineAction>();
+        removeBuffer = new LinkedList<IEngineAction>();
         
         loops = new LinkedList<EngineLoop>();    
     }
     
+    //   Getters   //
+    public int getActionsSize()
+    {    	
+    	return actions.size();
+    }
+    public float getDeltaTime()
+    {
+    	return deltaTime;
+    }
+    public int getAddBufferSize()
+    {
+    	return addBuffer.size();
+    }
+    public int getRemoveBufferSize()
+    {
+    	return removeBuffer.size();
+    }
+    public int getCurrentThreadNumber()
+    {
+    	return currentThreadNumber;
+    }
     //Add to stack
     public void addAction(IEngineAction action)
     {
+    	
     	//Add action to buffer
-    	addBuffer.add(action);
+    	synchronized(addBuffer)
+    	{
+    		addBuffer.add(action);
+    	}
     }
     
     protected void modifyActionList()
@@ -65,17 +91,37 @@ public class Engine implements Runnable
     	{
     		return;
     	}
-    	//Add & remove actions from the buffer
-    	actions.removeAll(removeBuffer);
-    	actions.addAll(addBuffer);
+    	if(removeBuffer.size() !=  0)
+    	{
+    		synchronized(removeBuffer)
+    		{
+    			actions.removeAll(removeBuffer);
+        		removeBuffer =  new LinkedList<>();
+    		}
+    	}
     	
-    	//Clear the buffer
-    	removeBuffer =  new LinkedList<>();
-    	addBuffer = new LinkedList<>();
+    	if(addBuffer.size() != 0)
+    	{
+    		
+    		synchronized(addBuffer)
+    		{
+    			actions.addAll(addBuffer);
+            	addBuffer = new LinkedList<>();
+    		}
+    		
+    	}
+    	//Add & remove actions from the buffer
+
+    	currentThreadNumber = actions.size() / actionsToSplit + 1;
+    	
+    	if(currentThreadNumber > maxThreads)
+    	{
+    		currentThreadNumber = maxThreads;
+    	}
     	
     	//Check if it it needs to split the actions &
     	//if the maximum number of loops have been reached
-    	while((actions.size() / actionsToSplit + 1 > loops.size()) && (loops.size() < maxThreads))
+    	while((currentThreadNumber > loops.size()) && (loops.size() < maxThreads))
 		{
     		EngineLoop loop = new EngineLoop(removeBuffer);
     		loops.add(loop);
@@ -85,6 +131,8 @@ public class Engine implements Runnable
 		}
     	//Calculate the size of the sublists
     	subListSize = actions.size() / loops.size();
+    	
+    	
     }
     
     //Start engine loop
@@ -107,6 +155,7 @@ public class Engine implements Runnable
     //Update the game
     void update() throws InterruptedException
     {
+    	
     	//Get the time between frames
     	deltaTime = ( System.nanoTime() - time ) / 1000000.0f;
     	
@@ -133,21 +182,21 @@ public class Engine implements Runnable
     	
     	//Configure the engineLoops
     	Iterator<EngineLoop> loopIterator = loops.iterator();
-    	
     	int loopNumber = 0;
-    	while(loopIterator.hasNext())
+    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
     	{
     		EngineLoop loop = loopIterator.next();
-    		
     		//Slice the list of actions in smaller lists
     		//equal in size for the loops
     		if(loopNumber == 0)
     		{
-    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1)) );
+    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
+    			loop.setRemoveBuffer(removeBuffer);
     		}
     		else
     		{
-    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1)) );
+    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
+    			loop.setRemoveBuffer(removeBuffer);
     		}
     		loopNumber++;
     		
