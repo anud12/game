@@ -8,7 +8,9 @@ class EngineLoop extends Thread{
 	private List<IEngineAction> actions;
 	//Returning list of deleted actions
 	private List<IEngineAction> removeBuffer;
+	//Iterator used for navigating the list
 	private Iterator<IEngineAction>iterator;
+	//Time passed from the last loop
 	private float deltaTime;
 	//Endless loop check
 	private boolean exitLoop;

@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 
 import game.engine.IEngineAction;
 import game.library.Controllers.PawnController;
-import game.library.interfaces.IWorld;
+import game.library.world.IWorld;
 import game.util.ISerializableXML;
 
 public class Pawn extends Entity implements ISerializableXML{

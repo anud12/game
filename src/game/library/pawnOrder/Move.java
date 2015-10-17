@@ -30,8 +30,8 @@ public class Move implements IPawnOrder{
 			step = new Vector();
 			
 			//Calculate the direction
-			direction.setX(destination.getX() - pawn.getRectangle().getX());
-			direction.setY(destination.getY() - pawn.getRectangle().getY());
+			direction.setX(destination.getX() - pawn.getCenter().getX());
+			direction.setY(destination.getY() - pawn.getCenter().getY());
 			direction.normalize();
 		}
 		//Setters
@@ -40,8 +40,8 @@ public class Move implements IPawnOrder{
 			this.destination = destination;
 			
 			//Calculate the direction
-			direction.setX(destination.getX() - pawn.getRectangle().getX());
-			direction.setY(destination.getY() - pawn.getRectangle().getY());
+			direction.setX(destination.getX() - pawn.getCenter().getX());
+			direction.setY(destination.getY() - pawn.getCenter().getY());
 			direction.normalize();
 		}
 		
@@ -57,20 +57,14 @@ public class Move implements IPawnOrder{
 			//Check if the step is over the destination
 			if(pawn.getCenter().distance(this.destination) < step.getLength())
 			{
-				//Move directly on top
-				pawn.getRectangle().x = destination.x;
-				pawn.getRectangle().y = destination.y;
+				pawn.getRectangle().setLocation(destination);
+				
 			}
 			else
 			{
 				//Make the step
-				pawn.getRectangle().x += step.getX();
-				pawn.getRectangle().y += step.getY();
+				pawn.getRectangle().setLocation(pawn.getCenter().x + step.getX(), pawn.getCenter().y + step.getY());
 			}
-			//Artifact needed to be implemented in Entity
-			pawn.setCenter(pawn.getRectangle().x , pawn.getRectangle().y);
-			
-			
 		}
 
 		@Override

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import game.library.Entity;
-import game.library.interfaces.IWorld;
+import game.library.world.IWorld;
 
 public class ExperimentalWorld implements IWorld 
 {

@@ -8,10 +8,7 @@ import game.engine.Engine;
 import game.engine.IEngineAction;
 
 public class EngineQueueStressTest 
-{
-	
-	
-	
+{	
 	public static void main(String args[])
 	{
 		Engine engine = new Engine(100, 0);
@@ -30,7 +27,7 @@ public class EngineQueueStressTest
 		while(true)
 		{
 			boolean add = true;
-			if(i > 250)
+			if(i > 1)
 			{
 				System.out.print("Delta Time ");
 				System.out.print(engine.getDeltaTime());
@@ -45,7 +42,7 @@ public class EngineQueueStressTest
 				System.out.println();
 				i = 0;
 			}
-			if(engine.getActionsSize() > 10000)
+			if(engine.getActionsSize() > 1000000)
 			{
 				add = false;
 				try {
@@ -57,16 +54,17 @@ public class EngineQueueStressTest
 			}
 			if(add)
 			{
-				engine.addAction(new oneRunAction(random.nextInt((2000))));
+				engine.addAction(new oneRunAction(random.nextInt((15000))));
 			}
+			i++;
 			try {
-				Thread.sleep(0, 50000);
+				Thread.sleep(0, 1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			i++;
+			
 			
 		}
 	}

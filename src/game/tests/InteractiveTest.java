@@ -1,6 +1,7 @@
 package game.tests;
 
 import java.awt.geom.Point2D;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,9 +11,11 @@ import game.experimental.GLView;
 import game.experimental.TextInterface;
 import game.library.Entity;
 import game.library.Pawn;
-import game.library.interfaces.IWorld;
 import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
+import game.library.world.IWorld;
+import game.library.world.SectorGrid;
+
 import java.awt.Color;
 
 public class InteractiveTest 
@@ -59,7 +62,7 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		for(int i = 0 ; i < 1000000 ; i++)
+		for(int i = 0 ; i < 0 ; i++)
 		{
 			IWorld world2 = new ExperimentalWorld();
 			point = new Point2D.Float(-10,-10);
@@ -73,6 +76,10 @@ public class InteractiveTest
 		}
 		
 		executor.execute(gl);
-		//executor.execute(new GLView(world));
+		
+		SectorGrid grid = new SectorGrid(2,2, 12000);
+		
+		
+		executor.execute(new GLView(world, grid));
 	}
 }

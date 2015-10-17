@@ -35,21 +35,27 @@ public class Engine implements Runnable
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
     {
+    	//If actions is 0 make it infinite
     	if(actionsToSplit == 0)
     		this.actionsToSplit = Integer.MAX_VALUE;
     	else
     		this.actionsToSplit = actionsToSplit;
     	
+    	//If the number of threads is 0
+    	//query the OS with the number
+    	//of virtual processors available
     	if(maxThreads == 0)
         	this.maxThreads = Runtime.getRuntime().availableProcessors();
     	else
     		this.maxThreads = maxThreads; 	
     	
+    	//Initialize the lists
         actions = new LinkedList<IEngineAction>();
+        loops = new LinkedList<EngineLoop>();   
+        //Buffer lists
         addBuffer = new LinkedList<IEngineAction>();
         removeBuffer = new LinkedList<IEngineAction>();
-        
-        loops = new LinkedList<EngineLoop>();    
+         
     }
     
     //   Getters   //
@@ -76,7 +82,6 @@ public class Engine implements Runnable
     //Add to stack
     public void addAction(IEngineAction action)
     {
-    	
     	//Add action to buffer
     	synchronized(addBuffer)
     	{
@@ -84,36 +89,40 @@ public class Engine implements Runnable
     	}
     }
     
-    protected void modifyActionList()
+    protected void readFromBuffers()
     {
     	//Check if the buffer lists aren't empty
     	if(removeBuffer.size() ==  0  && addBuffer.size() == 0)
     	{
     		return;
     	}
+    	
+    	//Check if the remove Buffer is empty
     	if(removeBuffer.size() !=  0)
     	{
     		synchronized(removeBuffer)
     		{
     			actions.removeAll(removeBuffer);
+    			//Assign new buffer
         		removeBuffer =  new LinkedList<>();
     		}
     	}
     	
+    	//Check if the add Buffer is empty
     	if(addBuffer.size() != 0)
-    	{
-    		
+    	{	
     		synchronized(addBuffer)
     		{
     			actions.addAll(addBuffer);
+    			//Assign new buffer
             	addBuffer = new LinkedList<>();
-    		}
-    		
+    		}	
     	}
-    	//Add & remove actions from the buffer
-
+    	//Calculate the required number of threads
+    	//regardless of the limit
     	currentThreadNumber = actions.size() / actionsToSplit + 1;
     	
+    	//Trim the number
     	if(currentThreadNumber > maxThreads)
     	{
     		currentThreadNumber = maxThreads;
@@ -187,7 +196,7 @@ public class Engine implements Runnable
     	{
     		EngineLoop loop = loopIterator.next();
     		//Slice the list of actions in smaller lists
-    		//equal in size for the loops
+    		//equal in size for the loops and set the removeBuffer
     		if(loopNumber == 0)
     		{
     			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
@@ -216,9 +225,7 @@ public class Engine implements Runnable
     		}
     	}
     	
-    	
-    	// Asking if the loops are finished
-    	
+    	//Wait until the loops are finished
     	Iterator<EngineLoop> iterator = loops.iterator();
     	while(iterator.hasNext())
     	{
@@ -230,6 +237,6 @@ public class Engine implements Runnable
     		Thread.sleep(1);
     	}
     	//Modify the actions list with the queued changes
-    	modifyActionList();
+    	readFromBuffers();
     }
 }

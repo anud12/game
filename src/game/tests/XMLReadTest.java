@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 import game.experimental.ExperimentalWorld;
 import game.library.Entity;
 import game.library.Pawn;
-import game.library.interfaces.IWorld;
+import game.library.world.IWorld;
 
 public class XMLReadTest 
 {

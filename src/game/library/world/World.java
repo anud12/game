@@ -1,4 +1,4 @@
-package game.library;
+package game.library.world;
 
 import java.awt.Point;
 import java.util.ArrayList;

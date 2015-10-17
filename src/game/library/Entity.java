@@ -23,14 +23,15 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import game.library.interfaces.IWorld;
+import game.geom.classes.Rectangle;
+import game.library.world.IWorld;
 import game.util.ISerializableXML;
 
 public class Entity implements ISerializableXML
 {
 
     //Attributes:
-    private Rectangle2D.Float rectangle;
+    private Rectangle rectangle;
     private Point2D.Float center;
     private List<String> keywords;
     private IWorld world;
@@ -42,18 +43,23 @@ public class Entity implements ISerializableXML
     	world.addEntity(this);
     	this.world = world;
     	
-    	rectangle = new Rectangle2D.Float();
+    	rectangle = new Rectangle();
     	this.center = new Point2D.Float();
     	
     	readFromXML(element);
     }
     
-    public Entity(int width, int height, Point2D.Float origin, IWorld world)
+    public Entity(int width, int heigth, Point2D.Float origin, IWorld world)
     {
     	world.addEntity(this);
     	this.world = world;
     	
-    	rectangle = new Rectangle2D.Float();
+    	try {
+			rectangle = new Rectangle(heigth, width, origin.x , origin.y);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
     	rectangle.x = origin.x;
     	rectangle.y = origin.y;
@@ -61,7 +67,7 @@ public class Entity implements ISerializableXML
     	this.center = new Point2D.Float(origin.x,origin.y);
     	
     	rectangle.width = width;
-    	rectangle.height = height;
+    	rectangle.height = heigth;
     	this.keywords = new ArrayList<String>();
     	
     	color = Color.white;
@@ -79,11 +85,11 @@ public class Entity implements ISerializableXML
     	return color;
     }
     //get/set rectangle 
-    public Rectangle2D.Float getRectangle()
+    public Rectangle getRectangle()
     {
         return rectangle;
     }
-    public void setRectangle(Rectangle2D.Float rectangle)
+    public void setRectangle(Rectangle rectangle)
     {
         this.rectangle = rectangle;
     }
@@ -91,7 +97,7 @@ public class Entity implements ISerializableXML
     //gets the location of our entity
     public Point2D.Float getCenter()
     {
-    	return this.center;
+    	return rectangle.getCenter();
     }
     public void setCenter(float x , float y)
     {

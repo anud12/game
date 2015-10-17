@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 
 import game.experimental.ExperimentalWorld;
 import game.library.*;
-import game.library.interfaces.IWorld;
+import game.library.world.IWorld;
 import game.tests.*;
 
 public class XMLTest {
