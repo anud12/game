@@ -11,113 +11,73 @@ public class Rectangle extends java.awt.geom.Rectangle2D.Float{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected List<Triangle> InnerTriangles;
-	protected List<Point> points;
-	protected Point center;
+	protected List<PointF> points;
+	protected PointF center;
+	protected float area;
 	public Rectangle() 
 	{
 		super();
 		
-		InnerTriangles = new ArrayList<>();
 		
 		points = new ArrayList<>();
 	}
 	
-	public Rectangle(float height, float width, float x, float y) throws Exception
+	public Rectangle(float height, float width, float x, float y)
 	{
 		//Call super constructor
 		super(height, width, x, y);
 		
-		//Initialize lists
-		InnerTriangles = new ArrayList();
+		//Calculate the area
+		area = height * width;
+		
 		points = new ArrayList<>();
 		
 		//Calculate rectangle points
-		points.add(new Point(x + (height/2),y - (width/2)));
-		points.add(new Point(x + (height/2),y + (width/2)));
-		points.add(new Point(x - (height/2),y + (width/2)));
-		points.add(new Point(x - (height/2),y - (width/2)));
+		points.add(new PointF(x + (height/2),y - (width/2)));
+		points.add(new PointF(x + (height/2),y + (width/2)));
+		points.add(new PointF(x - (height/2),y + (width/2)));
+		points.add(new PointF(x - (height/2),y - (width/2)));
 		
 		//Set the center
-		center = new Point(x, y);
-		
-		//Initialize the array used to fill the rectangle
-		ArrayList<Point> trianglePoints = new ArrayList<>();
-		
-		//Creating a triangle//
-		//Add the points to the list
-		trianglePoints.add(points.get(0));
-		trianglePoints.add(points.get(1));
-		trianglePoints.add(center);
-		
-		//Add a new triangle with the points in the list
-		InnerTriangles.add(new Triangle(trianglePoints));
-		//Clear the list
-		trianglePoints = new ArrayList<>();
-		
-		
-		//Creating a triangle//
-		//Add the points to the list
-		trianglePoints.add(points.get(1));
-		trianglePoints.add(points.get(2));
-		trianglePoints.add(center);
-		
-		//Add a new triangle with the points in the list
-		InnerTriangles.add(new Triangle(trianglePoints));
-		//Clear the list
-		trianglePoints = new ArrayList<>();
-		
-		//Creating a triangle//
-		//Add the points to the list
-		trianglePoints.add(points.get(2));
-		trianglePoints.add(points.get(3));
-		trianglePoints.add(center);
-		
-		//Add a new triangle with the points in the list
-		InnerTriangles.add(new Triangle(trianglePoints));
-		//Clear the list
-		trianglePoints = new ArrayList<>();
-		
-		//Creating a triangle//
-		//Add the points to the list
-		trianglePoints.add(points.get(3));
-		trianglePoints.add(points.get(0));
-		trianglePoints.add(center);
-		
-		//Add a new triangle with the points in the list
-		InnerTriangles.add(new Triangle(trianglePoints));
-		
+		center = new PointF(x, y);
 	}
 	
 	public void setLocation(Point2D.Float point)
 	{
+		//Calls the simplified function
 		this.setLocation(point.x , point.y);
+	}
+	public void setLocation(double x, double y) {
+		//Calls the simplified function
+		this.setLocation((float)x , (float)y);
 	}
 	public void setLocation(float x, float y)
 	{
+		//Modify the center location
 		center.setLocation(x,y);
+		
+		//Calculate the points according
+		//to the new center
+		//TO REDO!
 		points.get(0).setLocation(center.x + (height/2),center.y - (width/2));
 		points.get(1).setLocation(center.x + (height/2),center.y + (width/2));
 		points.get(2).setLocation(center.x - (height/2),center.y + (width/2));
 		points.get(3).setLocation(center.x - (height/2),center.y - (width/2));
 	}
 	
-	public List<Triangle> getInnerTriangles()
-	{	
-		return InnerTriangles;
-	}
-	public Point getCenter()
+	public PointF getCenter()
 	{
 		return center;
 	}
-	public List<Point> getPoints()
+	public List<PointF> getPoints()
 	{
 		return points;
 	}
-
-	public void setLocation(double x, double y) {
-		this.setLocation((float)x , (float)y);
-		
+	public float getArea()
+	{
+		return height * width;
 	}
+
+	
 
 }

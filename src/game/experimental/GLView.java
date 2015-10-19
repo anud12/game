@@ -1,8 +1,10 @@
 package game.experimental;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.Iterator;
+import java.util.List;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -11,11 +13,13 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import game.geom.classes.Point;
+import game.geom.classes.PointF;
 import game.geom.classes.Triangle;
 import game.library.Entity;
 import game.library.world.IWorld;
+import game.library.world.Sector;
 import game.library.world.SquareCell;
+import game.library.world.TriangleCell;
 import game.library.world.SectorGrid;
 
 public class GLView implements Runnable{
@@ -23,7 +27,7 @@ public class GLView implements Runnable{
 	protected IWorld world;
 	protected Point2D.Float position;
 	
-	protected SectorGrid grid;
+	protected List<Sector> sectors;
 	
 	boolean clickedFirstRun = true;
 	boolean afterClickFirstRun = true;
@@ -40,11 +44,11 @@ public class GLView implements Runnable{
 	Point2D.Float previousPosition;
 	private boolean untilClickFirstRun = true;
 	
-	public GLView(IWorld world, SectorGrid grid)
+	public GLView(IWorld world, List<Sector> grid)
 	{
 		position = new Point2D.Float(0, 0);
 		this.world = world;
-		this.grid = grid;
+		this.sectors = grid;
 		
 		previousPosition = new Point2D.Float(position.x, position.y);
 	}
@@ -76,43 +80,42 @@ public class GLView implements Runnable{
 	        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);  
 	        
 	        // set the color of the quad (R,G,B,A)
-	       
-	        Iterator<Point> sectorCenter = grid.getList().iterator();
+	        Iterator<Sector> sectorsListIterator = sectors.iterator();
 	        
-	        while(sectorCenter.hasNext())
+	        while(sectorsListIterator.hasNext())
 	        {
-	        	try {
-					SquareCell cell = grid.getCell(sectorCenter.next());
-					
-					Iterator<Triangle> triangles = cell.getInnerTriangles().iterator();
-					
-					GL11.glColor3d(0, 0.2 , 0);
-					
-		        	while(triangles.hasNext())
+	        	Sector sector = sectorsListIterator.next();
+	        	Iterator<TriangleCell> sectorTriangles = sector.getList().iterator();
+		        while(sectorTriangles.hasNext())
+		        {
+		        	Triangle triangle = sectorTriangles.next();
+		        	Iterator<PointF> points = triangle.getPoints().iterator();
+		        	
+		        	Color color = sector.getColor();
+		        	
+		        	float red = color.getRed() / 255f;
+		        	float blue = color.getBlue() / 255f;
+		        	float green = color.getGreen() / 255f;
+		        	
+		        	red = red / 1f;
+		        	green = green / 1f;
+		        	blue = blue / 1f;
+		        	
+		        	GL11.glColor3d(red, green, blue);
+		        	
+		        	GL11.glBegin(GL11.GL_TRIANGLES);
+		        	//GL11.glBegin(GL11.GL_LINE_LOOP);
+		        	while(points.hasNext())
 		        	{
+		        		PointF point = points.next();
 		        		
-		        		Triangle triangle = triangles.next();
-		        		Iterator<Point> points = triangle.getPoints().iterator();
+		        		GL11.glVertex2f(
+			        			(point.x + position.x) * zoom ,
+			        			(point.y + position.y) * zoom);
 		        		
-		        		
-		        		
-		        		GL11.glBegin(GL11.GL_LINE_LOOP);
-		        		while(points.hasNext())
-		        		{
-		        			Point2D.Float point = points.next();
-			        		GL11.glVertex2f(
-				        			(point.x + position.x) * zoom ,
-				        			(point.y + position.y) * zoom);
-		        		}
-		        		GL11.glEnd();
 		        	}
-					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        	
-	        	
+		        	GL11.glEnd();
+		        }
 	        }
 	        
 	        Iterator<Entity> iterator = world.getIterator();
@@ -126,19 +129,17 @@ public class GLView implements Runnable{
 	        	
 	        	GL11.glColor3d(red, green, blue);
 	        	
-	        	Iterator<Triangle> triangles = ent.getRectangle().getInnerTriangles().iterator();
-	        	
 	        	GL11.glBegin(GL11.GL_POINTS);
         		GL11.glVertex2f((ent.getCenter().x  + position.x) * zoom, (ent.getCenter().y  + position.y)  * zoom);
         		GL11.glEnd();
 	        	
 	        	GL11.glBegin(GL11.GL_QUADS);
 	        	//GL11.glBegin(GL11.GL_LINE_LOOP);
-	        	Iterator<Point> points = ent.getRectangle().getPoints().iterator();
+	        	Iterator<PointF> points = ent.getRectangle().getPoints().iterator();
 	        	
 	        	while(points.hasNext())
 	        	{
-	        		Point point = points.next();
+	        		PointF point = points.next();
 	        		GL11.glVertex2f(
 		        			(point.x + position.x) * zoom ,
 		        			(point.y + position.y) * zoom);

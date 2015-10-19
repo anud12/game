@@ -1,6 +1,7 @@
 package game.tests;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,11 +10,14 @@ import game.engine.Engine;
 import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
 import game.experimental.TextInterface;
+import game.geom.classes.PointF;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
 import game.library.world.IWorld;
+import game.library.world.Sector;
+import game.library.world.SectorGeneratorAlgoritm;
 import game.library.world.SectorGrid;
 
 import java.awt.Color;
@@ -49,7 +53,7 @@ public class InteractiveTest
 		ent.setColor(new Color(139,69,19));
 		ent.addKeyword("resource");
 		
-		point = new Point2D.Float(10,30);
+		point = new Point2D.Float(0,0);
     	
     	pawn = new Pawn(10, 10, point, world);
     	pawn.setMovementSpeed(0.010f);
@@ -75,11 +79,19 @@ public class InteractiveTest
 			gl.addAction(pawn.getController());
 		}
 		
+		SectorGrid grid = new SectorGrid(30);
+		SectorGeneratorAlgoritm generator = new SectorGeneratorAlgoritm();
+		
+		ArrayList<Sector> sectors = new ArrayList();
+		
+		for(int i = 0 ; i < 100; i++)
+		sectors.add(generator.generate(grid, grid.getEmptySquare()));
+		
+		for(int i = 0 ; i < 960; i++)
+		sectors.add(generator.generate2(grid, grid.getEmptyTriangle()));
 		executor.execute(gl);
 		
-		SectorGrid grid = new SectorGrid(2,2, 12000);
 		
-		
-		executor.execute(new GLView(world, grid));
+		executor.execute(new GLView(world, sectors));
 	}
 }
