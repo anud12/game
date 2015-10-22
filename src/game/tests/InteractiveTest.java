@@ -3,6 +3,7 @@ package game.tests;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,7 +19,7 @@ import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
 import game.library.world.IWorld;
 import game.library.world.Sector;
-import game.library.world.SectorGeneratorAlgoritm;
+import game.library.world.DemoSectorGenerator;
 import game.library.world.SectorGrid;
 import game.library.world.SquareCell;
 
@@ -81,24 +82,39 @@ public class InteractiveTest
 			gl.addAction(pawn.getController());
 		}
 		
+		
 		SectorGrid grid = new SectorGrid(50);
-		SectorGeneratorAlgoritm generator = new SectorGeneratorAlgoritm();
+		DemoSectorGenerator generator = new DemoSectorGenerator();
 		
 		ArrayList<Sector> sectors = new ArrayList();
-		ArrayList squareList = new ArrayList<SquareCell>();
-		squareList.add(grid.getSquareByGrid(new PointI(0,0)));
 		
 		
 		executor.execute(gl);
 		executor.execute(new GLView(world, sectors));
-		
-		for(int i = 0 ; i < 50; i++)
+		Random rand = new Random();
+		for(int i = 0 ; i < 6000; i++)
 		{
 			synchronized(sectors)
 			{
-				sectors.add(generator.generate(grid));
+				switch(rand.nextInt(3))
+				{
+				case 0:
+					sectors.add(generator.generate(grid));
+					break;
+				case 1:
+					sectors.add(generator.generate2(grid));
+					break;
+				case 2:
+					sectors.add(generator.generate3(grid));
+					break;
+				}	
 			}
-			
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

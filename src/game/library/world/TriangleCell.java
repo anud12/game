@@ -12,7 +12,14 @@ public class TriangleCell extends Triangle {
 	public TriangleCell(List<PointF> points, SquareCell parent) throws Exception 
 	{
 		super(points);
+		
+		
 		this.parent = parent;
+	}
+	
+	public SquareCell getParent()
+	{
+		return parent;
 	}
 
 }

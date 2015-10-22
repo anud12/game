@@ -16,16 +16,15 @@ public class SquareCell extends Rectangle
 	protected TriangleCell topTriangle;
 	protected TriangleCell bottomTriangle;
 	
+	
 	public SquareCell(float height, float x, float y)
 	{
 		super(height, height, x, y);
+		calculateInnerTriangles();
 	}
 	
 	public List<TriangleCell> getInnerTrianglesCell()
-	{
-		if(innerTriangles == null)
-			calculateInnerTriangles();
-		
+	{		
 		return innerTriangles;
 	}
 	

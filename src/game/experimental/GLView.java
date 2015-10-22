@@ -99,9 +99,9 @@ public class GLView implements Runnable{
 			        	float blue = color.getBlue() / 255f;
 			        	float green = color.getGreen() / 255f;
 			        	
-			        	red = red / 0.7f;
-			        	green = green / 0.7f;
-			        	blue = blue / 0.7f;
+			        	red = red / 0.8f;
+			        	green = green / 0.8f;
+			        	blue = blue / 0.8f;
 			        	
 			        	GL11.glColor3d(red, green, blue);
 			        	
