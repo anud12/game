@@ -23,26 +23,32 @@ public class Move implements IPawnOrder{
 		public Move(Pawn pawn, Point2D.Float destination)
 		{
 			this.pawn = pawn;
-					
-			this.destination = destination;
 			
 			direction = new Vector();
 			step = new Vector();
 			
-			//Calculate the direction
-			direction.setX(destination.getX() - pawn.getCenter().getX());
-			direction.setY(destination.getY() - pawn.getCenter().getY());
-			direction.normalize();
+			setDestination(destination);
 		}
 		//Setters
 		public void setDestination(Point2D.Float destination)
-		{			
-			this.destination = destination;
+		{		
 			
-			//Calculate the direction
-			direction.setX(destination.getX() - pawn.getCenter().getX());
-			direction.setY(destination.getY() - pawn.getCenter().getY());
-			direction.normalize();
+			if(pawn.getCenter() != destination)
+			{
+				this.destination = destination;
+				//Calculate the direction
+				direction.setX(destination.getX() - pawn.getCenter().getX());
+				direction.setY(destination.getY() - pawn.getCenter().getY());
+				direction.normalize();
+			}
+			else
+			{
+				
+				direction.setX(0);
+				direction.setY(0);
+				System.out.println("NAN");
+			}
+			
 		}
 		
 		
@@ -50,6 +56,8 @@ public class Move implements IPawnOrder{
 		@Override
 		public void execute(double deltaTime) 
 		{
+			if(direction.getLength() == 0)
+				return;
 			//Calculate the next step to go towards  the destination
 			step.equal(direction);
 			step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
@@ -70,7 +78,7 @@ public class Move implements IPawnOrder{
 		@Override
 		public boolean isCompleted(IEngineAction action) {
 			
-			if(pawn.getCenter().distance(this.destination) == 0)
+			if(pawn.getCenter().distance(this.destination) == 0 || direction.getLength() == 0)
 				return true;
 			return false;
 		}

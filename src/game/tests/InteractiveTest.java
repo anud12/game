@@ -92,7 +92,7 @@ public class InteractiveTest
 		executor.execute(gl);
 		executor.execute(new GLView(world, sectors));
 		Random rand = new Random();
-		for(int i = 0 ; i < 6000; i++)
+		for(int i = 0 ; i < 60; i++)
 		{
 			synchronized(sectors)
 			{
@@ -110,7 +110,7 @@ public class InteractiveTest
 				}	
 			}
 			try {
-				Thread.sleep(0);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
