@@ -10,6 +10,12 @@ import game.geom.classes.Triangle;
 public class SquareCell extends Rectangle
 {
 	protected List<TriangleCell> innerTriangles;
+	
+	protected TriangleCell rightTriangle;
+	protected TriangleCell leftTriangle;
+	protected TriangleCell topTriangle;
+	protected TriangleCell bottomTriangle;
+	
 	public SquareCell(float height, float x, float y)
 	{
 		super(height, height, x, y);
@@ -21,6 +27,23 @@ public class SquareCell extends Rectangle
 			calculateInnerTriangles();
 		
 		return innerTriangles;
+	}
+	
+	public TriangleCell getTopTriangle()
+	{
+		return topTriangle;
+	}
+	public TriangleCell getBottomTriangle()
+	{
+		return bottomTriangle;
+	}
+	public TriangleCell getLeftTriangle()
+	{
+		return leftTriangle;
+	}
+	public TriangleCell getRightTriangle()
+	{
+		return rightTriangle;
 	}
 	
 	protected void calculateInnerTriangles()
@@ -35,12 +58,21 @@ public class SquareCell extends Rectangle
 		trianglePoints.add(points.get(1));
 		trianglePoints.add(center);
 		
+		try 
+		{
+			rightTriangle = new TriangleCell(trianglePoints, this);
+		} 
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
 		//Try used if there are less than
 		//3 points in trianglePoints list
 		try 
 		{
 			//Add a new triangle with the points in the list
-			innerTriangles.add(new TriangleCell(trianglePoints, this));
+			innerTriangles.add(rightTriangle);
 		} 
 		catch (Exception e) 
 		{
@@ -62,8 +94,19 @@ public class SquareCell extends Rectangle
 		//3 points in trianglePoints list
 		try 
 		{
+			bottomTriangle = new TriangleCell(trianglePoints, this);
+		} 
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
+		//Try used if there are less than
+		//3 points in trianglePoints list
+		try 
+		{
 			//Add a new triangle with the points in the list
-			innerTriangles.add(new TriangleCell(trianglePoints, this));
+			innerTriangles.add(bottomTriangle);
 		} 
 		catch (Exception e) 
 		{
@@ -83,8 +126,19 @@ public class SquareCell extends Rectangle
 		//3 points in trianglePoints list
 		try 
 		{
+			leftTriangle = new TriangleCell(trianglePoints, this);
+		} 
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
+		//Try used if there are less than
+		//3 points in trianglePoints list
+		try 
+		{
 			//Add a new triangle with the points in the list
-			innerTriangles.add(new TriangleCell(trianglePoints, this));
+			innerTriangles.add(leftTriangle);
 		} 
 		catch (Exception e) 
 		{
@@ -104,8 +158,19 @@ public class SquareCell extends Rectangle
 		//3 points in trianglePoints list
 		try 
 		{
+			topTriangle = new TriangleCell(trianglePoints, this);
+		} 
+		catch (Exception e1) 
+		{
+			e1.printStackTrace();
+		}
+		
+		//Try used if there are less than
+		//3 points in trianglePoints list
+		try 
+		{
 			//Add a new triangle with the points in the list
-			innerTriangles.add(new TriangleCell(trianglePoints, this));
+			innerTriangles.add(topTriangle);
 		} 
 		catch (Exception e) 
 		{

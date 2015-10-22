@@ -80,43 +80,47 @@ public class GLView implements Runnable{
 	        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);  
 	        
 	        // set the color of the quad (R,G,B,A)
-	        Iterator<Sector> sectorsListIterator = sectors.iterator();
-	        
-	        while(sectorsListIterator.hasNext())
+	        synchronized(sectors)
 	        {
-	        	Sector sector = sectorsListIterator.next();
-	        	Iterator<TriangleCell> sectorTriangles = sector.getList().iterator();
-		        while(sectorTriangles.hasNext())
+	        	Iterator<Sector> sectorsListIterator = sectors.iterator();
+		        
+		        while(sectorsListIterator.hasNext())
 		        {
-		        	Triangle triangle = sectorTriangles.next();
-		        	Iterator<PointF> points = triangle.getPoints().iterator();
-		        	
-		        	Color color = sector.getColor();
-		        	
-		        	float red = color.getRed() / 255f;
-		        	float blue = color.getBlue() / 255f;
-		        	float green = color.getGreen() / 255f;
-		        	
-		        	red = red / 1f;
-		        	green = green / 1f;
-		        	blue = blue / 1f;
-		        	
-		        	GL11.glColor3d(red, green, blue);
-		        	
-		        	GL11.glBegin(GL11.GL_TRIANGLES);
-		        	//GL11.glBegin(GL11.GL_LINE_LOOP);
-		        	while(points.hasNext())
-		        	{
-		        		PointF point = points.next();
-		        		
-		        		GL11.glVertex2f(
-			        			(point.x + position.x) * zoom ,
-			        			(point.y + position.y) * zoom);
-		        		
-		        	}
-		        	GL11.glEnd();
+		        	Sector sector = sectorsListIterator.next();
+		        	Iterator<TriangleCell> sectorTriangles = sector.getList().iterator();
+			        while(sectorTriangles.hasNext())
+			        {
+			        	Triangle triangle = sectorTriangles.next();
+			        	Iterator<PointF> points = triangle.getPoints().iterator();
+			        	
+			        	Color color = sector.getColor();
+			        	
+			        	float red = color.getRed() / 255f;
+			        	float blue = color.getBlue() / 255f;
+			        	float green = color.getGreen() / 255f;
+			        	
+			        	red = red / 0.7f;
+			        	green = green / 0.7f;
+			        	blue = blue / 0.7f;
+			        	
+			        	GL11.glColor3d(red, green, blue);
+			        	
+			        	//GL11.glBegin(GL11.GL_TRIANGLES);
+			        	GL11.glBegin(GL11.GL_LINE_LOOP);
+			        	while(points.hasNext())
+			        	{
+			        		PointF point = points.next();
+			        		
+			        		GL11.glVertex2f(
+				        			(point.x + position.x) * zoom ,
+				        			(point.y + position.y) * zoom);
+			        		
+			        	}
+			        	GL11.glEnd();
+			        }
 		        }
 	        }
+	        
 	        
 	        Iterator<Entity> iterator = world.getIterator();
 	        while(iterator.hasNext())

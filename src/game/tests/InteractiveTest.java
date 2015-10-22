@@ -11,6 +11,7 @@ import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
 import game.experimental.TextInterface;
 import game.geom.classes.PointF;
+import game.geom.classes.PointI;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.pawnOrder.Harvest;
@@ -19,6 +20,7 @@ import game.library.world.IWorld;
 import game.library.world.Sector;
 import game.library.world.SectorGeneratorAlgoritm;
 import game.library.world.SectorGrid;
+import game.library.world.SquareCell;
 
 import java.awt.Color;
 
@@ -79,19 +81,24 @@ public class InteractiveTest
 			gl.addAction(pawn.getController());
 		}
 		
-		SectorGrid grid = new SectorGrid(30);
+		SectorGrid grid = new SectorGrid(50);
 		SectorGeneratorAlgoritm generator = new SectorGeneratorAlgoritm();
 		
 		ArrayList<Sector> sectors = new ArrayList();
+		ArrayList squareList = new ArrayList<SquareCell>();
+		squareList.add(grid.getSquareByGrid(new PointI(0,0)));
 		
-		for(int i = 0 ; i < 100; i++)
-		sectors.add(generator.generate(grid, grid.getEmptySquare()));
 		
-		for(int i = 0 ; i < 960; i++)
-		sectors.add(generator.generate2(grid, grid.getEmptyTriangle()));
 		executor.execute(gl);
-		
-		
 		executor.execute(new GLView(world, sectors));
+		
+		for(int i = 0 ; i < 50; i++)
+		{
+			synchronized(sectors)
+			{
+				sectors.add(generator.generate(grid));
+			}
+			
+		}
 	}
 }

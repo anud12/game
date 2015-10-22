@@ -21,6 +21,14 @@ public class Sector
 		color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
 		
 	}
+	public Sector(Color color)
+	{
+		this.triangleList = new ArrayList<TriangleCell>();
+		
+		
+		this.color = color;
+		
+	}
 	public List<TriangleCell> getList()
 	{
 		return triangleList;
