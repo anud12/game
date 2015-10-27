@@ -18,10 +18,10 @@ import game.library.Pawn;
 import game.library.pawnOrder.Harvest;
 import game.library.pawnOrder.Move;
 import game.library.world.IWorld;
-import game.library.world.Sector;
-import game.library.world.DemoSectorGenerator;
-import game.library.world.SectorGrid;
-import game.library.world.SquareCell;
+import game.library.world.sector.Sector;
+import game.library.world.sector.SectorGrid;
+import game.library.world.sector.cell.SquareCell;
+import game.library.world.sector.generator.DemoSectorGenerator;
 
 import java.awt.Color;
 
@@ -88,33 +88,34 @@ public class InteractiveTest
 		
 		ArrayList<Sector> sectors = new ArrayList();
 		
-		
 		executor.execute(gl);
-		executor.execute(new GLView(world, sectors));
+		//executor.execute(new GLView(world, sectors));
+		
 		Random rand = new Random();
-		for(int i = 0 ; i < 60; i++)
+		int j = 0;
+		for(int i = 0 ; i < 100; i++)
 		{
 			synchronized(sectors)
 			{
-				switch(rand.nextInt(3))
+				
+				switch(rand.nextInt(1) + 0)
 				{
-				case 0:
-					sectors.add(generator.generate(grid));
-					break;
-				case 1:
-					sectors.add(generator.generate2(grid));
-					break;
-				case 2:
-					sectors.add(generator.generate3(grid));
-					break;
-				}	
+					case 0:
+					{
+						sectors.add(generator.generate(grid));
+						break;
+					}
+					
+				}
 			}
 			try {
-				Thread.sleep(100);
+				Thread.sleep(0,1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}
+		System.out.println("Done creating sectors");
 	}
 }

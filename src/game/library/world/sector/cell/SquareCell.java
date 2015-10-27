@@ -1,4 +1,4 @@
-package game.library.world;
+package game.library.world.sector.cell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
 import game.geom.classes.Triangle;
 
-public class SquareCell extends Rectangle
+public class SquareCell extends Rectangle implements Cell
 {
 	protected List<TriangleCell> innerTriangles;
 	

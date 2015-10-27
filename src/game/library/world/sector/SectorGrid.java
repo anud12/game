@@ -1,4 +1,4 @@
-package game.library.world;
+package game.library.world.sector;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +8,10 @@ import java.util.Set;
 import game.geom.classes.PointF;
 import game.geom.classes.PointI;
 import game.geom.classes.Triangle;
+import game.library.world.sector.cell.Cell;
+import game.library.world.sector.cell.SquareCell;
+import game.library.world.sector.cell.TriangleCell;
+import game.library.world.sector.cellSelector.CellSelector;
 
 public class SectorGrid {
 	
@@ -48,7 +52,7 @@ public class SectorGrid {
 			//Put triangle to occupied list
 			occupiedTriangle.put(triangle.getCenter(), triangle);
 			//Get parent square
-			SquareCell square = triangle.parent;
+			SquareCell square = triangle.getParent();
 			if(!occupiedSquare.containsKey(square.getCenter()))
 			{
 				//Put square to occupied list
@@ -71,7 +75,7 @@ public class SectorGrid {
 				//Put triangle to occupied list
 				occupiedTriangle.put(triangle.getCenter(), triangle);
 				//Get parent square
-				SquareCell square = triangle.parent;
+				SquareCell square = triangle.getParent();
 				if(!occupiedSquare.containsKey(square.getCenter()))
 				{
 					//Put square to occupied list
@@ -170,7 +174,7 @@ public class SectorGrid {
 	}
 	
 	//Get empty cells
-	public SquareCell getEmptySquare(Set<SquareCell> except)
+	public Cell getEmptySquare(Set<SquareCell> except)
 	{
 		//Check if this search will modify global
 		//parameters
@@ -411,173 +415,22 @@ public class SectorGrid {
 	}
 	
 	
-	public TriangleCell getEmptyTriangle()
-	{
-		//Set the boolean used to check
-		//if it has been found
-		boolean found = false;
-		
-		//Initialize the point
-		PointI point = new PointI(tesselatedTriangle,tesselatedTriangle);
-		
-		//Loop while the empty cell isn't found
-		while(!found)
-		{
-			
-			//Reset the location to the new size if applicable
-			point.x = tesselatedTriangle;
-			point.y = tesselatedTriangle;
-			
-			//Get the triangles from the squares
-			Iterator<TriangleCell> triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-			while(triangles.hasNext())
-			{
-				TriangleCell triangle = triangles.next();
-				///Check if it is in the used list
-				if(this.isTriangleFree(triangle))
-				{
-					return triangle;
-				}
-			}
-			
-			//Set the location to the negative mirror
-			point.x = -tesselatedTriangle;
-			point.y = -tesselatedTriangle;
-			
-			//Check if it is in the used list
-			//Get the triangles from the squares
-			triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-			while(triangles.hasNext())
-			{
-				TriangleCell triangle = triangles.next();
-				///Check if it is in the used list
-				if(this.isTriangleFree(triangle))
-				{
-					return triangle;
-				}
-			}
-			
-			//Calculate the outer ring size
-			//000
-			//0X0
-			//000
-			int maxSteps = (int) (tesselatedTriangle * 2 + 1);
-			
-			//Set the iterator to 0
-			int iter = 0;
-			while(!found && iter < maxSteps)
-			{
-				//Move to
-				//000
-				//000
-				//0X0
-				point.x = -tesselatedTriangle + iter;
-				point.y = -tesselatedTriangle;
-				
-				//Check if it is in the used list
-				//Get the triangles from the squares
-				triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-				while(triangles.hasNext())
-				{
-					TriangleCell triangle = triangles.next();
-					///Check if it is in the used list
-					if(this.isTriangleFree(triangle))
-					{
-						return triangle;
-					}
-				}
-				
-				//Move to
-				//000
-				//X00
-				//000
-				point.x = -tesselatedTriangle;
-				point.y = -tesselatedTriangle + iter;
-				
-				//Check if it is in the used list
-				triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-				while(triangles.hasNext())
-				{
-					TriangleCell triangle = triangles.next();
-					///Check if it is in the used list
-					if(this.isTriangleFree(triangle))
-					{
-						return triangle;
-					}
-				}
-				
-				//Move to
-				//0X0
-				//000
-				//000
-				point.x = tesselatedTriangle - iter;
-				point.y = tesselatedTriangle;
-			
-				//Check if it is in the used list
-				triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-				while(triangles.hasNext())
-				{
-					TriangleCell triangle = triangles.next();
-					///Check if it is in the used list
-					if(this.isTriangleFree(triangle))
-					{
-						return triangle;
-					}
-				}
-				//Move to
-				//000
-				//00X
-				//000
-				point.x = tesselatedTriangle;
-				point.y = tesselatedTriangle - iter;
-				
-				//Check if it is in the used list
-				triangles = this.getSquareByGrid(point).innerTriangles.iterator();
-				while(triangles.hasNext())
-				{
-					TriangleCell triangle = triangles.next();
-					///Check if it is in the used list
-					if(this.isTriangleFree(triangle))
-					{
-						return triangle;
-					}
-				}
-				
-				iter++;
-			}
-			//Increase the scope of the search
-			if(!found)
-			{
-				tesselatedTriangle++;
-			}
-		}
-		return null;
-	}
-	
-	//TODO: Untested function
-	public TriangleCell getEmptyTriangle(Set<TriangleCell> except)
+	public Cell getEmptySquare(Set<Cell> except, CellSelector selector)
 	{
 		//Check if this search will modify global
 		//parameters
 		//Get the current range
-		int range = tesselatedTriangle;
+		int range = tesselatedSquare;
 		//Set the boolean used to check
 		//if it has been found
 		boolean found = false;
 		
 		//Initialize the point
-		PointI point = new PointI(tesselatedTriangle,tesselatedTriangle);
+		PointI point = new PointI(tesselatedSquare,tesselatedSquare);
 		
 		//Loop while the empty cell isn't found
 		while(!found)
 		{
-			System.out.println("GRID->Except contains :");
-			Iterator<TriangleCell> iterator = except.iterator();
-			while(iterator.hasNext())
-			{
-				System.out.println(iterator.next());
-			}
-			
 			
 			//Reset the location to the new size if applicable
 			point.x = range;
@@ -585,18 +438,11 @@ public class SectorGrid {
 			
 			//Get the square
 			SquareCell square = getSquareByGrid(point);
-			
-			Iterator<TriangleCell> triangleIterator = square.getInnerTrianglesCell().iterator();
-			while(triangleIterator.hasNext())
+			//Check if it is in the used list
+			if(selector.isValid(square, except))
 			{
-				TriangleCell triangle = triangleIterator.next();
-				//Check if it is in the used list
-				if(isTriangleFree(triangle ) && !except.contains(triangle))
-				{
-					return triangle;
-				}
+				return selector.returnValue(square);
 			}
-			
 			
 			//Set the location to the negative mirror
 			point.x = -range;
@@ -604,16 +450,10 @@ public class SectorGrid {
 			
 			//Get the square
 			square = getSquareByGrid(point);
-
-			triangleIterator = square.getInnerTrianglesCell().iterator();
-			while(triangleIterator.hasNext())
+			//Check if it is in the used list
+			if(selector.isValid(square, except))
 			{
-				TriangleCell triangle = triangleIterator.next();
-				//Check if it is in the used list
-				if(isTriangleFree(triangle ) && !except.contains(triangle))
-				{
-					return triangle;
-				}
+				return selector.returnValue(square);
 			}
 			
 			//Calculate the outer ring size
@@ -635,15 +475,10 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				triangleIterator = square.getInnerTrianglesCell().iterator();
- 				while(triangleIterator.hasNext())
+				//Check if it is in the used list
+				if(selector.isValid(square, except))
 				{
-					TriangleCell triangle = triangleIterator.next();
-					//Check if it is in the used list
-					if(isTriangleFree(triangle ) && !except.contains(triangle))
-					{
-						return triangle;
-					}
+					return selector.returnValue(square);
 				}
 				//Move to
 				//000
@@ -654,15 +489,10 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				triangleIterator = square.getInnerTrianglesCell().iterator();
-				while(triangleIterator.hasNext())
+				//Check if it is in the used list
+				if(selector.isValid(square, except))
 				{
-					TriangleCell triangle = triangleIterator.next();
-					//Check if it is in the used list
-					if(isTriangleFree(triangle ) && !except.contains(triangle))
-					{
-						return triangle;
-					}
+					return selector.returnValue(square);
 				}
 				
 				//Move to
@@ -674,15 +504,10 @@ public class SectorGrid {
 			
 				//Get the square
 				square = getSquareByGrid(point);
-				triangleIterator = square.getInnerTrianglesCell().iterator();
-				while(triangleIterator.hasNext())
+				//Check if it is in the used list
+				if(selector.isValid(square, except))
 				{
-					TriangleCell triangle = triangleIterator.next();
-					//Check if it is in the used list
-					if(isTriangleFree(triangle ) && !except.contains(triangle))
-					{
-						return triangle;
-					}
+					return selector.returnValue(square);
 				}
 				//Move to
 				//000
@@ -693,15 +518,10 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				triangleIterator = square.getInnerTrianglesCell().iterator();
-				while(triangleIterator.hasNext())
+				//Check if it is in the used list
+				if(selector.isValid(square, except))
 				{
-					TriangleCell triangle = triangleIterator.next();
-					//Check if it is in the used list
-					if(isTriangleFree(triangle ) && !except.contains(triangle))
-					{
-						return triangle;
-					}
+					return selector.returnValue(square);
 				}
 				
 				offset++;
@@ -714,6 +534,4 @@ public class SectorGrid {
 		}
 		return null;
 	}
-
-	
 }

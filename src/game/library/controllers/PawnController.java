@@ -1,4 +1,4 @@
-package game.library.Controllers;
+package game.library.controllers;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package game.library.world;
+package game.library.world.sector;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import game.geom.classes.Triangle;
+import game.library.world.sector.cell.TriangleCell;
 
 public class Sector 
 {

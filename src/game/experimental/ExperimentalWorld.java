@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 import game.library.Entity;
 import game.library.world.IWorld;
-import game.library.world.SectorGrid;
+import game.library.world.sector.SectorGrid;
 
 public class ExperimentalWorld implements IWorld 
 {

@@ -17,10 +17,10 @@ import game.geom.classes.PointF;
 import game.geom.classes.Triangle;
 import game.library.Entity;
 import game.library.world.IWorld;
-import game.library.world.Sector;
-import game.library.world.SquareCell;
-import game.library.world.TriangleCell;
-import game.library.world.SectorGrid;
+import game.library.world.sector.Sector;
+import game.library.world.sector.SectorGrid;
+import game.library.world.sector.cell.SquareCell;
+import game.library.world.sector.cell.TriangleCell;
 
 public class GLView implements Runnable{
 	
