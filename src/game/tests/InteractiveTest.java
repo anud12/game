@@ -89,7 +89,7 @@ public class InteractiveTest
 		ArrayList<Sector> sectors = new ArrayList();
 		
 		executor.execute(gl);
-		//executor.execute(new GLView(world, sectors));
+		executor.execute(new GLView(world, sectors));
 		
 		Random rand = new Random();
 		int j = 0;
