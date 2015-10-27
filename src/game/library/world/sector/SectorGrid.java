@@ -173,8 +173,8 @@ public class SectorGrid {
 		return squareList.keySet();
 	}
 	
-	//Get empty cells
-	public Cell getEmptySquare(Set<SquareCell> except)
+	//Get square with properties defined by selector
+	public SquareCell getEmptyCell(Set<Cell> except, CellSelector selector)
 	{
 		//Check if this search will modify global
 		//parameters
@@ -197,248 +197,9 @@ public class SectorGrid {
 			
 			//Get the square
 			SquareCell square = getSquareByGrid(point);
-			//Check if it is in the used list
-			if(isSquareFree(square ) && !except.contains(square))
-			{
-				return square;
-			}
 			
-			//Set the location to the negative mirror
-			point.x = -range;
-			point.y = -range;
-			
-			//Get the square
-			square = getSquareByGrid(point);
-			//Check if it is in the used list
-			if(isSquareFree(square ) && !except.contains(square))
-			{
-				return square;
-			}
-			
-			//Calculate the outer ring size
-			//000
-			//0X0
-			//000
-			int maxSteps = (int) (range * 2 + 1);
-			
-			//Set the iterator to 0
-			int offset = 0;
-			while(!found && offset < maxSteps)
-			{
-				//Move to
-				//000
-				//000
-				//0X0
-				point.x = -range + offset;
-				point.y = -range;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ) && !except.contains(square))
-				{
-					return square;
-				}
-				//Move to
-				//000
-				//X00
-				//000
-				point.x = -range;
-				point.y = -range + offset;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ) && !except.contains(square))
-				{
-					return square;
-				}
-				
-				//Move to
-				//0X0
-				//000
-				//000
-				point.x = range - offset;
-				point.y = range;
-			
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ) && !except.contains(square))
-				{
-					return square;
-				}
-				//Move to
-				//000
-				//00X
-				//000
-				point.x = range;
-				point.y = range - offset;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ) && !except.contains(square))
-				{
-					return square;
-				}
-				
-				offset++;
-			}
-			//Increase the scope of the search
-			if(!found)
-			{
-				range++;
-			}
-		}
-		return null;
-	}
-	
-	public SquareCell getEmptySquare()
-	{
-		//Get the current range
-		int range = tesselatedSquare;
-		//Set the boolean used to check
-		//if it has been found
-		boolean found = false;
-		
-		//Initialize the point
-		PointI point = new PointI(tesselatedSquare,tesselatedSquare);
-		
-		//Loop while the empty cell isn't found
-		while(!found)
-		{
-			
-			//Reset the location to the new size if applicable
-			point.x = range;
-			point.y = range;
-			
-			//Get the square
-			SquareCell square = getSquareByGrid(point);
-			//Check if it is in the used list
-			if(isSquareFree(square ))
-			{
-				return square;
-			}
-			
-			//Set the location to the negative mirror
-			point.x = -range;
-			point.y = -range;
-			
-			//Get the square
-			square = getSquareByGrid(point);
-			//Check if it is in the used list
-			if(isSquareFree(square ))
-			{
-				return square;
-			}
-			
-			//Calculate the outer ring size
-			//000
-			//0X0
-			//000
-			int maxSteps = (int) (range * 2 + 1);
-			
-			//Set the iterator to 0
-			int offset = 0;
-			while(!found && offset < maxSteps)
-			{
-				//Move to
-				//000
-				//000
-				//0X0
-				point.x = -range + offset;
-				point.y = -range;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ))
-				{
-					return square;
-				}
-				
-				//Move to
-				//000
-				//X00
-				//000
-				point.x = -range;
-				point.y = -range + offset;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ))
-				{
-					return square;
-				}
-				
-				//Move to
-				//0X0
-				//000
-				//000
-				point.x = range - offset;
-				point.y = range;
-			
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ))
-				{
-					return square;
-				}
-				//Move to
-				//000
-				//00X
-				//000
-				point.x = range;
-				point.y = range - offset;
-				
-				//Get the square
-				square = getSquareByGrid(point);
-				//Check if it is in the used list
-				if(isSquareFree(square ))
-				{
-					return square;
-				}
-				
-				offset++;
-			}
-			//Increase the scope of the search
-			if(!found)
-			{
-				tesselatedSquare++;
-				range = tesselatedSquare;
-			}
-		}
-		return null;
-	}
-	
-	
-	public Cell getEmptySquare(Set<Cell> except, CellSelector selector)
-	{
-		//Check if this search will modify global
-		//parameters
-		//Get the current range
-		int range = tesselatedSquare;
-		//Set the boolean used to check
-		//if it has been found
-		boolean found = false;
-		
-		//Initialize the point
-		PointI point = new PointI(tesselatedSquare,tesselatedSquare);
-		
-		//Loop while the empty cell isn't found
-		while(!found)
-		{
-			
-			//Reset the location to the new size if applicable
-			point.x = range;
-			point.y = range;
-			
-			//Get the square
-			SquareCell square = getSquareByGrid(point);
-			//Check if it is in the used list
+			//Check if the square is valid according to
+			//the specified selection property
 			if(selector.isValid(square, except))
 			{
 				return selector.returnValue(square);
@@ -450,9 +211,12 @@ public class SectorGrid {
 			
 			//Get the square
 			square = getSquareByGrid(point);
-			//Check if it is in the used list
+			
+			//Check if the square is valid according to
+			//the specified selection property
 			if(selector.isValid(square, except))
 			{
+				//Return the square
 				return selector.returnValue(square);
 			}
 			
@@ -475,7 +239,9 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				//Check if it is in the used list
+				
+				//Check if the square is valid according to
+				//the specified selection property
 				if(selector.isValid(square, except))
 				{
 					return selector.returnValue(square);
@@ -489,7 +255,9 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				//Check if it is in the used list
+
+				//Check if the square is valid according to
+				//the specified selection property
 				if(selector.isValid(square, except))
 				{
 					return selector.returnValue(square);
@@ -504,7 +272,9 @@ public class SectorGrid {
 			
 				//Get the square
 				square = getSquareByGrid(point);
-				//Check if it is in the used list
+
+				//Check if the square is valid according to
+				//the specified selection property
 				if(selector.isValid(square, except))
 				{
 					return selector.returnValue(square);
@@ -518,7 +288,9 @@ public class SectorGrid {
 				
 				//Get the square
 				square = getSquareByGrid(point);
-				//Check if it is in the used list
+
+				//Check if the square is valid according to
+				//the specified selection property
 				if(selector.isValid(square, except))
 				{
 					return selector.returnValue(square);

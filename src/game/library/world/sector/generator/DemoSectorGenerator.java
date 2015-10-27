@@ -44,7 +44,7 @@ public class DemoSectorGenerator
 			//Get an empty square from the grid,
 			//except the ones that where tried before (located in squareList)
 			
-			SquareCell startSquare = (SquareCell) grid.getEmptySquare(squareList, CellSelector.leftTriangle(grid));
+			SquareCell startSquare = (SquareCell) grid.getEmptyCell(squareList, CellSelector.leftTriangle(grid));
 			
 			//Add the returned square in the list
 			squareList.add(startSquare);

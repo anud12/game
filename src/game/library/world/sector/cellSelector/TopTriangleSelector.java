@@ -11,7 +11,7 @@ class TopTriangleSelector extends CellSelector {
 		super(grid);
 	}
 	@Override
-	public Cell returnValue(SquareCell squareCell) {
+	public SquareCell returnValue(SquareCell squareCell) {
 		return squareCell;
 		
 	}

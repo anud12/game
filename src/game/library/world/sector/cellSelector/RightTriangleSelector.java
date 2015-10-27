@@ -14,7 +14,7 @@ class RightTriangleSelector extends CellSelector {
 	}
 
 	@Override
-	public Cell returnValue(SquareCell squareCell) {
+	public SquareCell returnValue(SquareCell squareCell) {
 		return squareCell;
 		
 	}
