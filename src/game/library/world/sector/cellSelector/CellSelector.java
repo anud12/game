@@ -72,7 +72,8 @@ public abstract class CellSelector
 	
 	//The range from which to search
 	protected int omogenRange; 
-		
+	//Remembers if the selector did not skip a cell
+	protected boolean hasSkipped;
 	//Constructor
 	public CellSelector(SectorGrid grid)
 	{
@@ -80,10 +81,10 @@ public abstract class CellSelector
 		omogenRange = 0;
 	}
 	//Setting the grid
-	public void setGrid(SectorGrid grid)
+	void setGrid(SectorGrid grid)
 	{
 		this.parentGrid = grid;
-		
+		this.hasSkipped = false;		
 	}
 	//Setting the omogenRange
 	public int getOmogenRange()
@@ -97,9 +98,12 @@ public abstract class CellSelector
 	public abstract SquareCell returnValue(SquareCell squareCell);
 	//The algorithm to search
 	public abstract boolean isValid(SquareCell squareCell, Set<Cell> except);
-	
-	
-	
-
+	public void updateOmogenRange()
+	{
+		if(!hasSkipped)
+		{
+			this.omogenRange++;
+		}
+	}
 	
 }

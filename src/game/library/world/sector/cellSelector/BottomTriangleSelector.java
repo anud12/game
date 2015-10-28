@@ -18,8 +18,17 @@ class BottomTriangleSelector extends CellSelector {
 	}
 	@Override
 	public boolean isValid(SquareCell squareCell, Set<Cell> except) {
-		if(parentGrid.isTriangleFree(squareCell.getBottomTriangle()) && !except.contains(squareCell))
-			return true;
+		if(parentGrid.isTriangleFree(squareCell.getBottomTriangle()))
+		{
+			if(!except.contains(squareCell))
+			{
+				return true;
+			}
+			else
+			{
+				this.hasSkipped = true;
+			}
+		}
 		return false;
 	}
 }

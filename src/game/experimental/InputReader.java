@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.swing.JTextField;
 
+import game.geom.classes.PointF;
 import game.library.Entity;
 import game.library.Pawn;
 import game.library.pawnOrder.Harvest;
@@ -56,7 +57,7 @@ public class InputReader extends KeyAdapter
 							float x = Float.parseFloat(text[1]);
 							float y = Float.parseFloat(text[2]);
 							
-							Point2D.Float point2d = new Point2D.Float(x, y);
+							PointF point2d = new PointF(x, y);
 							pawn.getController().setOrder(new Move(pawn, point2d));
 							field.setText("");
 						}
@@ -79,7 +80,7 @@ public class InputReader extends KeyAdapter
 							{
 								case "resource":
 								{
-									Entity ent = new Entity(2, 2, new Point2D.Float(x,y), world);
+									Entity ent = new Entity(2, 2, new PointF(x,y), world);
 									
 									ent.addKeyword("resource");
 									ent.setColor(new Color(139,69,19));
@@ -87,7 +88,7 @@ public class InputReader extends KeyAdapter
 								}
 								case "smallShip":
 								{
-									Pawn pawn = new Pawn(10, 10, new Point2D.Float(x,y), world);
+									Pawn pawn = new Pawn(10, 10, new PointF(x,y), world);
 							    	pawn.setMovementSpeed(0.010f);
 							    	pawn.setColor(Color.white);
 							    	
@@ -100,7 +101,7 @@ public class InputReader extends KeyAdapter
 								}
 								case "dropOff":
 								{
-							    	Pawn pawn = new Pawn(20, 20, new Point2D.Float(x,y), world);
+							    	Pawn pawn = new Pawn(20, 20, new PointF(x,y), world);
 							    	pawn.setMovementSpeed(0.005f);
 							    	pawn.addKeyword("dropOff");
 							    	pawn.setColor(Color.gray);

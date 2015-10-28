@@ -42,7 +42,7 @@ public class Rectangle extends java.awt.geom.Rectangle2D.Float{
 		center = new PointF(x, y);
 	}
 	
-	public void setLocation(Point2D.Float point)
+	public void setLocation(PointF point)
 	{
 		//Calls the simplified function
 		this.setLocation(point.x , point.y);

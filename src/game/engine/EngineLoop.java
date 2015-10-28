@@ -30,6 +30,7 @@ class EngineLoop extends Thread{
 	public void setActions(List<IEngineAction> actions)
 	{
 		this.actions = actions;
+		waiting = false;
 		iterator =  actions.iterator();
 	}
 	public void setRemoveBuffer(List<IEngineAction> removeBuffer)
@@ -64,7 +65,9 @@ class EngineLoop extends Thread{
 				{
 					try {
 							waiting = true;
-							monitor.wait();
+							
+								monitor.wait();
+							
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

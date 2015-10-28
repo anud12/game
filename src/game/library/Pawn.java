@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import game.engine.IEngineAction;
+import game.geom.classes.PointF;
 import game.library.controllers.PawnController;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
@@ -21,7 +22,7 @@ public class Pawn extends Entity implements ISerializableXML{
 	//Active Entity inteface
 	LinkedList<IEngineAction>actions;
 	
-	public Pawn(int width, int height, Point2D.Float origin, IWorld world) {
+	public Pawn(int width, int height, PointF origin, IWorld world) {
 		super(width, height, origin, world);
 		actions = new LinkedList<IEngineAction>();
 		

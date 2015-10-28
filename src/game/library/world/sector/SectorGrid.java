@@ -179,13 +179,13 @@ public class SectorGrid {
 		//Check if this search will modify global
 		//parameters
 		//Get the current range
-		int range = tesselatedSquare;
+		int range =0;
 		//Set the boolean used to check
 		//if it has been found
 		boolean found = false;
 		
 		//Initialize the point
-		PointI point = new PointI(tesselatedSquare,tesselatedSquare);
+		PointI point = new PointI(0,0);
 		
 		//Loop while the empty cell isn't found
 		while(!found)
@@ -297,6 +297,7 @@ public class SectorGrid {
 				}
 				
 				offset++;
+				selector.updateOmogenRange();
 			}
 			//Increase the scope of the search
 			if(!found)

@@ -23,6 +23,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
@@ -32,7 +33,7 @@ public class Entity implements ISerializableXML
 
     //Attributes:
     private Rectangle rectangle;
-    private Point2D.Float center;
+    private PointF center;
     private List<String> keywords;
     private IWorld world;
     protected Color color;
@@ -44,12 +45,12 @@ public class Entity implements ISerializableXML
     	this.world = world;
     	
     	rectangle = new Rectangle();
-    	this.center = new Point2D.Float();
+    	this.center = new PointF();
     	
     	readFromXML(element);
     }
     
-    public Entity(int width, int heigth, Point2D.Float origin, IWorld world)
+    public Entity(int width, int heigth, PointF origin, IWorld world)
     {
     	world.addEntity(this);
     	this.world = world;
@@ -64,7 +65,7 @@ public class Entity implements ISerializableXML
     	rectangle.x = origin.x;
     	rectangle.y = origin.y;
     	
-    	this.center = new Point2D.Float(origin.x,origin.y);
+    	this.center = new PointF(origin.x,origin.y);
     	
     	rectangle.width = width;
     	rectangle.height = heigth;
@@ -95,7 +96,7 @@ public class Entity implements ISerializableXML
     }
     
     //gets the location of our entity
-    public Point2D.Float getCenter()
+    public PointF getCenter()
     {
     	return rectangle.getCenter();
     }

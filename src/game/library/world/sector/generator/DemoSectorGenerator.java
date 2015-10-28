@@ -25,7 +25,7 @@ public class DemoSectorGenerator
 	public Sector generate(SectorGrid grid)
 	{
 		//Create sector with a random color or specified one
-		Sector sector = new Sector();
+		Sector sector = new Sector(Color.red);
 		
 		//Create set for already tested starting points for the region
 		Set<Cell> squareList = new LinkedHashSet<Cell>();
@@ -44,8 +44,8 @@ public class DemoSectorGenerator
 			//Get an empty square from the grid,
 			//except the ones that where tried before (located in squareList)
 			
-			SquareCell startSquare = (SquareCell) grid.getEmptyCell(squareList, CellSelector.leftTriangle(grid));
-			
+			SquareCell startSquare = grid.getEmptyCell(squareList, CellSelector.leftTriangle(grid));
+			System.out.println(startSquare.getCenter());
 			//Add the returned square in the list
 			squareList.add(startSquare);
 			

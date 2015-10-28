@@ -22,6 +22,7 @@ import game.library.world.sector.Sector;
 import game.library.world.sector.SectorGrid;
 import game.library.world.sector.cell.SquareCell;
 import game.library.world.sector.generator.DemoSectorGenerator;
+import game.library.world.sector.generator.SquareSectorGenerator;
 
 import java.awt.Color;
 
@@ -30,16 +31,16 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(250000, 8);
+		gl = new Engine(25000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
-		Point2D.Float point;
+		PointF point;
     	Pawn pawn;
     	TextInterface inter;
 		
-		point = new Point2D.Float(70,100);
+		point = new PointF(70,100);
     	
     	pawn = new Pawn(20, 20, point, world);
     	pawn.setMovementSpeed(0.005f);
@@ -52,11 +53,11 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		Entity ent = new Entity(2, 2, new Point2D.Float(50,20), world);
+		Entity ent = new Entity(2, 2, new PointF(50,20), world);
 		ent.setColor(new Color(139,69,19));
 		ent.addKeyword("resource");
 		
-		point = new Point2D.Float(0,0);
+		point = new PointF(0,0);
     	
     	pawn = new Pawn(10, 10, point, world);
     	pawn.setMovementSpeed(0.010f);
@@ -69,14 +70,14 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		for(int i = 0 ; i < 0 ; i++)
+		for(int i = 0 ; i < 100000 ; i++)
 		{
 			IWorld world2 = new ExperimentalWorld();
-			point = new Point2D.Float(-10,-10);
+			point = new PointF(-10,-10);
 	    	
 	    	pawn = new Pawn(10, 40, point, world2);
 	    	pawn.setMovementSpeed(0.00001f);
-	    	point = new Point2D.Float(Float.MAX_VALUE , Float.MAX_VALUE);
+	    	point = new PointF(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	pawn.getController().setOrder(new Move(pawn, point));
 	    	
 			gl.addAction(pawn.getController());
@@ -85,6 +86,7 @@ public class InteractiveTest
 		
 		SectorGrid grid = new SectorGrid(50);
 		DemoSectorGenerator generator = new DemoSectorGenerator();
+		SquareSectorGenerator squareGenerator = new SquareSectorGenerator();
 		
 		ArrayList<Sector> sectors = new ArrayList();
 		
@@ -93,23 +95,26 @@ public class InteractiveTest
 		
 		Random rand = new Random();
 		int j = 0;
-		for(int i = 0 ; i < 100; i++)
+		for(int i = 0 ; i < 500; i++)
 		{
 			synchronized(sectors)
 			{
 				
-				switch(rand.nextInt(1) + 0)
+				switch(rand.nextInt(2) + 0)
 				{
 					case 0:
 					{
 						sectors.add(generator.generate(grid));
 						break;
 					}
-					
+					case 1:
+					{
+						sectors.add(squareGenerator.generate(grid));
+					}
 				}
 			}
 			try {
-				Thread.sleep(0,1);
+				Thread.sleep(100,1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -117,5 +122,7 @@ public class InteractiveTest
 			
 		}
 		System.out.println("Done creating sectors");
+		
+		//EngineQueueStressTest.main(gl);
 	}
 }

@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import game.experimental.ExperimentalWorld;
+import game.geom.classes.PointF;
 import game.library.*;
 import game.library.world.IWorld;
 import game.tests.*;
@@ -42,8 +43,8 @@ public class XMLTest {
     	//Initializations
     	IWorld world = new ExperimentalWorld();
     	
-    	Entity ent = new Entity (0 , 0 , new Point2D.Float(0, 0), world);
-    	Pawn pawn = new Pawn(0 , 0 , new Point2D.Float(0, 0), world);
+    	Entity ent = new Entity (0 , 0 , new PointF(0, 0), world);
+    	Pawn pawn = new Pawn(0 , 0 , new PointF(0, 0), world);
     	pawn.setMovementSpeed(5);
     	
     	//Create root element

@@ -99,14 +99,14 @@ public class GLView implements Runnable{
 			        	float blue = color.getBlue() / 255f;
 			        	float green = color.getGreen() / 255f;
 			        	
-			        	red = red / 0.8f;
-			        	green = green / 0.8f;
-			        	blue = blue / 0.8f;
+			        	red = red / 4f;
+			        	green = green / 4f;
+			        	blue = blue / 4f;
 			        	
 			        	GL11.glColor3d(red, green, blue);
 			        	
-			        	//GL11.glBegin(GL11.GL_TRIANGLES);
-			        	GL11.glBegin(GL11.GL_LINE_LOOP);
+			        	GL11.glBegin(GL11.GL_TRIANGLES);
+			        	//GL11.glBegin(GL11.GL_LINE_LOOP);
 			        	while(points.hasNext())
 			        	{
 			        		PointF point = points.next();
@@ -130,6 +130,10 @@ public class GLView implements Runnable{
 	        	float red = ent.getColor().getRed() / 255f;
 	        	float blue = ent.getColor().getBlue() / 255f;
 	        	float green = ent.getColor().getGreen() / 255f;
+	        	
+	        	red = red / 0.5f;
+	        	green = green / 0.5f;
+	        	blue = blue / 0.5f;
 	        	
 	        	GL11.glColor3d(red, green, blue);
 	        	

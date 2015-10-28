@@ -9,18 +9,18 @@ import game.engine.IEngineAction;
 
 public class EngineQueueStressTest 
 {	
-	public static void main(String args[])
+	public static void main(Engine engine)
 	{
-		Engine engine = new Engine(100, 0);
+		//Engine engine = new Engine(100, 0);
 		
-		ExecutorService executor = Executors.newCachedThreadPool();
+		//ExecutorService executor = Executors.newCachedThreadPool();
 		
 		Random random = new Random();
 		random.setSeed(1);
 		
 		
 		
-		executor.execute(engine);
+		//executor.execute(engine);
 		
 		int i = 0;
 		
@@ -29,6 +29,7 @@ public class EngineQueueStressTest
 			boolean add = true;
 			if(i > 1)
 			{
+				/*
 				System.out.print("Delta Time ");
 				System.out.print(engine.getDeltaTime());
 				System.out.print(" actions: ");
@@ -40,9 +41,10 @@ public class EngineQueueStressTest
 				System.out.print(" threads: ");
 				System.out.print(engine.getCurrentThreadNumber());
 				System.out.println();
+				*/
 				i = 0;
 			}
-			if(engine.getActionsSize() > 1000000)
+			if(engine.getActionsSize() > 10000000)
 			{
 				add = false;
 				try {

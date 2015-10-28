@@ -11,25 +11,25 @@ public class Engine implements Runnable
     Iterator<IEngineAction> actionIterator;
     
     //Total time elapsed
-    long time;
-    float deltaTime;
+    private long time;
+    private float deltaTime;
     // MultiThread //
     
     //Number of actions when a new loop will be created
-    int actionsToSplit; 
+    private int actionsToSplit; 
     //Number of maximum running parallel loops
-    int maxThreads;
+    private int maxThreads;
     
-    int currentThreadNumber;
+    private int currentThreadNumber;
     //Size of the sublist to be sent
-    int subListSize;
+    private int subListSize;
     //List of loops running in parallel 
-    LinkedList<EngineLoop> loops;
+    private LinkedList<EngineLoop> loops;
     
     //Buffer list used in modifying  actions
     //in between the loop iterations
-    LinkedList<IEngineAction> addBuffer;
-    LinkedList<IEngineAction> removeBuffer;
+    private LinkedList<IEngineAction> addBuffer;
+    private LinkedList<IEngineAction> removeBuffer;
     
     
     //Initializations
@@ -189,6 +189,8 @@ public class Engine implements Runnable
     		}
     	}
     	
+    	
+    	
     	//Configure the engineLoops
     	Iterator<EngineLoop> loopIterator = loops.iterator();
     	int loopNumber = 0;
@@ -211,11 +213,11 @@ public class Engine implements Runnable
     		
     		//Set the deltaTime for the loop
     		loop.setDeltaTime(deltaTime);
+    		
+    		
     	}
-    	
+    	//Start the loop
     	loopIterator = loops.iterator();
-    	
-    	//Run the loops
     	while(loopIterator.hasNext())
     	{
     		EngineLoop loop = loopIterator.next();
