@@ -12,13 +12,13 @@ import game.library.interfaces.IPawnOrder;
 public class Move implements IPawnOrder{
 
 	//Variables
-		Pawn pawn;
-		PointF destination;
+		protected Pawn pawn;
+		protected PointF destination;
 		
-		IVector step;
-		IVector direction;
+		protected IVector step;
+		protected IVector direction;
 		
-		boolean completedPremature;
+		protected boolean completedPremature;
 		//Constructors
 		
 		public Move(Pawn pawn, PointF destination)
