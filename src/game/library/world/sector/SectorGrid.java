@@ -15,11 +15,11 @@ import game.library.world.sector.cellSelector.CellSelector;
 
 public class SectorGrid {
 	
+	//Size of the cell
 	protected float cellSize;
 	
-	//Size of the grid
-	protected int tesselatedSquare;
-	protected int tesselatedTriangle;
+	//Point [0,0]
+	protected PointF origin;
 	
 	//List to save the grid
 	protected HashMap<PointF, SquareCell> squareList;
@@ -33,15 +33,18 @@ public class SectorGrid {
 	}
 	
 	//Constructor
-	public SectorGrid(float cellSize)
+	public SectorGrid(float cellSize, PointF origin)
 	{
+		//Size of the cell
+		this.cellSize = cellSize;
+		//Point [0,0]
+		this.origin = origin;
+		
+		//List to save the grid
 		squareList = new HashMap<PointF, SquareCell>();
 		triangleList = new HashMap<PointF, Triangle>();
-		
 		occupiedTriangle = new HashMap<PointF, Triangle>();
 		occupiedSquare = new HashMap<PointF, SquareCell>();
-		
-		this.cellSize = cellSize;
 	}
 	
 	public void occupyTriangle(TriangleCell triangle)
@@ -100,26 +103,29 @@ public class SectorGrid {
 		occupiedSquare.put(square.getCenter(), square);
 		
 	}
+	// Check if the square is free //
+	public boolean isSquareFree(PointF point)
+	{
+		if(occupiedSquare.containsKey(point))
+			return false;
+		return true;
+	}
+	
 	public boolean isSquareFree(PointI point) {
 		return isSquareFree(point.x, point.y);
 	}
 	
 	public boolean isSquareFree(int x, int y)
 	{
-		PointF point = new PointF(x * cellSize, y * cellSize);
-		if(occupiedSquare.containsKey(point))
-			return false;
-		
-		return true;
+		PointF point = new PointF(x * cellSize + origin.x, y * cellSize + origin.y);
+		return isSquareFree(point);
 	}
 	public boolean isSquareFree(SquareCell square)
 	{
-		PointF point = square.getCenter();
-		if(occupiedSquare.containsKey(point))
-			return false;
-		
-		return true;
+		return isSquareFree(square.getCenter());
 	}
+	
+	
 	//  Get methods  //
 	//Square
 	public SquareCell getSquareByGrid(PointI gridLocation)
@@ -130,7 +136,7 @@ public class SectorGrid {
 	{
 		
 		//Transform from rows and columns to world position
-		PointF point = new PointF(x * cellSize, y * cellSize);
+		PointF point = new PointF(x * cellSize + origin.x, y * cellSize + origin.y);
 		
 		//Check if square exists
 		//If not create it
@@ -162,8 +168,8 @@ public class SectorGrid {
 		PointF center = square.getCenter();
 		PointI gridLocation = new PointI();
 		
-		gridLocation.x = (int) (center.x / cellSize);
-		gridLocation.y = (int) (center.y / cellSize);
+		gridLocation.x = (int) ((center.x  - origin.x)/ cellSize);
+		gridLocation.y = (int) ((center.y  - origin.y) / cellSize);
 		
 		return gridLocation;
 	}

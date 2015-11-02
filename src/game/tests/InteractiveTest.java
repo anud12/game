@@ -31,7 +31,7 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(25000, 8);
+		gl = new Engine(100, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -61,7 +61,7 @@ public class InteractiveTest
     	
     	pawn = new Pawn(10, 10, point, world);
     	pawn.setMovementSpeed(0.010f);
-    	pawn.getController().setOrder(new Harvest(pawn));
+    	pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
     	pawn.setColor(Color.white);
 		
 		inter = new TextInterface(pawn, executor);
@@ -84,18 +84,18 @@ public class InteractiveTest
 		}
 		
 		
-		SectorGrid grid = new SectorGrid(50);
+		SectorGrid grid = new SectorGrid(5, new PointF (0,0));
 		DemoSectorGenerator generator = new DemoSectorGenerator();
 		SquareSectorGenerator squareGenerator = new SquareSectorGenerator();
 		
-		ArrayList<Sector> sectors = new ArrayList();
+		ArrayList<Sector> sectors = new ArrayList<Sector>();
 		
 		executor.execute(gl);
 		executor.execute(new GLView(world, sectors));
 		
 		Random rand = new Random();
 		int j = 0;
-		for(int i = 0 ; i < 500; i++)
+		for(int i = 0 ; i < 10; i++)
 		{
 			synchronized(sectors)
 			{
@@ -113,13 +113,14 @@ public class InteractiveTest
 					}
 				}
 			}
+			/*
 			try {
 				Thread.sleep(100,1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			*/
 		}
 		System.out.println("Done creating sectors");
 		
