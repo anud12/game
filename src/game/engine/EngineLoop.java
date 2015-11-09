@@ -3,7 +3,7 @@ package game.engine;
 import java.util.Iterator;
 import java.util.List;
 
-class EngineLoop extends Thread{
+class EngineLoop implements Runnable{
 	//Action list
 	private List<IEngineAction> actions;
 	//Returning list of deleted actions
@@ -24,7 +24,6 @@ class EngineLoop extends Thread{
 		this.removeBuffer = removeBuffer;
 		exitLoop = false;
 		monitor = new Object();
-		this.setName("Main Engine");
 	}
 	
 	public void setActions(List<IEngineAction> actions)
@@ -58,21 +57,8 @@ class EngineLoop extends Thread{
 			//Liveness of the thread is maintained by
 			//this endless loop that can be killed by
 			//making it stop
-			do
 			{
 				//Wait until notified by the engine
-				if(this.getState() == Thread.State.RUNNABLE)
-				{
-					try {
-							waiting = true;
-							
-								monitor.wait();
-							
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 				synchronized(actions)
 				{
 					//Get iterator
@@ -105,7 +91,6 @@ class EngineLoop extends Thread{
 
 				}
 			}
-			while(!exitLoop);
 		}
 	}
 	

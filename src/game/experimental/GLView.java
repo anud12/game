@@ -105,8 +105,8 @@ public class GLView implements Runnable{
 			        	
 			        	GL11.glColor3d(red, green, blue);
 			        	
-			        	GL11.glBegin(GL11.GL_TRIANGLES);
-			        	//GL11.glBegin(GL11.GL_LINE_LOOP);
+			        	//GL11.glBegin(GL11.GL_TRIANGLES);
+			        	GL11.glBegin(GL11.GL_LINE_LOOP);
 			        	while(points.hasNext())
 			        	{
 			        		PointF point = points.next();
@@ -141,8 +141,8 @@ public class GLView implements Runnable{
         		GL11.glVertex2f((ent.getCenter().x  + position.x) * zoom, (ent.getCenter().y  + position.y)  * zoom);
         		GL11.glEnd();
 	        	
-	        	GL11.glBegin(GL11.GL_QUADS);
-	        	//GL11.glBegin(GL11.GL_LINE_LOOP);
+	        	//GL11.glBegin(GL11.GL_QUADS);
+	        	GL11.glBegin(GL11.GL_LINE_LOOP);
 	        	Iterator<PointF> points = ent.getRectangle().getPoints().iterator();
 	        	
 	        	while(points.hasNext())

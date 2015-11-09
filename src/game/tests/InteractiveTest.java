@@ -61,7 +61,8 @@ public class InteractiveTest
     	
     	pawn = new Pawn(10, 10, point, world);
     	pawn.setMovementSpeed(0.010f);
-    	pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
+    	//pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
+    	pawn.getController().setOrder(new Harvest(pawn));
     	pawn.setColor(Color.white);
 		
 		inter = new TextInterface(pawn, executor);
@@ -84,7 +85,7 @@ public class InteractiveTest
 		}
 		
 		
-		SectorGrid grid = new SectorGrid(5, new PointF (0,0));
+		SectorGrid grid = new SectorGrid(100, new PointF (0,0));
 		DemoSectorGenerator generator = new DemoSectorGenerator();
 		SquareSectorGenerator squareGenerator = new SquareSectorGenerator();
 		

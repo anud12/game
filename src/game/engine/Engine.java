@@ -2,6 +2,10 @@ package game.engine;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Engine implements Runnable
 {
@@ -25,6 +29,14 @@ public class Engine implements Runnable
     private int subListSize;
     //List of loops running in parallel 
     private LinkedList<EngineLoop> loops;
+    
+    //Utility to launch, cache
+    //and synchronize the threads
+    private ExecutorService executor;
+    
+    //List to keep the future states of 
+    //all the loops used for synchronization
+    private LinkedList<Future<EngineLoop>> futureList;
     
     //Buffer list used in modifying  actions
     //in between the loop iterations
@@ -55,7 +67,13 @@ public class Engine implements Runnable
         //Buffer lists
         addBuffer = new LinkedList<IEngineAction>();
         removeBuffer = new LinkedList<IEngineAction>();
-         
+        
+        //Utility to launch, cache
+        //and synchronize the threads
+        executor = Executors.newFixedThreadPool(maxThreads);
+        //List to keep the future states of 
+        //all the loops used for synchronization
+        futureList = new LinkedList<Future<EngineLoop>>();
     }
     
     //   Getters   //
@@ -135,13 +153,31 @@ public class Engine implements Runnable
     		EngineLoop loop = new EngineLoop(removeBuffer);
     		loops.add(loop);
     		
-    		loop.setName("Loop " + (loops.size() -1) );
-    		loop.start();
 		}
     	//Calculate the size of the sublists
     	subListSize = actions.size() / loops.size();
     	
-    	
+    	//Configure the engineLoops
+    	Iterator<EngineLoop> loopIterator = loops.iterator();
+    	int loopNumber = 0;
+    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
+    	{
+    		EngineLoop loop = loopIterator.next();
+    		//Slice the list of actions in smaller lists
+    		//equal in size for the loops and set the removeBuffer
+    		if(loopNumber == 0)
+    		{
+    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
+    			loop.setRemoveBuffer(removeBuffer);
+    			
+    		}
+    		else
+    		{
+    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
+    			loop.setRemoveBuffer(removeBuffer);
+    		}
+    		loopNumber++;
+    	}
     }
     
     //Start engine loop
@@ -161,7 +197,8 @@ public class Engine implements Runnable
     	}
     }
     
-    //Update the game
+    @SuppressWarnings("unchecked")
+	//Update the game
     void update() throws InterruptedException
     {
     	
@@ -189,54 +226,34 @@ public class Engine implements Runnable
     		}
     	}
     	
-    	
-    	
-    	//Configure the engineLoops
     	Iterator<EngineLoop> loopIterator = loops.iterator();
-    	int loopNumber = 0;
-    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
-    	{
-    		EngineLoop loop = loopIterator.next();
-    		//Slice the list of actions in smaller lists
-    		//equal in size for the loops and set the removeBuffer
-    		if(loopNumber == 0)
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
-    			loop.setRemoveBuffer(removeBuffer);
-    		}
-    		else
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
-    			loop.setRemoveBuffer(removeBuffer);
-    		}
-    		loopNumber++;
-    		
-    		//Set the deltaTime for the loop
-    		loop.setDeltaTime(deltaTime);
-    		
-    		
-    	}
-    	//Start the loop
-    	loopIterator = loops.iterator();
     	while(loopIterator.hasNext())
     	{
     		EngineLoop loop = loopIterator.next();
-    		synchronized(loop.monitor)
-    		{
-    			loop.monitor.notify();
-    		}
+    		//Set the deltaTime for the loop
+    		loop.setDeltaTime(deltaTime);
+    		
+    		//Start the loop and get 
+    		//the object in the finished state
+    		futureList.add((Future<EngineLoop>) executor.submit(loop));
     	}
+
     	
     	//Wait until the loops are finished
-    	Iterator<EngineLoop> iterator = loops.iterator();
+    	Iterator<Future<EngineLoop>> iterator = futureList.iterator();
     	while(iterator.hasNext())
     	{
-    		EngineLoop loop = iterator.next();
-    		while(!loop.isWaiting())
+    		Future<EngineLoop> loop = iterator.next();
+    		
+    		try 
     		{
-    			Thread.sleep(1);
-    		}
-    		Thread.sleep(1);
+    			//Wait until the loop is finished
+				loop.get();
+			} catch (ExecutionException e) 
+    		{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	//Modify the actions list with the queued changes
     	readFromBuffers();
