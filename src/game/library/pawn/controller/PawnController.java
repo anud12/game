@@ -1,10 +1,10 @@
-package game.library.controllers;
+package game.library.pawn.controller;
 
 import java.util.ArrayList;
 
 import game.engine.IEngineAction;
-import game.library.Pawn;
-import game.library.interfaces.IPawnOrder;
+import game.library.pawn.Pawn;
+import game.library.pawn.order.IPawnOrder;
 
 public class PawnController implements IEngineAction
 {

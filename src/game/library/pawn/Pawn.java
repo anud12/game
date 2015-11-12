@@ -1,4 +1,4 @@
-package game.library;
+package game.library.pawn;
 
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -10,7 +10,8 @@ import org.w3c.dom.Element;
 
 import game.engine.IEngineAction;
 import game.geom.classes.PointF;
-import game.library.controllers.PawnController;
+import game.library.Entity;
+import game.library.pawn.controller.PawnController;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
 

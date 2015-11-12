@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 import game.experimental.ExperimentalWorld;
 import game.library.Entity;
-import game.library.Pawn;
+import game.library.pawn.Pawn;
 import game.library.world.IWorld;
 
 public class XMLReadTest 

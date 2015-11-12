@@ -1,9 +1,8 @@
-package game.library.pawnOrder;
+package game.library.pawn.order;
 
 import game.engine.IEngineAction;
 import game.library.Entity;
-import game.library.Pawn;
-import game.library.interfaces.IPawnOrder;
+import game.library.pawn.Pawn;
 
 public class Harvest implements IPawnOrder 
 {

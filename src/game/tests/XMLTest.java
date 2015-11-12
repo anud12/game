@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 import game.experimental.ExperimentalWorld;
 import game.geom.classes.PointF;
 import game.library.*;
+import game.library.pawn.Pawn;
 import game.library.world.IWorld;
 import game.tests.*;
 

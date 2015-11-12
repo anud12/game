@@ -1,4 +1,4 @@
-package game.library.pawnOrder;
+package game.library.pawn.order;
 
 import java.awt.geom.Point2D;
 
@@ -6,8 +6,7 @@ import game.engine.IEngineAction;
 import game.geom.IVector;
 import game.geom.classes.PointF;
 import game.geom.classes.Vector;
-import game.library.Pawn;
-import game.library.interfaces.IPawnOrder;
+import game.library.pawn.Pawn;
 
 public class Move implements IPawnOrder{
 

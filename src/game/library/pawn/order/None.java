@@ -1,7 +1,6 @@
-package game.library.pawnOrder;
+package game.library.pawn.order;
 
 import game.engine.IEngineAction;
-import game.library.interfaces.IPawnOrder;
 
 public class None implements IPawnOrder
 {

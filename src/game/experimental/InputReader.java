@@ -10,10 +10,10 @@ import javax.swing.JTextField;
 
 import game.geom.classes.PointF;
 import game.library.Entity;
-import game.library.Pawn;
-import game.library.pawnOrder.Harvest;
-import game.library.pawnOrder.Move;
-import game.library.pawnOrder.None;
+import game.library.pawn.Pawn;
+import game.library.pawn.order.Harvest;
+import game.library.pawn.order.Move;
+import game.library.pawn.order.None;
 import game.library.world.IWorld;
 import game.tests.InteractiveTest;
 import javafx.scene.input.KeyCode;

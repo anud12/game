@@ -1,4 +1,4 @@
-package game.library.interfaces;
+package game.library.pawn.order;
 
 import game.engine.IEngineAction;
 

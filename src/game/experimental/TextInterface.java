@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.BoxLayout;
 
-import game.library.Pawn;
+import game.library.pawn.Pawn;
+
+import javax.swing.BoxLayout;
 
 public class TextInterface extends JFrame implements Runnable
 {
