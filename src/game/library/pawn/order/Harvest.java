@@ -40,7 +40,7 @@ public class Harvest extends PawnOrder
 		
 	}
 	@Override
-	public void execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) {
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
@@ -58,6 +58,7 @@ public class Harvest extends PawnOrder
 				move.execute(deltaTime);
 			}
 		}
+		return move;
 	}
 
 	@Override

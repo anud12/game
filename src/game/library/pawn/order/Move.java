@@ -1,7 +1,5 @@
 package game.library.pawn.order;
 
-import java.awt.geom.Point2D;
-
 import game.engine.IEngineAction;
 import game.geom.IVector;
 import game.geom.classes.PointF;
@@ -54,10 +52,10 @@ public class Move extends PawnOrder{
 		
 		//Functions from IGameLoop
 		@Override
-		public void execute(double deltaTime) 
+		public IEngineAction execute(double deltaTime) 
 		{
 			if(direction.getLength() == 0)
-				return;
+				return this;
 			//Calculate the next step to go towards  the destination
 			step.equal(direction);
 			step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
@@ -73,6 +71,8 @@ public class Move extends PawnOrder{
 				//Make the step
 				pawn.getRectangle().setLocation(pawn.getCenter().x + step.getX(), pawn.getCenter().y + step.getY());
 			}
+			
+			return this;
 		}
 
 		@Override

@@ -12,8 +12,6 @@ class EngineLoop implements Runnable{
 	private Iterator<IEngineAction>iterator;
 	//Time passed from the last loop
 	private float deltaTime;
-	//Endless loop check
-	private boolean exitLoop;
 	//If loop is completed
 	private boolean waiting;
 	//Object used to sleep and awake the loop
@@ -22,7 +20,6 @@ class EngineLoop implements Runnable{
 	public EngineLoop(List<IEngineAction> removeBuffer)
 	{
 		this.removeBuffer = removeBuffer;
-		exitLoop = false;
 		monitor = new Object();
 	}
 	
@@ -40,10 +37,6 @@ class EngineLoop implements Runnable{
 	public void setDeltaTime(float deltaTime)
 	{
 		this.deltaTime = deltaTime;
-	}
-	public void setExitLoop(boolean exitLoop)
-	{
-		this.exitLoop = exitLoop;
 	}
 	public synchronized boolean isWaiting()
 	{
@@ -71,14 +64,14 @@ class EngineLoop implements Runnable{
 						//Get iterator
 						IEngineAction action = iterator.next();
 						
-						//Execute current action
-						action.execute(deltaTime);
+						//Execute current action and grab the returned executed action
+						IEngineAction returnedAction = action.execute(deltaTime);
 						
-						if(action.isCompleted(action))
+						if(action.isCompleted(returnedAction))
 						{
-			            	action.onComplete(action);
+			            	action.onComplete(returnedAction);
 			            	
-			            	if(action.isRemovable(action))
+			            	if(action.isRemovable(returnedAction))
 			            	{
 			            		//Single access on removeBuffer
 			            		synchronized(removeBuffer)

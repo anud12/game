@@ -2,7 +2,6 @@ package game.experimental;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,8 +17,6 @@ import game.geom.classes.Triangle;
 import game.library.Entity;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
-import game.library.world.sector.SectorGrid;
-import game.library.world.sector.cell.SquareCell;
 import game.library.world.sector.cell.TriangleCell;
 
 public class GLView implements Runnable{

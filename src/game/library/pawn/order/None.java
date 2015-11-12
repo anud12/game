@@ -6,9 +6,9 @@ public class None extends PawnOrder
 {
 
 	@Override
-	public void execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) {
 		// TODO Auto-generated method stub
-		
+		return this;
 	}
 
 	@Override

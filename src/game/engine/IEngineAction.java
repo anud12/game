@@ -11,16 +11,17 @@ package game.engine;
  */
 public interface IEngineAction
 {
-	//To do each frame
-    public void execute(double deltaTime);
+	//To do each frame and return the action which
+	//has executed
+    public IEngineAction execute(double deltaTime);
     
     
-    //Check if its action is completed
-    public boolean isCompleted(IEngineAction action);
+    //Check if the action that returned from executed is completed
+    public boolean isCompleted(IEngineAction returnedAction);
     
     //Check if the action is removable from the action list
-    public boolean isRemovable(IEngineAction action);
+    public boolean isRemovable(IEngineAction returnedAction);
     
     //Actions to do when its completed
-    public void onComplete(IEngineAction action);
+    public void onComplete(IEngineAction returnedAction);
 }

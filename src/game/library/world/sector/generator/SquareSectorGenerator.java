@@ -24,7 +24,7 @@ public class SquareSectorGenerator {
 		
 		Set<Cell> except = new HashSet<>();
 		
-		List<TriangleCell> triangleList = new ArrayList();
+		List<TriangleCell> triangleList = new ArrayList<TriangleCell>();
 		
 		SquareCell square = null;
 		

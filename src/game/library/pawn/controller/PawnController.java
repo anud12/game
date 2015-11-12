@@ -4,17 +4,23 @@ import java.util.ArrayList;
 
 import game.engine.IEngineAction;
 import game.library.pawn.Pawn;
+import game.library.pawn.behaviour.Idle;
+import game.library.pawn.behaviour.PawnBehaviour;
 import game.library.pawn.order.PawnOrder;
 
 public class PawnController implements IEngineAction
 {
 	ArrayList<PawnOrder> orders;
 	Pawn pawn;
+	PawnBehaviour behaviour;
 	
 	public PawnController(Pawn pawn)
 	{
 		this.pawn = pawn;
 		orders = new ArrayList<PawnOrder>();
+		
+		//TODO:Delete
+		behaviour = new Idle();
 	}
 	//Setter Getters
 	
@@ -42,31 +48,30 @@ public class PawnController implements IEngineAction
 	}
 	//IGameLoop implementation
 	@Override
-	public void execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) {
 		if(orders.isEmpty())
-			return;
-		orders.get(0).execute(deltaTime);
+		{
+			return behaviour.execute(deltaTime);
+		}
+		return orders.get(0).execute(deltaTime);
 	}
 
 	@Override
-	public boolean isCompleted(IEngineAction action) {
-		if(orders.isEmpty())
-			return true;
-		return orders.get(0).isCompleted(action);
-		//return false;
+	public boolean isCompleted(IEngineAction returnedAction) {
+		return returnedAction.isCompleted(returnedAction);
 	}
 
 	@Override
-	public boolean isRemovable(IEngineAction action) {
+	public boolean isRemovable(IEngineAction returnedAction) {
 		return false;
 	}
 
 	@Override
-	public void onComplete(IEngineAction action) {
+	public void onComplete(IEngineAction returnedAction) {
 		if(orders.isEmpty())
 			return;
-		orders.get(0).onComplete(action);
-		if(orders.get(0).isRemovable(action))
+		orders.get(0).onComplete(returnedAction);
+		if(orders.get(0).isRemovable(returnedAction))
 		{
 			orders.remove(0);
 		}

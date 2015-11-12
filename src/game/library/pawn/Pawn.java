@@ -1,6 +1,5 @@
 package game.library.pawn;
 
-import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 import javax.management.modelmbean.XMLParseException;

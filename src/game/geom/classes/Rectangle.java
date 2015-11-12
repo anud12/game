@@ -1,6 +1,5 @@
 package game.geom.classes;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 

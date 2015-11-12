@@ -1,6 +1,5 @@
 package game.tests;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -31,7 +30,7 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(100, 8);
+		gl = new Engine(10000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -71,7 +70,7 @@ public class InteractiveTest
 		
 		gl.addAction(pawn.getController());
 		
-		for(int i = 0 ; i < 100000 ; i++)
+		for(int i = 0 ; i < 1000 ; i++)
 		{
 			IWorld world2 = new ExperimentalWorld();
 			point = new PointF(-10,-10);

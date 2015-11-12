@@ -12,8 +12,9 @@ public class oneRunAction implements IEngineAction
 		this.target = steps;		
 	}
 	@Override
-	public void execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) {
 		i++;
+		return this;
 	}
 
 	@Override

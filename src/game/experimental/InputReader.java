@@ -3,7 +3,6 @@ package game.experimental;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.concurrent.ExecutorService;
 
 import javax.swing.JTextField;
@@ -16,7 +15,6 @@ import game.library.pawn.order.Move;
 import game.library.pawn.order.None;
 import game.library.world.IWorld;
 import game.tests.InteractiveTest;
-import javafx.scene.input.KeyCode;
 
 public class InputReader extends KeyAdapter
 {
