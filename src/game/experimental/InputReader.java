@@ -10,7 +10,8 @@ import javax.swing.JTextField;
 import game.geom.classes.PointF;
 import game.library.Entity;
 import game.library.pawn.Pawn;
-import game.library.pawn.order.Harvest;
+import game.library.pawn.behaviour.Harvest;
+import game.library.pawn.behaviour.Idle;
 import game.library.pawn.order.Move;
 import game.library.pawn.order.None;
 import game.library.world.IWorld;
@@ -45,6 +46,7 @@ public class InputReader extends KeyAdapter
 					case "stop":
 					{
 						pawn.getController().setOrder(new None());
+						pawn.getController().setBehaviour(new Idle());
 						field.setText("");
 						break;
 					}
@@ -64,7 +66,7 @@ public class InputReader extends KeyAdapter
 					}
 					case "harvest":
 					{
-						pawn.getController().setOrder(new Harvest(pawn));
+						pawn.getController().setBehaviour(new Harvest(pawn));
 						field.setText("");
 						break;
 					}

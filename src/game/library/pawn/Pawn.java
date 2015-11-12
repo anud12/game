@@ -58,8 +58,6 @@ public class Pawn extends Entity implements ISerializableXML{
 		
 		super.appendDataToXML(doc, rootElement);
 		appendDataToXML(doc, rootElement);
-		
-		
 	}
 	
 	@Override
@@ -75,7 +73,5 @@ public class Pawn extends Entity implements ISerializableXML{
 		super.readFromXML(element);
 		this.movementSpeed = java.lang.Float.parseFloat( element.getElementsByTagName("movementSpeed").item(0).getTextContent());
 	}
-	
-	//GameLoop interaction
 	
 }

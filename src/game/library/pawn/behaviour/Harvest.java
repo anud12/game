@@ -1,10 +1,11 @@
-package game.library.pawn.order;
+package game.library.pawn.behaviour;
 
 import game.engine.IEngineAction;
 import game.library.Entity;
 import game.library.pawn.Pawn;
+import game.library.pawn.order.Move;
 
-public class Harvest extends PawnOrder 
+public class Harvest extends PawnBehaviour 
 {
 	protected Pawn pawn;
 	
@@ -17,7 +18,8 @@ public class Harvest extends PawnOrder
 	protected boolean hasDropOff;
 	protected boolean hasResource;
 	
-	public  Harvest (Pawn pawn){
+	public  Harvest (Pawn pawn)
+	{
 		this.pawn = pawn;
 		isLoaded = false;
 		
@@ -40,14 +42,15 @@ public class Harvest extends PawnOrder
 		
 	}
 	@Override
-	public IEngineAction execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) 
+	{
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
 			{
 				move.setDestination(resourceEntity.getCenter());
 				
-				move.execute(deltaTime);
+				return move.execute(deltaTime);
 			}
 		}
 		else
@@ -55,31 +58,33 @@ public class Harvest extends PawnOrder
 			if(hasResource)
 			{
 				move.setDestination(dropOffEntity.getCenter());
-				move.execute(deltaTime);
+				return move.execute(deltaTime);
 			}
 		}
-		return move;
-	}
-
-	@Override
-	public boolean isCompleted(IEngineAction action) {
-		return move.isCompleted(action);
-	}
-
-	@Override
-	public void onComplete(IEngineAction action) {
 		
+		return null;
+	}
+
+	@Override
+	public boolean isCompleted(IEngineAction returnedAction) 
+	{
+		return move.isCompleted(returnedAction);
+	}
+
+	@Override
+	public void onComplete(IEngineAction action) 
+	{
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
-			{				
+			{
 				move.setDestination(dropOffEntity.getCenter());
 			}
 		}
 		else
 		{
 			if(hasResource)
-			{				
+			{
 				move.setDestination(resourceEntity.getCenter());
 			}
 		}

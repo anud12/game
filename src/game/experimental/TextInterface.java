@@ -102,6 +102,10 @@ public class TextInterface extends JFrame implements Runnable
 			}
 			buffer.append("\n");
 			
+			buffer.append("->Behaviour = ");
+			buffer.append(target.getController().getBehaviour().toString());
+			buffer.append("\n");
+			
 			buffer.append("->Order size = ");
 			buffer.append(Integer.toString(target.getController().size()));
 			buffer.append("\n");

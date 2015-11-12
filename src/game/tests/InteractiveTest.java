@@ -14,7 +14,7 @@ import game.geom.classes.PointF;
 import game.geom.classes.PointI;
 import game.library.Entity;
 import game.library.pawn.Pawn;
-import game.library.pawn.order.Harvest;
+import game.library.pawn.behaviour.Harvest;
 import game.library.pawn.order.Move;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
@@ -61,7 +61,7 @@ public class InteractiveTest
     	pawn = new Pawn(10, 10, point, world);
     	pawn.setMovementSpeed(0.010f);
     	//pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
-    	pawn.getController().setOrder(new Harvest(pawn));
+    	pawn.getController().setBehaviour(new Harvest(pawn));
     	pawn.setColor(Color.white);
 		
 		inter = new TextInterface(pawn, executor);

@@ -35,11 +35,21 @@ public class PawnController implements IEngineAction
 		orders.clear();
 		orders.add(order);
 	}
+	
 	public PawnOrder getFirst()
 	{
 		if(orders.isEmpty())
 			return null;
 		return orders.get(0);
+	}
+	
+	public PawnBehaviour getBehaviour()
+	{
+		return  behaviour;
+	}
+	public void setBehaviour(PawnBehaviour behaviour)
+	{
+		this.behaviour = behaviour;
 	}
 	
 	public int size()
@@ -48,28 +58,42 @@ public class PawnController implements IEngineAction
 	}
 	//IGameLoop implementation
 	@Override
-	public IEngineAction execute(double deltaTime) {
+	public IEngineAction execute(double deltaTime) 
+	{
 		if(orders.isEmpty())
 		{
-			return behaviour.execute(deltaTime);
+			behaviour.execute(deltaTime);
+			return behaviour;
 		}
 		return orders.get(0).execute(deltaTime);
 	}
 
 	@Override
-	public boolean isCompleted(IEngineAction returnedAction) {
+	public boolean isCompleted(IEngineAction returnedAction) 
+	{
+		if(returnedAction.equals(behaviour))
+		{
+			return behaviour.isCompleted(returnedAction);
+		}
+			
 		return returnedAction.isCompleted(returnedAction);
 	}
 
 	@Override
-	public boolean isRemovable(IEngineAction returnedAction) {
+	public boolean isRemovable(IEngineAction returnedAction) 
+	{
 		return false;
 	}
 
 	@Override
-	public void onComplete(IEngineAction returnedAction) {
-		if(orders.isEmpty())
+	public void onComplete(IEngineAction returnedAction) 
+	{
+		if(returnedAction.equals(behaviour))
+		{
+			returnedAction.onComplete(returnedAction);
 			return;
+		}
+	
 		orders.get(0).onComplete(returnedAction);
 		if(orders.get(0).isRemovable(returnedAction))
 		{
