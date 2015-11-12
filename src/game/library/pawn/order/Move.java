@@ -8,7 +8,7 @@ import game.geom.classes.PointF;
 import game.geom.classes.Vector;
 import game.library.pawn.Pawn;
 
-public class Move implements IPawnOrder{
+public class Move extends PawnOrder{
 
 	//Variables
 		protected Pawn pawn;
@@ -88,9 +88,5 @@ public class Move implements IPawnOrder{
 			
 		}
 
-		@Override
-		public boolean isRemovable(IEngineAction action) {
-			return true;
-		}
 
 }

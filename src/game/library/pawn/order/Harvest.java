@@ -4,7 +4,7 @@ import game.engine.IEngineAction;
 import game.library.Entity;
 import game.library.pawn.Pawn;
 
-public class Harvest implements IPawnOrder 
+public class Harvest extends PawnOrder 
 {
 	protected Pawn pawn;
 	
@@ -63,12 +63,6 @@ public class Harvest implements IPawnOrder
 	@Override
 	public boolean isCompleted(IEngineAction action) {
 		return move.isCompleted(action);
-	}
-
-	@Override
-	public boolean isRemovable(IEngineAction action) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

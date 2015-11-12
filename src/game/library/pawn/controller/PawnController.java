@@ -4,32 +4,32 @@ import java.util.ArrayList;
 
 import game.engine.IEngineAction;
 import game.library.pawn.Pawn;
-import game.library.pawn.order.IPawnOrder;
+import game.library.pawn.order.PawnOrder;
 
 public class PawnController implements IEngineAction
 {
-	ArrayList<IPawnOrder> orders;
+	ArrayList<PawnOrder> orders;
 	Pawn pawn;
 	
 	public PawnController(Pawn pawn)
 	{
 		this.pawn = pawn;
-		orders = new ArrayList<IPawnOrder>();
+		orders = new ArrayList<PawnOrder>();
 	}
 	//Setter Getters
 	
 	
-	public void queueOrder(IPawnOrder order)
+	public void queueOrder(PawnOrder order)
 	{
 		orders.add(order);
 	}
 	
-	public void setOrder (IPawnOrder order)
+	public void setOrder (PawnOrder order)
 	{
 		orders.clear();
 		orders.add(order);
 	}
-	public IPawnOrder getFirst()
+	public PawnOrder getFirst()
 	{
 		if(orders.isEmpty())
 			return null;
