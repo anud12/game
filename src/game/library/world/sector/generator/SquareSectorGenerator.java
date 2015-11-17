@@ -20,7 +20,7 @@ public class SquareSectorGenerator {
 
 	public Sector generate(SectorGrid grid)
 	{
-		Sector sector = new Sector(Color.CYAN);
+		Sector sector = new Sector(Color.white);
 		
 		Set<Cell> except = new HashSet<>();
 		
@@ -40,6 +40,7 @@ public class SquareSectorGenerator {
 			PointI origin = grid.getGridCoordinate(square);
 			
 			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getLeftTriangle());
+			
 			
 			triangleList.add(grid.getSquareByGrid(origin.x - 1, origin.y).getRightTriangle());
 			triangleList.add(grid.getSquareByGrid(origin.x - 1, origin.y).getTopTriangle());

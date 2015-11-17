@@ -1,6 +1,5 @@
 package game.library.world;
 
-import java.awt.geom.Point2D;
 import java.util.Iterator;
 
 import game.library.Entity;

@@ -185,7 +185,7 @@ public class SectorGrid {
 		//Check if this search will modify global
 		//parameters
 		//Get the current range
-		int range =0;
+		int range = selector.getOmogenRange();
 		//Set the boolean used to check
 		//if it has been found
 		boolean found = false;
