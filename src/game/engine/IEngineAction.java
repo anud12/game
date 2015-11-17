@@ -11,10 +11,12 @@ package game.engine;
  */
 public interface IEngineAction
 {
+	//To calculate the execution based on time between the frames
+	public void plan(double deltaTime);
+	
 	//To do each frame and return the action which
 	//has executed
-    public IEngineAction execute(double deltaTime);
-    
+    public IEngineAction execute();
     
     //Check if the action that returned from executed is completed
     public boolean isCompleted(IEngineAction returnedAction);

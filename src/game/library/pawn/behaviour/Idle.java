@@ -5,7 +5,13 @@ import game.engine.IEngineAction;
 public class Idle extends PawnBehaviour{
 
 	@Override
-	public IEngineAction execute(double deltaTime) 
+	public void plan(double deltaTime) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public IEngineAction execute() 
 	{
 		return this;
 	}
@@ -22,4 +28,5 @@ public class Idle extends PawnBehaviour{
 		
 	}
 
+	
 }

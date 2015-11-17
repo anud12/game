@@ -20,7 +20,7 @@ public class SquareSectorGenerator {
 
 	public Sector generate(SectorGrid grid)
 	{
-		Sector sector = new Sector(Color.white);
+		Sector sector = new Sector();
 		
 		Set<Cell> except = new HashSet<>();
 		

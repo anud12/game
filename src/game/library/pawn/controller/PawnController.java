@@ -58,14 +58,23 @@ public class PawnController implements IEngineAction
 	}
 	//IGameLoop implementation
 	@Override
-	public IEngineAction execute(double deltaTime) 
+	public void plan(double deltaTime) {
+		if(orders.isEmpty())
+		{
+			behaviour.plan(deltaTime);
+			return;
+		}
+		orders.get(0).plan(deltaTime);
+	}
+	@Override
+	public IEngineAction execute() 
 	{
 		if(orders.isEmpty())
 		{
-			behaviour.execute(deltaTime);
+			behaviour.execute();
 			return behaviour;
 		}
-		return orders.get(0).execute(deltaTime);
+		return orders.get(0).execute();
 	}
 
 	@Override
@@ -100,4 +109,7 @@ public class PawnController implements IEngineAction
 			orders.remove(0);
 		}
 	}
+
+
+	
 }

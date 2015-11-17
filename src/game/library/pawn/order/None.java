@@ -6,7 +6,7 @@ public class None extends PawnOrder
 {
 
 	@Override
-	public IEngineAction execute(double deltaTime) {
+	public IEngineAction execute() {
 		// TODO Auto-generated method stub
 		return this;
 	}
@@ -19,6 +19,12 @@ public class None extends PawnOrder
 
 	@Override
 	public void onComplete(IEngineAction action) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void plan(double deltaTime) {
 		// TODO Auto-generated method stub
 		
 	}

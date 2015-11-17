@@ -28,7 +28,7 @@ public class Engine implements Runnable
     //Size of the sublist to be sent
     private int subListSize;
     //List of loops running in parallel 
-    private LinkedList<EngineLoop> loops;
+    private LinkedList<ActionLoop> loops;
     
     //Utility to launch, cache
     //and synchronize the threads
@@ -36,7 +36,7 @@ public class Engine implements Runnable
     
     //List to keep the future states of 
     //all the loops used for synchronization
-    private LinkedList<Future<EngineLoop>> futureList;
+    private LinkedList<Future<ActionLoop>> futureList;
     
     //Buffer list used in modifying  actions
     //in between the loop iterations
@@ -63,7 +63,7 @@ public class Engine implements Runnable
     	
     	//Initialize the lists
         actions = new LinkedList<IEngineAction>();
-        loops = new LinkedList<EngineLoop>();   
+        loops = new LinkedList<ActionLoop>();   
         //Buffer lists
         addBuffer = new LinkedList<IEngineAction>();
         removeBuffer = new LinkedList<IEngineAction>();
@@ -73,7 +73,7 @@ public class Engine implements Runnable
         executor = Executors.newFixedThreadPool(maxThreads);
         //List to keep the future states of 
         //all the loops used for synchronization
-        futureList = new LinkedList<Future<EngineLoop>>();
+        futureList = new LinkedList<Future<ActionLoop>>();
     }
     
     //   Getters   //
@@ -106,80 +106,7 @@ public class Engine implements Runnable
     		addBuffer.add(action);
     	}
     }
-    
-    protected void readFromBuffers()
-    {
-    	//Check if the buffer lists aren't empty
-    	if(removeBuffer.size() ==  0  && addBuffer.size() == 0)
-    	{
-    		return;
-    	}
-    	
-    	//Check if the remove Buffer is empty
-    	if(removeBuffer.size() !=  0)
-    	{
-    		synchronized(removeBuffer)
-    		{
-    			actions.removeAll(removeBuffer);
-    			//Assign new buffer
-        		removeBuffer =  new LinkedList<>();
-    		}
-    	}
-    	
-    	//Check if the add Buffer is empty
-    	if(addBuffer.size() != 0)
-    	{	
-    		synchronized(addBuffer)
-    		{
-    			actions.addAll(addBuffer);
-    			//Assign new buffer
-            	addBuffer = new LinkedList<>();
-    		}	
-    	}
-    	//Calculate the required number of threads
-    	//regardless of the limit
-    	currentThreadNumber = actions.size() / actionsToSplit + 1;
-    	
-    	//Trim the number
-    	if(currentThreadNumber > maxThreads)
-    	{
-    		currentThreadNumber = maxThreads;
-    	}
-    	
-    	//Check if it it needs to split the actions &
-    	//if the maximum number of loops have been reached
-    	while((currentThreadNumber > loops.size()) && (loops.size() < maxThreads))
-		{
-    		EngineLoop loop = new EngineLoop(removeBuffer);
-    		loops.add(loop);
-    		
-		}
-    	//Calculate the size of the sublists
-    	subListSize = actions.size() / loops.size();
-    	
-    	//Configure the engineLoops
-    	Iterator<EngineLoop> loopIterator = loops.iterator();
-    	int loopNumber = 0;
-    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
-    	{
-    		EngineLoop loop = loopIterator.next();
-    		//Slice the list of actions in smaller lists
-    		//equal in size for the loops and set the removeBuffer
-    		if(loopNumber == 0)
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
-    			loop.setRemoveBuffer(removeBuffer);
-    			
-    		}
-    		else
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
-    			loop.setRemoveBuffer(removeBuffer);
-    		}
-    		loopNumber++;
-    	}
-    }
-    
+     
     //Start engine loop
     @Override
 	public void run()  
@@ -226,24 +153,49 @@ public class Engine implements Runnable
     		}
     	}
     	
-    	Iterator<EngineLoop> loopIterator = loops.iterator();
+    	
+    	Iterator<ActionLoop> loopIterator = loops.iterator();
     	while(loopIterator.hasNext())
     	{
-    		EngineLoop loop = loopIterator.next();
+    		ActionLoop loop = loopIterator.next();
     		//Set the deltaTime for the loop
     		loop.setDeltaTime(deltaTime);
-    		
+    		//Set the loop to plan the actions
+    		loop.setToPlanning();
     		//Start the loop and get 
     		//the object in the finished state
-    		futureList.add((Future<EngineLoop>) executor.submit(loop));
+    		futureList.add((Future<ActionLoop>) executor.submit(loop));
     	}
-
+    	//Wait until the loops are finished
+    	waitForLoops();
+    	
+    	loopIterator = loops.iterator();
+    	while(loopIterator.hasNext())
+    	{
+    		ActionLoop loop = loopIterator.next();
+    		//Set the deltaTime for the loop
+    		loop.setDeltaTime(deltaTime);
+    		//Set the loop to execute the actions
+    		loop.setToExecution();
+    		//Start the loop and get 
+    		//the object in the finished state
+    		futureList.add((Future<ActionLoop>) executor.submit(loop));
+    	}
     	
     	//Wait until the loops are finished
-    	Iterator<Future<EngineLoop>> iterator = futureList.iterator();
+    	waitForLoops();
+    	
+    	
+    	//Modify the actions list with the queued changes
+    	readFromBuffers();
+    }
+    
+    protected void waitForLoops() throws InterruptedException
+    {
+    	Iterator<Future<ActionLoop>> iterator = futureList.iterator();
     	while(iterator.hasNext())
     	{
-    		Future<EngineLoop> loop = iterator.next();
+    		Future<ActionLoop> loop = iterator.next();
     		
     		try 
     		{
@@ -255,7 +207,78 @@ public class Engine implements Runnable
 				e.printStackTrace();
 			}
     	}
-    	//Modify the actions list with the queued changes
-    	readFromBuffers();
+    }
+    
+    protected void readFromBuffers()
+    {
+    	//Check if the buffer lists aren't empty
+    	if(removeBuffer.size() ==  0  && addBuffer.size() == 0)
+    	{
+    		return;
+    	}
+    	
+    	//Check if the remove Buffer is empty
+    	if(removeBuffer.size() !=  0)
+    	{
+    		synchronized(removeBuffer)
+    		{
+    			actions.removeAll(removeBuffer);
+    			//Assign new buffer
+        		removeBuffer =  new LinkedList<>();
+    		}
+    	}
+    	
+    	//Check if the add Buffer is empty
+    	if(addBuffer.size() != 0)
+    	{	
+    		synchronized(addBuffer)
+    		{
+    			actions.addAll(addBuffer);
+    			//Assign new buffer
+            	addBuffer = new LinkedList<>();
+    		}	
+    	}
+    	//Calculate the required number of threads
+    	//regardless of the limit
+    	currentThreadNumber = actions.size() / actionsToSplit + 1;
+    	
+    	//Trim the number
+    	if(currentThreadNumber > maxThreads)
+    	{
+    		currentThreadNumber = maxThreads;
+    	}
+    	
+    	//Check if it it needs to split the actions &
+    	//if the maximum number of loops have been reached
+    	while((currentThreadNumber > loops.size()) && (loops.size() < maxThreads))
+		{
+    		ActionLoop loop = new ActionLoop(removeBuffer);
+    		loops.add(loop);
+    		
+		}
+    	//Calculate the size of the sublists
+    	subListSize = actions.size() / loops.size();
+    	
+    	//Configure the engineLoops
+    	Iterator<ActionLoop> loopIterator = loops.iterator();
+    	int loopNumber = 0;
+    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
+    	{
+    		ActionLoop loop = loopIterator.next();
+    		//Slice the list of actions in smaller lists
+    		//equal in size for the loops and set the removeBuffer
+    		if(loopNumber == 0)
+    		{
+    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
+    			loop.setRemoveBuffer(removeBuffer);
+    			
+    		}
+    		else
+    		{
+    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
+    			loop.setRemoveBuffer(removeBuffer);
+    		}
+    		loopNumber++;
+    	}
     }
 }

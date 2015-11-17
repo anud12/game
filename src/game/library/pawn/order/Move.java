@@ -16,6 +16,10 @@ public class Move extends PawnOrder{
 		protected IVector direction;
 		
 		protected boolean completedPremature;
+		
+		protected boolean noLenght;
+		protected boolean overshoot;
+		
 		//Constructors
 		
 		public Move(Pawn pawn, PointF destination)
@@ -30,7 +34,7 @@ public class Move extends PawnOrder{
 		//Setters
 		public void setDestination(PointF destination)
 		{		
-			
+			noLenght = false;
 			if(pawn.getCenter() != destination)
 			{
 				this.destination = destination;
@@ -41,27 +45,46 @@ public class Move extends PawnOrder{
 			}
 			else
 			{
-				
+				noLenght = true;
 				direction.setX(0);
 				direction.setY(0);
-				System.out.println("NAN");
 			}
 			
 		}
 		
 		
 		//Functions from IGameLoop
+		
 		@Override
-		public IEngineAction execute(double deltaTime) 
+		public synchronized void plan(double deltaTime) 
 		{
+			noLenght = false;
+			overshoot = false;
 			if(direction.getLength() == 0)
-				return this;
+			{
+				noLenght = true;
+				return;
+			}
+				
 			//Calculate the next step to go towards  the destination
 			step.equal(direction);
 			step.multiplyByScalar(pawn.getMovementSpeed() * deltaTime);
 			
 			//Check if the step is over the destination
 			if(pawn.getCenter().distance(this.destination) < step.getLength())
+			{
+				overshoot = true;
+				
+			}
+		}
+		
+		@Override
+		public synchronized IEngineAction execute() 
+		{
+			if(noLenght)
+				return this;
+			
+			if(overshoot)
 			{
 				pawn.getRectangle().setLocation(destination);
 				
@@ -87,6 +110,7 @@ public class Move extends PawnOrder{
 		public void onComplete(IEngineAction action) {
 			
 		}
+		
 
 
 }

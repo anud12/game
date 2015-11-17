@@ -21,7 +21,7 @@ public class DemoSectorGenerator
 	public Sector generate(SectorGrid grid)
 	{
 		//Create sector with a random color or specified one
-		Sector sector = new Sector(Color.white);
+		Sector sector = new Sector();
 		
 		//Create set for already tested starting points for the region
 		Set<Cell> squareList = new LinkedHashSet<Cell>();
@@ -84,7 +84,7 @@ public class DemoSectorGenerator
 	public Sector generate2(SectorGrid grid)
 	{
 		//Create sector with a random color or specified one
-		Sector sector = new Sector(Color.white);
+		Sector sector = new Sector();
 		
 		//Create set for already tested starting points for the region
 		Set<Cell> squareList = new LinkedHashSet<Cell>();
@@ -151,7 +151,7 @@ public class DemoSectorGenerator
 	public Sector generate3(SectorGrid grid)
 	{
 		//Create sector with a random color or specified one
-		Sector sector = new Sector(Color.white);
+		Sector sector = new Sector();
 		
 		//Create set for already tested starting points for the region
 		Set<Cell> squareList = new LinkedHashSet<Cell>();

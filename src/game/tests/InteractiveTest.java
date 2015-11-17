@@ -84,7 +84,7 @@ public class InteractiveTest
 		}
 		
 		
-		SectorGrid grid = new SectorGrid(100, new PointF (0,0));
+		SectorGrid grid = new SectorGrid(200, new PointF (0,0));
 		DemoSectorGenerator generator = new DemoSectorGenerator();
 		SquareSectorGenerator squareGenerator = new SquareSectorGenerator();
 		
@@ -95,12 +95,12 @@ public class InteractiveTest
 		
 		Random rand = new Random();
 		int j = 0;
-		for(int i = 0 ; i < 10; i++)
+		for(int i = 0 ; i < 100; i++)
 		{
 			synchronized(sectors)
 			{
 				
-				switch(rand.nextInt(2) + 0)
+				switch(rand.nextInt(3) + 0)
 				{
 					case 0:
 					{
@@ -109,18 +109,24 @@ public class InteractiveTest
 					}
 					case 1:
 					{
-						sectors.add(squareGenerator.generate(grid));
+						sectors.add(generator.generate2(grid));
+						break;
+					}
+					case 2:
+					{
+						sectors.add(generator.generate3(grid));
+						break;
 					}
 				}
 			}
-			/*
+			
 			try {
-				Thread.sleep(100,1);
+				Thread.sleep(0,1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
+			
 		}
 		System.out.println("Done creating sectors");
 		

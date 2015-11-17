@@ -11,8 +11,17 @@ public class oneRunAction implements IEngineAction
 	{
 		this.target = steps;		
 	}
+	
 	@Override
-	public IEngineAction execute(double deltaTime) {
+	public void plan(double deltaTime) {
+		if(i%2 == 0)
+			return;
+		return;
+		
+	}
+	
+	@Override
+	public IEngineAction execute() {
 		i++;
 		return this;
 	}
@@ -33,5 +42,6 @@ public class oneRunAction implements IEngineAction
 	public void onComplete(IEngineAction action) {
 		
 	}
+	
 	
 }

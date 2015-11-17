@@ -41,28 +41,32 @@ public class Harvest extends PawnBehaviour
 		move = new Move(pawn, resourceEntity.getCenter());
 		
 	}
+	
 	@Override
-	public IEngineAction execute(double deltaTime) 
-	{
+	public void plan(double deltaTime) {
+		
 		if(isLoaded == false)
 		{
 			if(hasDropOff)
 			{
-				move.setDestination(resourceEntity.getCenter());
-				
-				return move.execute(deltaTime);
+				move.setDestination(dropOffEntity.getCenter());
 			}
 		}
 		else
 		{
 			if(hasResource)
 			{
-				move.setDestination(dropOffEntity.getCenter());
-				return move.execute(deltaTime);
+				move.setDestination(resourceEntity.getCenter());
 			}
 		}
-		
-		return null;
+
+		move.plan(deltaTime);
+	}
+	
+	@Override
+	public IEngineAction execute() 
+	{
+		return move.execute();
 	}
 
 	@Override
@@ -90,5 +94,6 @@ public class Harvest extends PawnBehaviour
 		}
 		isLoaded = !isLoaded;	
 	}
+	
 
 }
