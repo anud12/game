@@ -27,6 +27,9 @@ public class Pawn extends Entity implements ISerializableXML{
 		actions = new LinkedList<IEngineAction>();
 		
 		controller = new PawnController(this);
+		
+		//ID initialization
+		this.stringID = "PWN";
 	}
 	public Pawn(Element element, IWorld world) throws XMLParseException
 	{

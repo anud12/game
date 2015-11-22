@@ -6,6 +6,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.management.modelmbean.XMLParseException;
 import javax.xml.parsers.DocumentBuilder;
@@ -38,6 +39,9 @@ public class Entity implements ISerializableXML
     private IWorld world;
     protected Color color;
     
+    protected int intID;
+    protected String stringID;
+    
     //constructor Entity
     public Entity(Element element, IWorld world) throws XMLParseException
     {
@@ -47,14 +51,17 @@ public class Entity implements ISerializableXML
     	rectangle = new Rectangle();
     	this.center = new PointF();
     	
+    	
     	readFromXML(element);
     }
     
     public Entity(int width, int heigth, PointF origin, IWorld world)
     {
+    	//World dependency initialization
     	world.addEntity(this);
     	this.world = world;
     	
+    	//Geometry Initialization
     	try {
 			rectangle = new Rectangle(heigth, width, origin.x , origin.y);
 		} catch (Exception e) {
@@ -72,6 +79,19 @@ public class Entity implements ISerializableXML
     	this.keywords = new ArrayList<String>();
     	
     	color = Color.white;
+    	
+    	//ID initialization
+    	Random random = new Random();
+    	
+    	do
+    	{
+    		intID = random.nextInt(1000000);
+    	}
+    	while(EntityIDs.addID(intID));
+    	
+    	stringID = "ENT";
+    	
+    	
     }
     
     //Methods:
@@ -114,6 +134,16 @@ public class Entity implements ISerializableXML
     public boolean containsKeyword(String keyword)
     {
     	return this.keywords.contains(keyword);
+    }
+    
+    //get ID
+    public int getIntID()
+    {
+    	return intID;
+    }
+    public String getStringID()
+    {
+    	return stringID;
     }
     //get IWorld
     public IWorld getWorld(){

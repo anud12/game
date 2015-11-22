@@ -74,7 +74,9 @@ public class TextInterface extends JFrame implements Runnable
 			buffer = buffer.delete(0, buffer.length());
 			
 			buffer.append(">Name = ");
-			buffer.append((target.toString()));
+			buffer.append(target.getStringID());
+			buffer.append(":");
+			buffer.append(target.getIntID());
 			buffer.append("\n");
 			
 			buffer.append("->Location\n");

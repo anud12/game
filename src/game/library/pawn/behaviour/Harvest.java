@@ -45,7 +45,7 @@ public class Harvest extends PawnBehaviour
 	@Override
 	public void plan(double deltaTime) {
 		
-		if(isLoaded == false)
+		if(isLoaded)
 		{
 			if(hasDropOff)
 			{
@@ -78,20 +78,6 @@ public class Harvest extends PawnBehaviour
 	@Override
 	public void onComplete(IEngineAction action) 
 	{
-		if(isLoaded == false)
-		{
-			if(hasDropOff)
-			{
-				move.setDestination(dropOffEntity.getCenter());
-			}
-		}
-		else
-		{
-			if(hasResource)
-			{
-				move.setDestination(resourceEntity.getCenter());
-			}
-		}
 		isLoaded = !isLoaded;	
 	}
 	
