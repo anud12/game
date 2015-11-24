@@ -6,10 +6,12 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 public class Client 
 {
@@ -24,6 +26,7 @@ public class Client
 		}
 		
 		InputStream in = socket.getInputStream();
+		OutputStream out = socket.getOutputStream();
 		
 		BufferedReader textResponse = new BufferedReader(new InputStreamReader(in, "ASCII"));
 		
@@ -45,8 +48,9 @@ public class Client
 			text = consoleReader.readLine();
 			
 			textOutput.write(text);
-			textOutput.write("\r\n");
+			
 			textOutput.flush();
+			out.write(0);
 		}
 	}
 }

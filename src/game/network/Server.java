@@ -1,20 +1,22 @@
 package game.network;
 
+import java.io.UnsupportedEncodingException;
 import java.net.SocketAddress;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import game.network.component.Router;
 import game.network.component.Session;
 import game.network.protocol.ChatProtocol;
-import game.network.protocol.IProtocol;
+import game.network.protocol.Protocol;
 
 public class Server implements Runnable
 {
 	protected Router router ;
 	protected HashMap<SocketAddress, Session> sessions;
-	protected IProtocol protocol;
+	protected HashSet<Protocol> protocols;
 		
 	public static void main (String[] args)
 	{
@@ -26,7 +28,8 @@ public class Server implements Runnable
 	public Server()
 	{
 		sessions = new HashMap<>();
-		protocol = new ChatProtocol();
+		protocols = new HashSet<Protocol>();
+		protocols.add(new ChatProtocol());
 	}
 	
 	@Override
@@ -42,25 +45,18 @@ public class Server implements Runnable
 	
 	public void onReply(Session session)
 	{
-		String reply = session.getReplyList();
+		byte[] message = session.getReply();
 		
-		Date date = new Date();
-		System.out.print(date.toString());
-		System.out.print(" | ");
-		System.out.print("reply from ");
+		Iterator<Protocol> iterator = protocols.iterator();
 		
-		System.out.print(session.getAddress());
-		
-		System.out.print(" = ");
-		System.out.print(reply);
-		System.out.print("\n");
-		
-		if(protocol.isApplicable(reply.getBytes()))
+		while(iterator.hasNext())
 		{
-			System.out.println("TRUE");
-			protocol.interpret(reply, session);
+			Protocol protocol = iterator.next();
+			if(protocol.isApplicable(message))
+			{
+				protocol.interpret(message, session);
+			}
 		}
-			
 	}
 	
 	public void broadcastGlobal(String message)
@@ -99,6 +95,13 @@ public class Server implements Runnable
 		System.out.print(" disconnected");
 		System.out.print("\n");
 		removeSession(session);
-		protocol.onDisconnect(session);
+		
+		Iterator<Protocol> iterator = protocols.iterator();
+		while(iterator.hasNext())
+		{
+			Protocol protocol = iterator.next();
+			protocol.onDisconnect(session);
+		}
+		
 	}
 }
