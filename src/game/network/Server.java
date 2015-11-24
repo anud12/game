@@ -1,8 +1,6 @@
 package game.network;
 
-import java.io.UnsupportedEncodingException;
 import java.net.SocketAddress;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,6 +9,7 @@ import game.network.component.Router;
 import game.network.component.Session;
 import game.network.protocol.ChatProtocol;
 import game.network.protocol.Protocol;
+import game.network.protocol.TextDisplayProtocol;
 
 public class Server implements Runnable
 {
@@ -30,6 +29,7 @@ public class Server implements Runnable
 		sessions = new HashMap<>();
 		protocols = new HashSet<Protocol>();
 		protocols.add(new ChatProtocol());
+		protocols.add(new TextDisplayProtocol());
 	}
 	
 	@Override
