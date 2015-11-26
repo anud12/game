@@ -22,6 +22,10 @@ import game.library.world.sector.SectorGrid;
 import game.library.world.sector.cell.SquareCell;
 import game.library.world.sector.generator.DemoSectorGenerator;
 import game.library.world.sector.generator.SquareSectorGenerator;
+import game.network.Server;
+import game.network.protocol.ChatProtocol;
+import game.network.protocol.EngineProtocol;
+import game.network.protocol.TextDisplayProtocol;
 
 import java.awt.Color;
 
@@ -92,6 +96,12 @@ public class InteractiveTest
 		
 		executor.execute(gl);
 		executor.execute(new GLView(world, sectors));
+		Server server = new Server();
+		server.addProtocol(new ChatProtocol());
+		server.addProtocol(new TextDisplayProtocol());
+		server.addProtocol(new EngineProtocol(world));
+		
+		executor.execute(server);
 		
 		Random rand = new Random();
 		int j = 0;

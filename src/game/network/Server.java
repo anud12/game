@@ -21,6 +21,8 @@ public class Server implements Runnable
 	{
 		Server server = new Server();
 		server.run();
+		server.addProtocol(new ChatProtocol());
+		server.addProtocol(new TextDisplayProtocol());
 		
 	}
 	
@@ -28,8 +30,6 @@ public class Server implements Runnable
 	{
 		sessions = new HashMap<>();
 		protocols = new HashSet<Protocol>();
-		protocols.add(new ChatProtocol());
-		protocols.add(new TextDisplayProtocol());
 	}
 	
 	@Override
@@ -57,6 +57,11 @@ public class Server implements Runnable
 				protocol.interpret(message, session);
 			}
 		}
+	}
+	
+	public void addProtocol (Protocol protocol)
+	{
+		this.protocols.add(protocol);
 	}
 	
 	public void broadcastGlobal(String message)

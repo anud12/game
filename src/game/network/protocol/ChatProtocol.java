@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import game.network.Server;
 import game.network.component.Session;
 
 public class ChatProtocol extends Protocol
@@ -14,29 +13,31 @@ public class ChatProtocol extends Protocol
 	
 	public ChatProtocol()
 	{
-		header = "CHAT";
 		users = new HashMap<String, Session>();
 	}
 	
-	public void interpret(byte[] array, Session session)
+	protected void process(byte[] array, Session session)
 	{
 		
 		try 
 		{
-			String string = new String(array, "ASCII");
+			String string = new String(array, "ASCII").trim();
+			
+			System.out.println("CHAT : " + string);
+			
 			String[] words = string.split(" ");
-			String header = words[1];
+			String header = words[0];
 			
 			switch(header)
 			{
 				case"LOGIN":
 				{
-					if(words.length > 2)
+					if(words.length > 1)
 					{
-						String name = words[2];
+						String name = words[1];
 						if(!users.containsKey(name))
 						{
-							users.put(words[2], session);
+							users.put(words[1], session);
 							session.write("Welcome");
 						}						
 					}
@@ -68,14 +69,14 @@ public class ChatProtocol extends Protocol
 				}
 				case"WHISPER":
 				{
-					if(words.length < 3)
+					if(words.length < 2)
 					{
 						return;
 					}
 									
-					Session target = users.get(words[2]);
+					Session target = users.get(words[1]);
 															
-					target.write(session.getAddress() + ": " + words[3]);
+					target.write(session.getAddress() + ": " + words[2]);
 					break;
 				}
 			}
@@ -94,20 +95,10 @@ public class ChatProtocol extends Protocol
 		users.values().remove(session);
 		
 	}
-
+	
 	@Override
-	public boolean isApplicable(byte[] array) {
-		
-		String[] words = null;
-		try 
-		{
-			words = (new String(array, "ASCII")).split(" ");
-		} 
-		catch (UnsupportedEncodingException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ( words[0].equals(header));
+	protected byte[] setHead() {
+		// TODO Auto-generated method stub
+		return "CHAT".getBytes();
 	}
 }

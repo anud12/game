@@ -7,7 +7,7 @@ import game.network.component.Session;
 public class TextDisplayProtocol extends Protocol{
 
 	@Override
-	public void interpret(byte[] array, Session session) {
+	protected void process(byte[] array, Session session) {
 		try 
 		{
 			System.out.print("-----------Reply-----------\n");
@@ -36,9 +36,11 @@ public class TextDisplayProtocol extends Protocol{
 		
 	}
 
+
 	@Override
-	public boolean isApplicable(byte[] array) {
-		return true;
+	protected byte[] setHead() 
+	{
+		return "".getBytes();
 	}
 
 }

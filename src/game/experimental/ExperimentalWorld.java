@@ -51,4 +51,23 @@ public class ExperimentalWorld implements IWorld
 		return list.size();
 	}
 
+	@Override
+	public Entity getEntityByID(String id) 
+	{
+		Iterator<Entity> iterator = list.iterator();
+		
+		while(iterator.hasNext())
+		{
+			Entity ent = iterator.next();
+			if((ent.getStringID() + ":" + ent.getIntID()).equals(id))
+			{
+				return ent;
+			}
+			{
+				System.out.println(id + " NOT " + ent.getStringID() + ":" + ent.getIntID()) ;
+			}
+		}
+		return null;
+	}
+
 }

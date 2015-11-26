@@ -10,4 +10,5 @@ public interface IWorld
 	public Entity getClosest(String type);
 	public Iterator<Entity> getIterator();
 	public int getSize();
+	public Entity getEntityByID(String id);
 }
