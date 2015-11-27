@@ -43,7 +43,7 @@ public class Server implements Runnable
 		
 	}
 	
-	public void onReply(Session session)
+	public void onReply(Session session) throws Exception
 	{
 		byte[] message = session.getReply();
 		

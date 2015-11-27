@@ -7,7 +7,7 @@ public class EntityIDs
 	static protected HashSet<Integer> usedNumbers;
 	
 	
-	static public boolean addID(int number)
+	static public void addID(int number)
 	{
 		if(usedNumbers == null)
 		{
@@ -16,11 +16,23 @@ public class EntityIDs
 		
 		if(usedNumbers.contains(number))
 		{
-			return false;
+			return;
 		}
 		
 		usedNumbers.add(number);
 		
+		return;
+	}
+	static public boolean isFree(int number)
+	{
+		if(usedNumbers == null)
+		{
+			usedNumbers = new HashSet<Integer>();
+		}
+		if(usedNumbers.contains(number))
+		{
+			return false;
+		}
 		return true;
 	}
 	

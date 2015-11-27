@@ -74,16 +74,17 @@ public class Session implements Runnable
 				server.onReply(this);
 			}
 		}
-		catch(SocketException e)
-		{
-			
-			server.onDisconnect(this);
-			
-		}
-		catch (IOException e) 
+		catch(Exception e)
 		{
 			e.printStackTrace();
 			server.onDisconnect(this);
+			try 
+			{
+				socket.close();
+			} 
+			catch (IOException e1) 
+			{
+			}
 		}
 	}
 	

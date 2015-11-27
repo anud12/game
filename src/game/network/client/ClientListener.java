@@ -15,6 +15,7 @@ public class ClientListener implements Runnable
 	
 	public ClientListener(Socket socket)
 	{
+		boolean exit = false;
 		this.socket = socket;
 		try 
 		{
@@ -32,15 +33,17 @@ public class ClientListener implements Runnable
 		{
 			BufferedReader textResponse = new BufferedReader(new InputStreamReader(in, "ASCII"));
 			while(true)
-			{				
+			{
+				
 				String text = null;
 				text = new String(read(), "ASCII");
+				
 				synchronized(System.out)
 				{
 					System.out.print("\n---Server_Response---\n");
 					System.out.print(text);
 					System.out.print("\n---------------------");
-					System.out.print("\n\ninput: ");
+					System.out.print("\n");
 				}
 			}
 		} 

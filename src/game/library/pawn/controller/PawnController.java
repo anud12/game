@@ -6,6 +6,7 @@ import game.engine.IEngineAction;
 import game.library.pawn.Pawn;
 import game.library.pawn.behaviour.Idle;
 import game.library.pawn.behaviour.PawnBehaviour;
+import game.library.pawn.order.PawnOrderInterface;
 import game.library.pawn.order.PawnOrder;
 
 public class PawnController implements IEngineAction
@@ -13,11 +14,14 @@ public class PawnController implements IEngineAction
 	ArrayList<PawnOrder> orders;
 	Pawn pawn;
 	PawnBehaviour behaviour;
+	PawnOrderInterface orderInterface;
 	
 	public PawnController(Pawn pawn)
 	{
 		this.pawn = pawn;
 		orders = new ArrayList<PawnOrder>();
+		
+		orderInterface = new PawnOrderInterface(this);
 		
 		//TODO:Delete
 		behaviour = new Idle();
@@ -50,6 +54,15 @@ public class PawnController implements IEngineAction
 	public void setBehaviour(PawnBehaviour behaviour)
 	{
 		this.behaviour = behaviour;
+	}
+	public Pawn getPawn()
+	{
+		return pawn;
+	}
+	
+	public PawnOrderInterface getOrderInterface()
+	{
+		return orderInterface;
 	}
 	
 	public int size()

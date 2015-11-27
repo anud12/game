@@ -83,11 +83,14 @@ public class Entity implements ISerializableXML
     	//ID initialization
     	Random random = new Random();
     	
+    	int i = 0;
     	do
     	{
-    		intID = random.nextInt(1000000);
+    		intID = i;
+    		i++;
     	}
-    	while(EntityIDs.addID(intID));
+    	while(!EntityIDs.isFree(intID));
+    	EntityIDs.addID(intID);
     	
     	stringID = "ENT";
     	

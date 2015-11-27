@@ -6,6 +6,7 @@ import game.geom.classes.PointF;
 import game.library.pawn.Pawn;
 import game.library.pawn.order.Move;
 import game.library.pawn.order.None;
+import game.library.pawn.order.PawnOrderInterface;
 import game.library.world.IWorld;
 import game.network.component.Session;
 
@@ -24,35 +25,31 @@ public class EngineProtocol extends Protocol{
 		{
 			String[] words = new String(array, "ASCII").trim().split(" ");
 			
-			switch(words[0])
+			String id = words[0];
+			
+			Pawn pawn = (Pawn)world.getEntityByID(id);
+			if(pawn == null)
+			{
+				return;
+			}
+			
+			switch(words[1])
 			{
 				case"MOVE":
 				{
 					int x = Integer.parseInt(words[2]);
 					int y = Integer.parseInt(words[3]);
-					PointF point = new PointF(x , y);
-					String id = words[1];
+					PointF destination = new PointF(x , y);
+					//pawn.getController().setOrder(new Move(pawn, destination));
+					PawnOrderInterface inter =  pawn.getController().getOrderInterface();
 					
-					Pawn pawn = (Pawn)world.getEntityByID(id);
-					if(pawn == null)
-					{
-						return;
-					}
-					pawn.getController().setOrder(new Move(pawn, point));
+					inter.move(destination);
+					
 					break;
 				}
 				case"STOP":
-				{
-					String id = words[1];
-					
-					Pawn pawn = (Pawn)world.getEntityByID(id);
-
-					if(pawn == null)
-					{
-						return;
-					}
-					
-					pawn.getController().setOrder(new None());
+				{					
+					pawn.getController().getOrderInterface().stop();
 					break;
 				}
 			}
