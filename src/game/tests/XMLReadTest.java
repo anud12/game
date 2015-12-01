@@ -28,6 +28,9 @@ import game.library.world.IWorld;
 
 public class XMLReadTest 
 {
+	//TASK :To implement
+	
+	/*
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, XMLParseException, TransformerException 
 	{
 		File inputFile = new File("test.xml");
@@ -92,4 +95,5 @@ public class XMLReadTest
     	//Write to disk
     	transformer.transform(source, result);
 	}
+	*/
 }

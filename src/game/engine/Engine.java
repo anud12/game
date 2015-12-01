@@ -207,6 +207,7 @@ public class Engine implements Runnable
 				e.printStackTrace();
 			}
     	}
+    	futureList.clear();
     }
     
     protected void readFromBuffers()

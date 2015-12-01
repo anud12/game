@@ -10,11 +10,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 
 import javax.swing.BoxLayout;
 
-public class TextInterface extends JFrame implements Runnable
+public class TextInterface extends JPanel implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -39,6 +40,7 @@ public class TextInterface extends JFrame implements Runnable
 		panel = new JPanel();
 		panel.setVisible(true);
 		
+		panel.setMaximumSize(new Dimension(9999, 9999));
 		
 		textArea = new JTextArea();
 		textArea.setVisible(true);
@@ -60,7 +62,6 @@ public class TextInterface extends JFrame implements Runnable
 		
 		this.add(panel);
 		this.setVisible(true);
-		this.setSize(200, 200);
 		textField.addKeyListener(new InputReader(textField, target, target.getWorld(), executor));
 		
 		buffer = new StringBuffer();
@@ -74,9 +75,7 @@ public class TextInterface extends JFrame implements Runnable
 			buffer = buffer.delete(0, buffer.length());
 			
 			buffer.append(">Name = ");
-			buffer.append(target.getStringID());
-			buffer.append(":");
-			buffer.append(target.getIntID());
+			buffer.append(target.get(AttributeSelector.ID()));
 			buffer.append("\n");
 			
 			buffer.append("->Location\n");
@@ -90,7 +89,7 @@ public class TextInterface extends JFrame implements Runnable
 			buffer.append("\n");
 			
 			buffer.append("->Speed = ");
-			buffer.append(Float.toString(target.getMovementSpeed()));
+			buffer.append(Float.toString((float)target.get(AttributeSelector.movementSpeed())));
 			buffer.append("\n");
 			
 			buffer.append("->Order = ");

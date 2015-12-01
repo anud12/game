@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import game.geom.classes.PointF;
 import game.geom.classes.Triangle;
 import game.library.Entity;
+import game.library.attribute.AttributeSelector;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
 import game.library.world.sector.cell.TriangleCell;
@@ -124,9 +125,9 @@ public class GLView implements Runnable{
 	        {
 	        	
 	        	Entity ent = iterator.next();
-	        	float red = ent.getColor().getRed() / 255f;
-	        	float blue = ent.getColor().getBlue() / 255f;
-	        	float green = ent.getColor().getGreen() / 255f;
+	        	float red = ((Color) ent.get(AttributeSelector.color())).getRed() / 255f;
+	        	float blue = ((Color) ent.get(AttributeSelector.color())).getBlue() / 255f;
+	        	float green = ((Color) ent.get(AttributeSelector.color())).getGreen() / 255f;
 	        	
 	        	red = red / 0.5f;
 	        	green = green / 0.5f;

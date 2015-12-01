@@ -27,7 +27,7 @@ public class EngineProtocol extends Protocol{
 			
 			String id = words[0];
 			
-			Pawn pawn = (Pawn)world.getEntityByID(id);
+			Pawn pawn = (Pawn)world.getEntityByID(Integer.parseInt(id));
 			if(pawn == null)
 			{
 				return;

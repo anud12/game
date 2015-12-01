@@ -19,12 +19,15 @@ import org.w3c.dom.Element;
 import game.experimental.ExperimentalWorld;
 import game.geom.classes.PointF;
 import game.library.*;
+import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.world.IWorld;
 import game.tests.*;
 
-public class XMLTest {
-
+public class XMLTest 
+{
+	//TASK :To implement
+	/*
 	public static void main(String[] args) throws ParserConfigurationException, TransformerException 
 	{
 		//Initialize the XML document
@@ -46,7 +49,7 @@ public class XMLTest {
     	
     	Entity ent = new Entity (0 , 0 , new PointF(0, 0), world);
     	Pawn pawn = new Pawn(0 , 0 , new PointF(0, 0), world);
-    	pawn.setMovementSpeed(5);
+    	pawn.set(AttributeSelector.movementSpeed(), 5);
     	
     	//Create root element
     	Element root = doc.createElement("root");
@@ -63,5 +66,5 @@ public class XMLTest {
     	//Write to disk
     	transformer.transform(source, result);
 	}
-
+	*/
 }

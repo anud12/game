@@ -12,7 +12,11 @@ import game.experimental.GLView;
 import game.experimental.TextInterface;
 import game.geom.classes.PointF;
 import game.geom.classes.PointI;
+import game.graphicalUserInterface.MainFrame;
+import game.graphicalUserInterface.panels.EngineJPanel;
+import game.graphicalUserInterface.panels.PanelSelector;
 import game.library.Entity;
+import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.pawn.behaviour.Harvest;
 import game.library.pawn.order.Move;
@@ -34,7 +38,7 @@ public class InteractiveTest
 	public static Engine gl;
 	public static void main(String args[])
 	{
-		gl = new Engine(10000, 8);
+		gl = new Engine(1000, 8);
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -42,33 +46,43 @@ public class InteractiveTest
 		PointF point;
     	Pawn pawn;
     	TextInterface inter;
+    	
+    	MainFrame mainWindow = new MainFrame();
+    	PanelSelector selector = new PanelSelector();
+    	mainWindow.add(selector);
 		
-		point = new PointF(70,100);
+    	EngineJPanel enginePanel = new EngineJPanel(gl);
+    	selector.addPanel("Engine", enginePanel);
+    	executor.execute(enginePanel);
+    	
+    	point = new PointF(70,100);
     	
     	pawn = new Pawn(20, 20, point, world);
-    	pawn.setMovementSpeed(0.005f);
+    	pawn.set(AttributeSelector.movementSpeed(), 0.005f);
     	pawn.addKeyword("dropOff");
-    	pawn.setColor(Color.gray);
+    	pawn.set(AttributeSelector.color(), Color.gray);
     	
 		inter = new TextInterface(pawn, executor);
+		selector.addPanel(pawn.get(AttributeSelector.ID()).toString(), inter);
 		
 		executor.execute(inter);
 		
 		gl.addAction(pawn.getController());
 		
 		Entity ent = new Entity(2, 2, new PointF(50,20), world);
-		ent.setColor(new Color(139,69,19));
+		ent.set(AttributeSelector.color(), new Color(139,69,19));
 		ent.addKeyword("resource");
 		
 		point = new PointF(0,0);
     	
     	pawn = new Pawn(10, 10, point, world);
-    	pawn.setMovementSpeed(0.010f);
+    	pawn.set(AttributeSelector.movementSpeed(), 0.010f);
     	//pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
     	pawn.getController().setBehaviour(new Harvest(pawn));
-    	pawn.setColor(Color.white);
+    	pawn.set(AttributeSelector.color(), Color.white);
 		
 		inter = new TextInterface(pawn, executor);
+		selector.addPanel(pawn.get(AttributeSelector.ID()).toString(), inter);
 		
 		executor.execute(inter);
 		
@@ -80,7 +94,7 @@ public class InteractiveTest
 			point = new PointF(-10,-10);
 	    	
 	    	pawn = new Pawn(10, 40, point, world2);
-	    	pawn.setMovementSpeed(0.00001f);
+	    	pawn.set(AttributeSelector.movementSpeed(), 0.00001f);
 	    	point = new PointF(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	pawn.getController().setOrder(new Move(pawn, point));
 	    	
@@ -140,6 +154,6 @@ public class InteractiveTest
 		}
 		System.out.println("Done creating sectors");
 		
-		//EngineQueueStressTest.main(gl);
+		EngineQueueStressTest.main(gl);
 	}
 }

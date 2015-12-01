@@ -76,7 +76,8 @@ public class Session implements Runnable
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			if(e.getMessage() != "Connection reset")
+				e.printStackTrace();
 			server.onDisconnect(this);
 			try 
 			{

@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 
 import game.geom.classes.PointF;
 import game.library.Entity;
+import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.pawn.behaviour.Harvest;
 import game.library.pawn.behaviour.Idle;
@@ -83,14 +84,14 @@ public class InputReader extends KeyAdapter
 									Entity ent = new Entity(2, 2, new PointF(x,y), world);
 									
 									ent.addKeyword("resource");
-									ent.setColor(new Color(139,69,19));
+									ent.set(AttributeSelector.color(), new Color(139,69,19));
 									break;
 								}
 								case "smallShip":
 								{
 									Pawn pawn = new Pawn(10, 10, new PointF(x,y), world);
-							    	pawn.setMovementSpeed(0.010f);
-							    	pawn.setColor(Color.white);
+							    	pawn.set(AttributeSelector.movementSpeed(), 0.010f);
+							    	pawn.set(AttributeSelector.color(), Color.white);
 							    	
 									TextInterface inter = new TextInterface(pawn, executor);
 									
@@ -102,9 +103,9 @@ public class InputReader extends KeyAdapter
 								case "dropOff":
 								{
 							    	Pawn pawn = new Pawn(20, 20, new PointF(x,y), world);
-							    	pawn.setMovementSpeed(0.005f);
+							    	pawn.set(AttributeSelector.movementSpeed(), 0.005f);
 							    	pawn.addKeyword("dropOff");
-							    	pawn.setColor(Color.gray);
+							    	pawn.set(AttributeSelector.color(), Color.gray);
 							    	
 									TextInterface inter = new TextInterface(pawn, executor);
 									

@@ -28,20 +28,7 @@ public class EngineQueueStressTest
 		{
 			boolean add = true;
 			if(i > 1)
-			{
-				
-				System.out.print("DTime: ");
-				System.out.print(engine.getDeltaTime());
-				System.out.print(" actions: ");
-				System.out.print(engine.getActionsSize());
-				System.out.print(" addBuffer: ");
-				System.out.print(engine.getAddBufferSize());
-				System.out.print(" removeBufffer: ");
-				System.out.print(engine.getRemoveBufferSize());
-				System.out.print(" threads: ");
-				System.out.print(engine.getCurrentThreadNumber());
-				System.out.println();
-				
+			{				
 				i = 0;
 			}
 			if(engine.getActionsSize() > 10000000)
@@ -56,7 +43,7 @@ public class EngineQueueStressTest
 			}
 			if(add)
 			{
-				engine.addAction(new oneRunAction(random.nextInt((15000))));
+				engine.addAction(new oneRunAction(random.nextInt((15000) + 15000)));
 			}
 			i++;
 			try {

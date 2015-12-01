@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import game.library.Entity;
+import game.library.attribute.AttributeSelector;
 import game.library.world.IWorld;
 import game.library.world.sector.SectorGrid;
 
@@ -52,19 +53,19 @@ public class ExperimentalWorld implements IWorld
 	}
 
 	@Override
-	public Entity getEntityByID(String id) 
+	public Entity getEntityByID(int id) 
 	{
 		Iterator<Entity> iterator = list.iterator();
 		
 		while(iterator.hasNext())
 		{
 			Entity ent = iterator.next();
-			if((ent.getStringID() + ":" + ent.getIntID()).equals(id))
+			if((ent.get(AttributeSelector.ID()).equals(id)))
 			{
 				return ent;
 			}
 			{
-				System.out.println("IWorld : " + id + " NOT " + ent.getStringID() + ":" + ent.getIntID()) ;
+				System.out.println("IWorld : " + id + " NOT " + ent.get(AttributeSelector.ID())) ;
 			}
 		}
 		return null;

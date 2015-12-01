@@ -24,12 +24,16 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.sun.org.apache.bcel.internal.classfile.Attribute;
+
 import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
+import game.library.attribute.AttributeSelector;
+import game.library.attribute.Attributes;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
 
-public class Entity implements ISerializableXML
+public class Entity
 {
 
     //Attributes:
@@ -39,24 +43,14 @@ public class Entity implements ISerializableXML
     private IWorld world;
     protected Color color;
     
-    protected int intID;
-    protected String stringID;
+    
+    protected Attributes attributes;
     
     //constructor Entity
-    public Entity(Element element, IWorld world) throws XMLParseException
-    {
-    	world.addEntity(this);
-    	this.world = world;
-    	
-    	rectangle = new Rectangle();
-    	this.center = new PointF();
-    	
-    	
-    	readFromXML(element);
-    }
     
     public Entity(int width, int heigth, PointF origin, IWorld world)
     {
+    	attributes = new Attributes();
     	//World dependency initialization
     	world.addEntity(this);
     	this.world = world;
@@ -86,28 +80,24 @@ public class Entity implements ISerializableXML
     	int i = 0;
     	do
     	{
-    		intID = i;
     		i++;
     	}
-    	while(!EntityIDs.isFree(intID));
-    	EntityIDs.addID(intID);
+    	while(!EntityIDs.isFree(i));
+    	EntityIDs.addID(i);
     	
-    	stringID = "ENT";
-    	
+    	attributes.set(AttributeSelector.ID(), i);
     	
     }
     
     //Methods:
-   
-    //get/set Color
-    public void setColor (Color color)
-    {
-    	 this.color = color;
-    }
-    public Color getColor ()
-    {
-    	return color;
-    }
+    public void set(AttributeSelector selector, Object value)
+	{    	
+		attributes.set(selector, value);
+	}
+	public Object get(AttributeSelector selector)
+	{
+		return attributes.get(selector);
+	}
     //get/set rectangle 
     public Rectangle getRectangle()
     {
@@ -138,74 +128,10 @@ public class Entity implements ISerializableXML
     {
     	return this.keywords.contains(keyword);
     }
-    
-    //get ID
-    public int getIntID()
-    {
-    	return intID;
-    }
-    public String getStringID()
-    {
-    	return stringID;
-    }
     //get IWorld
     public IWorld getWorld(){
     	return world;
     }
-    //ISerializableXML
-    @Override
-	public void appendObjectToXML(Document doc) 
-	{
-		Element rootElement = doc.createElement("entity");
-    	
-    	appendDataToXML(doc, rootElement);
-    	Element docRoot = doc.getDocumentElement();
-    	docRoot.appendChild(rootElement);
-    	
-	}
-	@Override
-	public void appendDataToXML(Document doc, Element rootElement) {
-		Element attribute ;
-    	
-    	attribute = doc.createElement("width");
-    	attribute.setTextContent(this.getRectangle().width + "");
-    			
-    	rootElement.appendChild(attribute);
-    	
-    	attribute = doc.createElement("height");
-    	attribute.setTextContent(this.getRectangle().height + "");
-    			
-    	rootElement.appendChild(attribute);
-    	
-    	Element position = doc.createElement("position");
-    			
-    	rootElement.appendChild(position);
-    	
-    	attribute = doc.createElement("x");
-    	attribute.setTextContent(this.center.x + "");
-    			
-    	position.appendChild(attribute);
-    	
-    	attribute = doc.createElement("y");
-    	attribute.setTextContent(this.center.y + "");
-    			
-    	position.appendChild(attribute);
-	}
-	@Override
-	public void readFromXML(Element element) throws XMLParseException 
-	{
-				
-		this.rectangle.width = Float.parseFloat( element.getElementsByTagName("width").item(0).getTextContent() );
-		this.rectangle.height = Float.parseFloat( element.getElementsByTagName("height").item(0).getTextContent() );
-		
-		//Get position -> get X & Y
-		Element position = (Element) element.getElementsByTagName("position").item(0);
-		this.center.x = Float.parseFloat( position.getElementsByTagName("x").item(0).getTextContent() );
-		this.center.y = Float.parseFloat( position.getElementsByTagName("y").item(0).getTextContent() );
-		
-	}
-    
-    
     /*
 	@Override
     public int compareTo(Object o) {
