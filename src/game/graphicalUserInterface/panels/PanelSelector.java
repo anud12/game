@@ -33,15 +33,16 @@ public class PanelSelector extends JPanel implements ListSelectionListener
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		JScrollPane scrollPanel = new JScrollPane(list);
-		//scrollPanel.setMaximumSize(new Dimension(500, 9999));
+		scrollPanel.setMaximumSize(new Dimension(700, 9999));
 		
-		scrollPanel.setMinimumSize(new Dimension(500, 9999));
+		//scrollPanel.setMinimumSize(new Dimension(500, 9999));
 		
 		this.add(scrollPanel);
 		this.add(new JScrollPane(displayPanel));
 		
 		this.setVisible(true);
-				
+		
+		
 		
 		list.addListSelectionListener(this);
 	}
@@ -57,12 +58,14 @@ public class PanelSelector extends JPanel implements ListSelectionListener
 				
 		Iterator<String> iter = keyList.iterator();
 		
+		
 		while(iter.hasNext())
 		{
 			String str = iter.next();
 			displayPanel.add(panels.get(str));
 		}		
-		
+		if(keyList.size() > 3)
+			displayPanel.setLayout(new GridLayout(keyList.size() / 2 + 1, 2));
 		displayPanel.repaint();
 		this.setVisible(true);
 	}
