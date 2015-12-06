@@ -54,7 +54,6 @@ public class Move extends PawnOrder
 		
 	}
 	
-	
 	//Functions from IGameLoop
 	
 	@Override
@@ -65,12 +64,18 @@ public class Move extends PawnOrder
 		//Calculate the next step to go towards  the destination
 		step.equal(direction);
 		step.multiplyByScalar((float)pawn.get(AttributeSelector.movementSpeed()) * deltaTime);
+				
+		//Calculate the overshoot distance
+		float extraDistance = (float) (step.getLength() - pawn.getCenter().distance(this.destination));
 		
-		//Check if the step is over the destination
-		if(pawn.getCenter().distance(this.destination) < step.getLength())
+		
+		if(extraDistance > 0)
 		{
 			overshoot = true;
-			
+			//Calculate the unused delta time
+			this.unusedDeltaTime = (float) ((extraDistance * deltaTime) / step.getLength());
+			System.out.println("Step " + step.getLength() + " Extra Distance " + extraDistance + "\nextraTime : " + unusedDeltaTime + " full: " + deltaTime);
+			System.out.print("");
 		}
 	}
 	
@@ -95,8 +100,8 @@ public class Move extends PawnOrder
 	}
 	
 	@Override
-	public boolean isCompleted(IEngineAction action) {
-		
+	public boolean isCompleted(IEngineAction action) 
+	{
 		if(pawn.getCenter().distance(this.destination) == 0 || direction.getLength() == 0)
 			return true;
 		return false;
@@ -106,6 +111,7 @@ public class Move extends PawnOrder
 	public void onComplete(IEngineAction action) {
 		
 	}
+	
 		
 
 
