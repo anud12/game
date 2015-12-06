@@ -11,12 +11,11 @@ public class Engine implements Runnable
 {
 	//Action lists to do for every cycle
 	LinkedList<IEngineAction> actions;
-	
-    Iterator<IEngineAction> actionIterator;
-    
-    //Total time elapsed
+	    
+    //Time measurements
     private long time;
     private float deltaTime;
+    int minimumDeltaTime;
     // MultiThread //
     
     //Number of actions when a new loop will be created
@@ -47,6 +46,8 @@ public class Engine implements Runnable
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
     {
+    	minimumDeltaTime = 1000;
+    	
     	//If actions is 0 make it infinite
     	if(actionsToSplit == 0)
     		this.actionsToSplit = Integer.MAX_VALUE;
@@ -110,9 +111,7 @@ public class Engine implements Runnable
     //Start engine loop
     @Override
 	public void run()  
-	{
-    	time = System.nanoTime();
-    	
+	{    	
     	while(true)
     	{
 			try {
@@ -128,32 +127,39 @@ public class Engine implements Runnable
 	//Update the game
     void update() throws InterruptedException
     {
+    	//Update time to current
+    	time = System.nanoTime();
     	
     	//Get the time between frames
     	deltaTime = ( System.nanoTime() - time ) / 1000000.0f;
     	
-    	//Update time to current
-    	time = System.nanoTime();
-    	
-    	//Grab iterator for the action lists
-    	actionIterator = actions.iterator();
-    	
-    	
     	//Check the frequency of the calls
-    	if(deltaTime < 0.9)
+    	if(deltaTime < minimumDeltaTime)
     	{
     		try
     		{
+    			boolean useNano = false;
+    			
+    			int sleepTime =  minimumDeltaTime - (int)deltaTime;
+    			deltaTime = minimumDeltaTime;
+    			
+    			if(sleepTime < 0)
+    			{
+    				useNano = true;
+    				sleepTime = minimumDeltaTime * 1000000 - (int)deltaTime * 1000000;
+    			}
+    			
     			//Wait until the minimum time
-    			Thread.sleep(0 ,(int) (900000 - deltaTime * 1000000) );
-    			deltaTime = 0.9f;
+    			if(useNano)
+    				Thread.sleep(0, sleepTime);
+    			Thread.sleep((long) (sleepTime));
     		}
     		catch(Exception e)
     		{
     		}
     	}
     	
-    	
+    	//Grab iterator for the loops list
     	Iterator<ActionLoop> loopIterator = loops.iterator();
     	while(loopIterator.hasNext())
     	{
@@ -169,6 +175,7 @@ public class Engine implements Runnable
     	//Wait until the loops are finished
     	waitForLoops();
     	
+    	//Grab iterator for the loops list
     	loopIterator = loops.iterator();
     	while(loopIterator.hasNext())
     	{
