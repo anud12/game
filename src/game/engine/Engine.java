@@ -42,6 +42,8 @@ public class Engine implements Runnable
     private LinkedList<IEngineAction> addBuffer;
     private LinkedList<IEngineAction> removeBuffer;
     
+    //
+    private ActionLoopManager<ActionLoop> manager;
     
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
@@ -75,12 +77,14 @@ public class Engine implements Runnable
         //List to keep the future states of 
         //all the loops used for synchronization
         futureList = new LinkedList<Future<ActionLoop>>();
+        
+        manager = new ActionLoopManager<ActionLoop>(ActionLoop.class, actionsToSplit, maxThreads);
     }
     
     //   Getters   //
     public int getActionsSize()
     {    	
-    	return actions.size();
+    	return manager.getActionsSize();
     }
     public float getDeltaTime()
     {
@@ -88,11 +92,11 @@ public class Engine implements Runnable
     }
     public int getAddBufferSize()
     {
-    	return addBuffer.size();
+    	return manager.getAddBufferSize();
     }
     public int getRemoveBufferSize()
     {
-    	return removeBuffer.size();
+    	return manager.getRemoveBufferSize();
     }
     public int getCurrentThreadNumber()
     {
@@ -101,11 +105,7 @@ public class Engine implements Runnable
     //Add to stack
     public void addAction(IEngineAction action)
     {
-    	//Add action to buffer
-    	synchronized(addBuffer)
-    	{
-    		addBuffer.add(action);
-    	}
+    	manager.add(action);
     }
      
     //Start engine loop
@@ -159,133 +159,6 @@ public class Engine implements Runnable
     		}
     	}
     	
-    	//Grab iterator for the loops list
-    	Iterator<ActionLoop> loopIterator = loops.iterator();
-    	while(loopIterator.hasNext())
-    	{
-    		ActionLoop loop = loopIterator.next();
-    		//Set the deltaTime for the loop
-    		loop.setDeltaTime(deltaTime);
-    		//Set the loop to plan the actions
-    		loop.setToPlanning();
-    		//Start the loop and get 
-    		//the object in the finished state
-    		futureList.add((Future<ActionLoop>) executor.submit(loop));
-    	}
-    	//Wait until the loops are finished
-    	waitForLoops();
-    	
-    	//Grab iterator for the loops list
-    	loopIterator = loops.iterator();
-    	while(loopIterator.hasNext())
-    	{
-    		ActionLoop loop = loopIterator.next();
-    		//Set the deltaTime for the loop
-    		loop.setDeltaTime(deltaTime);
-    		//Set the loop to execute the actions
-    		loop.setToExecution();
-    		//Start the loop and get 
-    		//the object in the finished state
-    		futureList.add((Future<ActionLoop>) executor.submit(loop));
-    	}
-    	
-    	//Wait until the loops are finished
-    	waitForLoops();
-    	
-    	//Modify the actions list with the queued changes
-    	readFromBuffers();
-    }
-    
-    protected void waitForLoops() throws InterruptedException
-    {
-    	Iterator<Future<ActionLoop>> iterator = futureList.iterator();
-    	while(iterator.hasNext())
-    	{
-    		Future<ActionLoop> loop = iterator.next();
-    		
-    		try 
-    		{
-    			//Wait until the loop is finished
-				loop.get();
-			} catch (ExecutionException e) 
-    		{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-    	futureList.clear();
-    }
-    
-    protected void readFromBuffers()
-    {
-    	//Check if the buffer lists aren't empty
-    	if(removeBuffer.size() ==  0  && addBuffer.size() == 0)
-    	{
-    		return;
-    	}
-    	
-    	//Check if the remove Buffer is empty
-    	if(removeBuffer.size() !=  0)
-    	{
-    		synchronized(removeBuffer)
-    		{
-    			actions.removeAll(removeBuffer);
-    			//Assign new buffer
-        		removeBuffer =  new LinkedList<>();
-    		}
-    	}
-    	
-    	//Check if the add Buffer is empty
-    	if(addBuffer.size() != 0)
-    	{	
-    		synchronized(addBuffer)
-    		{
-    			actions.addAll(addBuffer);
-    			//Assign new buffer
-            	addBuffer = new LinkedList<>();
-    		}	
-    	}
-    	//Calculate the required number of threads
-    	//regardless of the limit
-    	currentThreadNumber = actions.size() / actionsToSplit + 1;
-    	
-    	//Trim the number
-    	if(currentThreadNumber > maxThreads)
-    	{
-    		currentThreadNumber = maxThreads;
-    	}
-    	
-    	//Check if it it needs to split the actions &
-    	//if the maximum number of loops have been reached
-    	while((currentThreadNumber > loops.size()) && (loops.size() < maxThreads))
-		{
-    		ActionLoop loop = new ActionLoop(removeBuffer);
-    		loops.add(loop);
-    		
-		}
-    	//Calculate the size of the sublists
-    	subListSize = actions.size() / loops.size();
-    	
-    	//Configure the engineLoops
-    	Iterator<ActionLoop> loopIterator = loops.iterator();
-    	int loopNumber = 0;
-    	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
-    	{
-    		ActionLoop loop = loopIterator.next();
-    		//Slice the list of actions in smaller lists
-    		//equal in size for the loops and set the removeBuffer
-    		if(loopNumber == 0)
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
-    			loop.setRemoveBuffer(removeBuffer);
-    			
-    		}
-    		else
-    		{
-    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
-    			loop.setRemoveBuffer(removeBuffer);
-    		}
-    		loopNumber++;
-    	}
+    	manager.run(deltaTime);
     }
 }
