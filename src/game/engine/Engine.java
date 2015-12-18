@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 public class Engine implements Runnable
 {
 	//Action lists to do for every cycle
-	LinkedList<IEngineAction> actions;
+	private LinkedList<IEngineAction> actions;
 	    
     //Time measurements
     private long time;
@@ -46,7 +46,7 @@ public class Engine implements Runnable
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
     {
-    	minimumDeltaTime = 1000;
+    	minimumDeltaTime = 1;
     	
     	//If actions is 0 make it infinite
     	if(actionsToSplit == 0)
@@ -191,7 +191,6 @@ public class Engine implements Runnable
     	
     	//Wait until the loops are finished
     	waitForLoops();
-    	
     	
     	//Modify the actions list with the queued changes
     	readFromBuffers();
