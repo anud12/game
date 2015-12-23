@@ -20,48 +20,82 @@ public class EngineJPanel extends JPanel implements Runnable
 {
 	protected Engine engine;
 	protected PropertyLine deltaTime;
-	protected PropertyLine addBufferSize;
-	protected PropertyLine removeBufferSize;
-	protected PropertyLine currentThreadNumber;
-	protected PropertyLine actionsSize;
+	protected PropertyLine executeAddBufferSize;
+	protected PropertyLine executeRemoveBufferSize;
+	protected PropertyLine executeCurrentThreadNumber;
+	protected PropertyLine executeActionsSize;
+	
+	protected PropertyLine planAddBufferSize;
+	protected PropertyLine planRemoveBufferSize;
+	protected PropertyLine planCurrentThreadNumber;
+	protected PropertyLine planActionsSize;
 	
 	
 	public EngineJPanel(Engine engine)
 	{
 		this.engine = engine;
 		
-		JLabel test = new JLabel(engine.toString());
-		
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		
 		this.setLayout(layout);
 		
 		deltaTime = new PropertyLine("Delta Time :");
+				
 		
-		addBufferSize = new PropertyLine("Add Buffer :");
-		removeBufferSize = new PropertyLine("Remove Buffer :");
-		currentThreadNumber = new PropertyLine("Current threads :");
-		actionsSize = new PropertyLine("Actions Size :");
+		JLabel executeLabel = new JLabel("Execute Manager");
+		
+		executeAddBufferSize = new PropertyLine("Add Buffer :");
+		executeRemoveBufferSize = new PropertyLine("Remove Buffer :");
+		executeCurrentThreadNumber = new PropertyLine("Current threads :");
+		executeActionsSize = new PropertyLine("Actions Size :");
 		
 		this.setBorder(BorderFactory.createEtchedBorder());
 		
-		this.add(test);
-		this.add(deltaTime);
-		this.add(actionsSize);
-		this.add(currentThreadNumber);
-		this.add(addBufferSize);
-		this.add(removeBufferSize);
-		this.add(new JPanel());
 		
+		JLabel planLabel = new JLabel("Plan Manager");
+		
+		BoxLayout planlayout = new BoxLayout(this, BoxLayout.Y_AXIS);
+		
+		this.setLayout(layout);
+		
+		deltaTime = new PropertyLine("Delta Time :");
+		
+		planAddBufferSize = new PropertyLine("Add Buffer :");
+		planRemoveBufferSize = new PropertyLine("Remove Buffer :");
+		planCurrentThreadNumber = new PropertyLine("Current threads :");
+		planActionsSize = new PropertyLine("Actions Size :");
+		
+		
+		this.add(deltaTime);
+
+		this.add(planLabel);
+		this.add(planActionsSize);
+		this.add(planCurrentThreadNumber);
+		this.add(planAddBufferSize);
+		this.add(planRemoveBufferSize);
+		
+		this.add(executeLabel);
+		this.add(executeActionsSize);
+		this.add(executeCurrentThreadNumber);
+		this.add(executeAddBufferSize);
+		this.add(executeRemoveBufferSize);
+		
+		this.add(new JPanel());
 	}
 	
 	public void update()
 	{
 		deltaTime.setValue(engine.getDeltaTime() + " ms");
-		actionsSize.setValue(engine.getActionsSize() + "");
-		addBufferSize.setValue(engine.getAddBufferSize()+ "");
-		currentThreadNumber.setValue(engine.getCurrentThreadNumber()+ "");
-		removeBufferSize.setValue(engine.getRemoveBufferSize()+ "");
+		
+		executeActionsSize.setValue(engine.getActionsSizeExecute() + "");
+		executeAddBufferSize.setValue(engine.getAddBufferSizeExecute()+ "");
+		executeCurrentThreadNumber.setValue(engine.getCurrentThreadNumberExecute()+ "");
+		executeRemoveBufferSize.setValue(engine.getRemoveBufferSizeExecute()+ "");
+		
+		planActionsSize.setValue(engine.getActionsSizePlan() + "");
+		planAddBufferSize.setValue(engine.getAddBufferSizePlan()+ "");
+		planCurrentThreadNumber.setValue(engine.getCurrentThreadNumberPlan()+ "");
+		planRemoveBufferSize.setValue(engine.getRemoveBufferSizePlan()+ "");
 	}
 
 	@Override

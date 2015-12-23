@@ -8,10 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class Engine implements Runnable
-{
-	//Action lists to do for every cycle
-	private LinkedList<IEngineAction> actions;
-	    
+{	    
     //Time measurements
     private long time;
     private float deltaTime;
@@ -26,8 +23,6 @@ public class Engine implements Runnable
     private int currentThreadNumber;
     //Size of the sublist to be sent
     private int subListSize;
-    //List of loops running in parallel 
-    private LinkedList<ActionLoop> loops;
     
     //Utility to launch, cache
     //and synchronize the threads
@@ -43,7 +38,8 @@ public class Engine implements Runnable
     private LinkedList<IEngineAction> removeBuffer;
     
     //
-    private ActionLoopManager<ActionLoop> manager;
+    private ActionLoopManager<PlanActionLoop> planningManager;
+    private ActionLoopManager<ExecuteActionLoop> executionManager;
     
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
@@ -64,9 +60,6 @@ public class Engine implements Runnable
     	else
     		this.maxThreads = maxThreads; 	
     	
-    	//Initialize the lists
-        actions = new LinkedList<IEngineAction>();
-        loops = new LinkedList<ActionLoop>();   
         //Buffer lists
         addBuffer = new LinkedList<IEngineAction>();
         removeBuffer = new LinkedList<IEngineAction>();
@@ -77,35 +70,56 @@ public class Engine implements Runnable
         //List to keep the future states of 
         //all the loops used for synchronization
         futureList = new LinkedList<Future<ActionLoop>>();
-        
-        manager = new ActionLoopManager<ActionLoop>(ActionLoop.class, actionsToSplit, maxThreads);
+                
+        planningManager = new ActionLoopManager<PlanActionLoop>(PlanActionLoop.class, actionsToSplit, maxThreads);
+        executionManager = new ActionLoopManager<ExecuteActionLoop>(ExecuteActionLoop.class, actionsToSplit, maxThreads, planningManager);
     }
     
     //   Getters   //
-    public int getActionsSize()
-    {    	
-    	return manager.getActionsSize();
-    }
     public float getDeltaTime()
     {
     	return deltaTime;
     }
-    public int getAddBufferSize()
-    {
-    	return manager.getAddBufferSize();
+    public int getActionsSizeExecute()
+    {    	
+    	return executionManager.getActionsSize();
     }
-    public int getRemoveBufferSize()
+    
+    public int getAddBufferSizeExecute()
     {
-    	return manager.getRemoveBufferSize();
+    	return executionManager.getAddBufferSize();
     }
-    public int getCurrentThreadNumber()
+    public int getRemoveBufferSizeExecute()
     {
-    	return currentThreadNumber;
+    	return executionManager.getRemoveBufferSize();
+    }
+    public int getCurrentThreadNumberExecute()
+    {
+    	return executionManager.getCurrentThreadNumberPlan();
+    }
+    
+    public int getActionsSizePlan()
+    {    	
+    	return planningManager.getActionsSize();
+    }
+    
+    public int getAddBufferSizePlan()
+    {
+    	return planningManager.getAddBufferSize();
+    }
+    public int getRemoveBufferSizePlan()
+    {
+    	return planningManager.getRemoveBufferSize();
+    }
+    public int getCurrentThreadNumberPlan()
+    {
+    	return planningManager.getCurrentThreadNumberPlan();
     }
     //Add to stack
     public void addAction(IEngineAction action)
     {
-    	manager.add(action);
+    	planningManager.add(action);
+    	executionManager.add(action);
     }
      
     //Start engine loop
@@ -158,7 +172,7 @@ public class Engine implements Runnable
     		{
     		}
     	}
-    	
-    	manager.run(deltaTime);
+    	planningManager.run(deltaTime);
+    	executionManager.run(deltaTime);
     }
 }

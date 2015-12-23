@@ -31,7 +31,7 @@ public class EngineQueueStressTest
 			{				
 				i = 0;
 			}
-			if(engine.getActionsSize() > 10000000)
+			if(engine.getActionsSizeExecute() > 10000000)
 			{
 				add = false;
 				try {
@@ -43,7 +43,7 @@ public class EngineQueueStressTest
 			}
 			if(add)
 			{
-				engine.addAction(new oneRunAction(random.nextInt((15000) + 15000)));
+				engine.addAction(new oneRunAction(random.nextInt((15) + 15000)));
 			}
 			i++;
 			try {

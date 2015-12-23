@@ -76,7 +76,7 @@ public class InteractiveTest
 		point = new PointF(0,0);
     	
     	pawn = new Pawn(10, 10, point, world);
-    	pawn.set(AttributeSelector.movementSpeed(), 0.010f);
+    	pawn.set(AttributeSelector.movementSpeed(), 0.01f);
     	//pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
     	pawn.getController().setBehaviour(new Harvest(pawn));
     	pawn.set(AttributeSelector.color(), Color.white);

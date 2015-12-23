@@ -2,6 +2,7 @@ package game.engine;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,8 +41,27 @@ class ActionLoopManager<ALoop extends ActionLoop>
     //List to keep the future states of 
     //all the loops used for synchronization
     private LinkedList<Future<ALoop>> futureList;
+    private LinkedList<ActionLoopManager<?>> childs;
     
 	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads)
+	{
+		
+		constructor(classOfLoop, actionsToSplit, maxThreads);
+	}
+	
+	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads, ActionLoopManager<?> child)
+	{
+		constructor(classOfLoop, actionsToSplit, maxThreads);
+		childs.add(child);
+	}
+	
+	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads, List<ActionLoopManager<?>> childs)
+	{
+		constructor(classOfLoop, actionsToSplit, maxThreads);
+		this.childs.addAll(childs);
+	}
+	
+	private void constructor(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads)
 	{
 		this.classOfLoop = classOfLoop;
 		this.actionsToSplit = actionsToSplit;
@@ -70,7 +90,9 @@ class ActionLoopManager<ALoop extends ActionLoop>
 		executor = Executors.newCachedThreadPool();
 		
 		futureList = new LinkedList<>();
+		childs = new LinkedList<>();
 	}
+	
 	private void readFromBuffers()
 	{
 		//Check if the buffer lists aren't empty
@@ -84,7 +106,6 @@ class ActionLoopManager<ALoop extends ActionLoop>
     		//Check if the remove Buffer is empty
         	if(removeBuffer.size() !=  0)
         	{
-        		
     			actions.removeAll(removeBuffer);
     			//Assign new buffer
         		removeBuffer =  new LinkedList<>();
@@ -103,6 +124,11 @@ class ActionLoopManager<ALoop extends ActionLoop>
         	}
     	}
     	
+		resizeLoops();
+	}
+	
+	protected void resizeLoops()
+	{
 		//Calculate the required number of threads
     	//regardless of the limit
     	currentThreadNumber = actions.size() / actionsToSplit + 1;
@@ -121,6 +147,7 @@ class ActionLoopManager<ALoop extends ActionLoop>
 			try
 			{
 				loop = classOfLoop.newInstance();
+				loop.setManager(this);
 				loops.add(loop);
 			}
 			catch (InstantiationException | IllegalAccessException e)
@@ -143,17 +170,15 @@ class ActionLoopManager<ALoop extends ActionLoop>
     		if(loopNumber == 0)
     		{
     			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
-    			loop.setRemoveBuffer(removeBuffer);
-    			
     		}
     		else
     		{
     			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
-    			loop.setRemoveBuffer(removeBuffer);
     		}
     		loopNumber++;
     	}
 	}
+	
 	public void add(IEngineAction action)
 	{
 		synchronized(addBuffer)
@@ -175,8 +200,14 @@ class ActionLoopManager<ALoop extends ActionLoop>
 	{
 		synchronized(removeBuffer)
 		{
-			removeBuffer.remove(action);
+			removeBuffer.add(action);
 			readFromBuffers = true;
+		}
+		Iterator<ActionLoopManager<?>> iterator = childs.iterator();
+		while(iterator.hasNext())
+		{
+			ActionLoopManager<?> manager = iterator.next();
+			manager.remove(action);
 		}
 	}
 	public void remove(LinkedList<IEngineAction> buffer)
@@ -186,8 +217,15 @@ class ActionLoopManager<ALoop extends ActionLoop>
 			removeBuffer.addAll(buffer);
 			readFromBuffers = true;
 		}
+		Iterator<ActionLoopManager<?>> iterator = childs.iterator();
+		while(iterator.hasNext())
+		{
+			ActionLoopManager<?> manager = iterator.next();
+			manager.remove(buffer);
+		}
 	}
 	
+	//  Getters  //
 	public int getAddBufferSize()
     {
     	return addBuffer.size();
@@ -200,14 +238,16 @@ class ActionLoopManager<ALoop extends ActionLoop>
     {    	
     	return actions.size();
     }
+    public int getCurrentThreadNumberPlan()
+    {
+    	return currentThreadNumber;
+    }
+    
 	@SuppressWarnings("unchecked")
 	public void run(float deltaTime) throws InterruptedException
 	{
 		readFromBuffers();
-		
-		//System.out.println(actions.size());
-		System.out.println(loops.size());
-		
+				
 		//Grab iterator for the loops list
 		Iterator<ALoop> loopIterator = loops.iterator();
     	while(loopIterator.hasNext())
@@ -215,28 +255,11 @@ class ActionLoopManager<ALoop extends ActionLoop>
     		ALoop loop = loopIterator.next();
     		//Set the deltaTime for the loop
     		loop.setDeltaTime(deltaTime);
-    		//Set the loop to plan the actions
-    		loop.setToPlanning();
     		//Start the loop and get 
     		//the object in the finished state
     		futureList.add((Future<ALoop>) executor.submit(loop));
     	}
     	//Wait until the loops are finished
-    	waitForLoops();
-    	
-    	//Grab iterator for the loops list
-    	loopIterator = loops.iterator();
-    	while(loopIterator.hasNext())
-    	{
-    		ActionLoop loop = loopIterator.next();
-    		//Set the deltaTime for the loop
-    		loop.setDeltaTime(deltaTime);
-    		//Set the loop to execute the actions
-    		loop.setToExecution();
-    		//Start the loop and get 
-    		//the object in the finished state
-    		futureList.add((Future<ALoop>) executor.submit(loop));
-    	}
     	waitForLoops();
 	}
 	public void waitForLoops() throws InterruptedException
