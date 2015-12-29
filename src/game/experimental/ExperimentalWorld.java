@@ -5,26 +5,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import game.engine.IEngineVariable;
 import game.library.Entity;
 import game.library.attribute.AttributeSelector;
+import game.library.world.EntityPositionContainer;
 import game.library.world.IWorld;
 import game.library.world.sector.SectorGrid;
 
-public class ExperimentalWorld implements IWorld 
+public class ExperimentalWorld implements IWorld
 {
 	protected List<Entity> list;
 	
-	SectorGrid grid;
+	protected SectorGrid grid;
+	protected EntityPositionContainer<Entity> locationList;
 	
 	public ExperimentalWorld()
 	{
 		list = new ArrayList<Entity>();
+		locationList = new EntityPositionContainer<Entity>();
 	}
 	
 	@Override
 	public void addEntity(Entity ent) {
 		// TODO Auto-generated method stub
 		list.add(ent);
+		locationList.add(ent);
 	}
 
 	@Override
@@ -64,11 +69,20 @@ public class ExperimentalWorld implements IWorld
 			{
 				return ent;
 			}
-			{
-				System.out.println("IWorld : " + id + " NOT " + ent.get(AttributeSelector.ID())) ;
-			}
 		}
 		return null;
+	}
+
+	@Override
+	public void update()
+	{
+		locationList.sort();
+	}
+
+	@Override
+	public EntityPositionContainer<Entity> getEntities()
+	{
+		return locationList;
 	}
 
 }

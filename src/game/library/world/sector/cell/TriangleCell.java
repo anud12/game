@@ -7,7 +7,7 @@ import game.geom.classes.Triangle;
 
 public class TriangleCell extends Triangle implements Cell
 {
-
+	private static final long serialVersionUID = 7797483000487840848L;
 	protected SquareCell parent;
 	
 	public TriangleCell(List<PointF> points, SquareCell parent) throws Exception 

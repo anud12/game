@@ -1,6 +1,5 @@
 package game.library.world.sector.generator;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;

@@ -9,6 +9,8 @@ import game.geom.classes.Triangle;
 
 public class SquareCell extends Rectangle implements Cell
 {
+	private static final long serialVersionUID = -5287963541778570188L;
+
 	protected List<TriangleCell> innerTriangles;
 	
 	protected TriangleCell rightTriangle;
