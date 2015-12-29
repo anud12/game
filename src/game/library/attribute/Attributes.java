@@ -1,7 +1,6 @@
 package game.library.attribute;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Attributes 
 {

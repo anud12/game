@@ -3,19 +3,17 @@ package game.graphicalUserInterface.panels;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import game.engine.Engine;
 
+@SuppressWarnings("serial")
 public class EngineJPanel extends JPanel implements Runnable
 {
 	protected Engine engine;
@@ -53,9 +51,7 @@ public class EngineJPanel extends JPanel implements Runnable
 		
 		
 		JLabel planLabel = new JLabel("Plan Manager");
-		
-		BoxLayout planlayout = new BoxLayout(this, BoxLayout.Y_AXIS);
-		
+				
 		this.setLayout(layout);
 		
 		deltaTime = new PropertyLine("Delta Time :");
@@ -118,6 +114,7 @@ public class EngineJPanel extends JPanel implements Runnable
 	}
 }
 
+@SuppressWarnings("serial")
 class PropertyLine extends JPanel
 {
 	protected JLabel nameLabel;

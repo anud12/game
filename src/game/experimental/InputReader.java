@@ -97,7 +97,7 @@ public class InputReader extends KeyAdapter
 									
 									executor.execute(inter);
 									
-									InteractiveTest.gl.addAction(pawn.getController());
+									InteractiveTest.engine.addAction(pawn.getController());
 									break;
 								}
 								case "dropOff":

@@ -1,23 +1,21 @@
 package game.graphicalUserInterface.panels;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JList;
 
 public class PanelSelector extends JPanel implements ListSelectionListener
 {
+	private static final long serialVersionUID = 6782650573617991709L;
 	protected JList<String> list;
 	protected JPanel displayPanel;
 
@@ -25,7 +23,7 @@ public class PanelSelector extends JPanel implements ListSelectionListener
 	
 	public PanelSelector()
 	{
-		list = new JList();
+		list = new JList<String>();
 		displayPanel = new JPanel();
 		displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
 		panels = new HashMap<>();

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import game.engine.Engine;
+import game.engine.IEngineVariable;
 import game.experimental.ExperimentalWorld;
 import game.experimental.GLView;
 import game.experimental.TextInterface;
@@ -27,18 +28,20 @@ import game.library.world.sector.cell.SquareCell;
 import game.library.world.sector.generator.DemoSectorGenerator;
 import game.library.world.sector.generator.SquareSectorGenerator;
 import game.network.Server;
-import game.network.protocol.ChatProtocol;
-import game.network.protocol.EngineProtocol;
-import game.network.protocol.TextDisplayProtocol;
+import game.network.services.ChatService;
+import game.network.services.EngineControlService;
+import game.network.services.TextDisplayService;
+import game.network.services.WorldControlService;
 
 import java.awt.Color;
 
 public class InteractiveTest 
 {
-	public static Engine gl;
+	public static Engine engine;
 	public static void main(String args[])
 	{
-		gl = new Engine(1000, 8);
+		engine = new Engine(1000, 8);
+		
 		IWorld world = new ExperimentalWorld();
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -51,7 +54,7 @@ public class InteractiveTest
     	PanelSelector selector = new PanelSelector();
     	mainWindow.add(selector);
 		
-    	EngineJPanel enginePanel = new EngineJPanel(gl);
+    	EngineJPanel enginePanel = new EngineJPanel(engine);
     	selector.addPanel("Engine", enginePanel);
     	executor.execute(enginePanel);
     	
@@ -67,7 +70,7 @@ public class InteractiveTest
 		
 		executor.execute(inter);
 		
-		gl.addAction(pawn.getController());
+		engine.addAction(pawn.getController());
 		
 		Entity ent = new Entity(2, 2, new PointF(50,20), world);
 		ent.set(AttributeSelector.color(), new Color(139,69,19));
@@ -86,11 +89,11 @@ public class InteractiveTest
 		
 		executor.execute(inter);
 		
-		gl.addAction(pawn.getController());
+		engine.addAction(pawn.getController());
 		
+		IWorld world2 = new ExperimentalWorld();
 		for(int i = 0 ; i < 1000 ; i++)
 		{
-			IWorld world2 = new ExperimentalWorld();
 			point = new PointF(-10,-10);
 	    	
 	    	pawn = new Pawn(10, 40, point, world2);
@@ -98,9 +101,12 @@ public class InteractiveTest
 	    	point = new PointF(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	pawn.getController().setOrder(new Move(pawn, point));
 	    	
-			gl.addAction(pawn.getController());
+			engine.addAction(pawn.getController());
 		}
 		
+		
+		//engine.addVariable(world);
+		engine.addVariable(world);
 		
 		SectorGrid grid = new SectorGrid(200, new PointF (0,0));
 		DemoSectorGenerator generator = new DemoSectorGenerator();
@@ -108,12 +114,13 @@ public class InteractiveTest
 		
 		ArrayList<Sector> sectors = new ArrayList<Sector>();
 		
-		executor.execute(gl);
+		executor.execute(engine);
 		executor.execute(new GLView(world, sectors));
 		Server server = new Server();
-		server.addProtocol(new ChatProtocol());
-		server.addProtocol(new TextDisplayProtocol());
-		server.addProtocol(new EngineProtocol(world));
+		server.addService(new ChatService());
+		server.addService(new TextDisplayService());
+		server.addService(new WorldControlService(world));
+		server.addService(new EngineControlService(engine));
 		
 		executor.execute(server);
 		
@@ -154,6 +161,6 @@ public class InteractiveTest
 		}
 		System.out.println("Done creating sectors");
 		
-		EngineQueueStressTest.main(gl);
+		EngineQueueStressTest.main(engine);
 	}
 }

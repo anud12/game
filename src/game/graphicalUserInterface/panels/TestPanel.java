@@ -3,11 +3,11 @@ package game.graphicalUserInterface.panels;
 import java.awt.Color;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class TestPanel extends JPanel
 {
+	private static final long serialVersionUID = -3334927255341581669L;
 
 	public TestPanel(Color color)
 	{

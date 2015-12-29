@@ -51,8 +51,7 @@ public class Entity
     public Entity(int width, int heigth, PointF origin, IWorld world)
     {
     	attributes = new Attributes();
-    	//World dependency initialization
-    	world.addEntity(this);
+    	
     	this.world = world;
     	
     	//Geometry Initialization
@@ -87,6 +86,8 @@ public class Entity
     	
     	attributes.set(AttributeSelector.ID(), i);
     	
+    	//World dependency initialization
+    	world.addEntity(this);
     }
     
     //Methods:
