@@ -7,29 +7,32 @@ import java.util.Iterator;
 
 import game.network.component.Router;
 import game.network.component.Session;
-import game.network.protocol.ChatProtocol;
-import game.network.protocol.Protocol;
-import game.network.protocol.TextDisplayProtocol;
+import game.network.services.ChatService;
+import game.network.services.Service;
+import game.network.services.TextDisplayService;
 
 public class Server implements Runnable
 {
+	//Router is used to listen and create sessions
 	protected Router router ;
+	//Sessions represents a connection
 	protected HashMap<SocketAddress, Session> sessions;
-	protected HashSet<Protocol> protocols;
+	//List of loaded services
+	protected HashSet<Service> services;
 		
 	public static void main (String[] args)
 	{
 		Server server = new Server();
 		server.run();
-		server.addProtocol(new ChatProtocol());
-		server.addProtocol(new TextDisplayProtocol());
+		server.addService(new ChatService());
+		server.addService(new TextDisplayService());
 		
 	}
 	
 	public Server()
 	{
 		sessions = new HashMap<>();
-		protocols = new HashSet<Protocol>();
+		services = new HashSet<Service>();
 	}
 	
 	@Override
@@ -42,26 +45,30 @@ public class Server implements Runnable
 		router.run();
 		
 	}
-	
+	//
 	public void onReply(Session session) throws Exception
 	{
+		//Get the message
 		byte[] message = session.getReply();
 		
-		Iterator<Protocol> iterator = protocols.iterator();
-		
+		Iterator<Service> iterator = services.iterator();
+		//Send the message to every service
 		while(iterator.hasNext())
 		{
-			Protocol protocol = iterator.next();
+			Service protocol = iterator.next();
+			
+			//Check if the message is for this service
 			if(protocol.isApplicable(message))
 			{
+				//Send the message to the service
 				protocol.interpret(message, session);
 			}
 		}
 	}
 	
-	public void addProtocol (Protocol protocol)
+	public void addService (Service service)
 	{
-		this.protocols.add(protocol);
+		this.services.add(service);
 	}
 	
 	public void broadcastGlobal(String message)
@@ -101,11 +108,11 @@ public class Server implements Runnable
 		System.out.print("\n");
 		removeSession(session);
 		
-		Iterator<Protocol> iterator = protocols.iterator();
+		Iterator<Service> iterator = services.iterator();
 		while(iterator.hasNext())
 		{
-			Protocol protocol = iterator.next();
-			protocol.onDisconnect(session);
+			Service service = iterator.next();
+			service.onDisconnect(session);
 		}
 		
 	}

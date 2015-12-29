@@ -1,27 +1,33 @@
-package game.network.protocol;
+package game.network.services;
 
 import game.network.component.Session;
 
-public abstract class Protocol 
+public abstract class Service 
 {
-	protected byte[] header;
-	
-	protected Protocol()
-	{
-		header = this.setHead();
-	}
-	
+	// Abstract //
+		
 	protected abstract void process(byte[] array, Session session);
 	public abstract void onDisconnect(Session session);
 	protected abstract byte[] setHead();
+	
+	// Implemented //
+	
+	protected byte[] header;
+	
+	protected Service()
+	{
+		//set the header
+		header = this.setHead();
+	}
 	
 	public final void interpret(byte[] array, Session session)
 	{
 		process(this.removeHeader(array), session);
 	}
-	
+	//Check if the header matches
 	public final boolean isApplicable(byte[] array)
 	{
+		
 		if(header == null)
 		{
 			return false;
@@ -39,7 +45,7 @@ public abstract class Protocol
 		}
 		return true;
 	}
-	
+	//Remove just the header part of the byte array
 	protected final byte[] removeHeader (byte[] array)
 	{
 		byte[] returnValue = new byte[array.length - header.length];

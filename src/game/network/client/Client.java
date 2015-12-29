@@ -2,7 +2,6 @@ package game.network.client;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,10 +24,8 @@ public class Client
 			socket = new Socket(args[0], 35000);
 		}
 		
-		InputStream in = socket.getInputStream();
 		OutputStream out = socket.getOutputStream();
 		
-		BufferedReader textResponse = new BufferedReader(new InputStreamReader(in, "ASCII"));
 		
 		BufferedWriter textOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "ASCII"));
 		

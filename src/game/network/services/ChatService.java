@@ -1,4 +1,4 @@
-package game.network.protocol;
+package game.network.services;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -6,12 +6,12 @@ import java.util.Iterator;
 
 import game.network.component.Session;
 
-public class ChatProtocol extends Protocol
+public class ChatService extends Service
 {
 	protected HashMap<String, Session> users;
 	protected String header;
 	
-	public ChatProtocol()
+	public ChatService()
 	{
 		users = new HashMap<String, Session>();
 	}
@@ -38,7 +38,7 @@ public class ChatProtocol extends Protocol
 						if(!users.containsKey(name))
 						{
 							users.put(words[1], session);
-							session.write("Welcome");
+							session.write("Welcome\n");
 						}						
 					}
 					break;

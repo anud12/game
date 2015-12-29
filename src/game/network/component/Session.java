@@ -15,17 +15,23 @@ import game.network.Server;
 
 public class Session implements Runnable	
 {
+	//Parent server to send the received messages
 	protected Server server;
 	
+	//The socket used to communicate with the client
 	protected Socket socket;
+	
+	// Streams //
 	protected OutputStreamWriter textOut;
 	protected OutputStream byteOut;
 	protected InputStream inBufferStream;
 	
+	//List of messages
 	protected List<Byte> message;
 	
+	//Client address
 	protected SocketAddress address;
-		
+	
 	public Session(Socket socket, Server server) throws IOException
 	{
 		this.server = server;
@@ -45,6 +51,8 @@ public class Session implements Runnable
 	{
 		int readValue;
 		boolean loop = false;
+		
+		//Read until it receives 0 or -1
 		do
 		{
 			loop = false;
@@ -66,11 +74,12 @@ public class Session implements Runnable
 	{
 		try 
 		{
-			write("Connected");			
+			write("Connected\n");			
 			
 			while(true)
 			{
 				read();
+				//Send to server the message
 				server.onReply(this);
 			}
 		}
@@ -113,15 +122,17 @@ public class Session implements Runnable
 	{
 		return server;
 	}
-	
+	//Send message to the client 
 	public void write(String string)
 	{
 		
 		try 
 		{
+			//Write the message
 			textOut.write(string);
 			
 			textOut.flush();
+			//Write end character
 			byteOut.write(0);
 			byteOut.flush();
 		} 

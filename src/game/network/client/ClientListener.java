@@ -1,9 +1,7 @@
 package game.network.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +13,6 @@ public class ClientListener implements Runnable
 	
 	public ClientListener(Socket socket)
 	{
-		boolean exit = false;
 		this.socket = socket;
 		try 
 		{
@@ -31,7 +28,6 @@ public class ClientListener implements Runnable
 	{
 		try 
 		{
-			BufferedReader textResponse = new BufferedReader(new InputStreamReader(in, "ASCII"));
 			while(true)
 			{
 				
@@ -40,10 +36,7 @@ public class ClientListener implements Runnable
 				
 				synchronized(System.out)
 				{
-					System.out.print("\n---Server_Response---\n");
 					System.out.print(text);
-					System.out.print("\n---------------------");
-					System.out.print("\n");
 				}
 			}
 		} 

@@ -1,10 +1,10 @@
-package game.network.protocol;
+package game.network.services;
 
 import java.io.UnsupportedEncodingException;
 
 import game.network.component.Session;
 
-public class TextDisplayProtocol extends Protocol{
+public class TextDisplayService extends Service{
 
 	@Override
 	protected void process(byte[] array, Session session) {
