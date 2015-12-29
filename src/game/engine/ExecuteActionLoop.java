@@ -1,6 +1,6 @@
 package game.engine;
 
-class ExecuteActionLoop extends ActionLoop
+class ExecuteActionLoop extends ActionLoop<IEngineAction>
 {
 
 	@Override

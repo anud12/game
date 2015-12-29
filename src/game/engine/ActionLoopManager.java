@@ -1,5 +1,6 @@
 package game.engine;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,15 +9,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-class ActionLoopManager<ALoop extends ActionLoop>
+
+class  ActionLoopManager<ALoop extends ActionLoop<?>, ActionType>
 {
-	//Class of the ALoop
+	//Variable used to instantiate a new ALoop object
 	private Class<ALoop> classOfLoop;
+	//Class of ActionType used to check the contents of the loops
+	private Class<ActionType> classOfActionType;
 	//Utility to launch, cache
     //and synchronize the threads
     private ExecutorService executor;
 	//Action lists to do for every cycle
-	private LinkedList<IEngineAction> actions;
+	private LinkedList<ActionType> actions;
 	
 	//Configurations
 	
@@ -28,42 +32,40 @@ class ActionLoopManager<ALoop extends ActionLoop>
     private int currentThreadNumber;
     //Size of the sublist to be sent
     private int subListSize;
-    //Scheduling to read from buffers
-    private boolean readFromBuffers;
     //Containers
     
     //List of loops running in parallel 
     private LinkedList<ALoop> loops;
     //Buffer list used in modifying  actions
     //in between the loop iterations
-    private LinkedList<IEngineAction> addBuffer;
-    private LinkedList<IEngineAction> removeBuffer;
+    private LinkedList<ActionType> addBuffer;
+    private LinkedList<ActionType> removeBuffer;
     //List to keep the future states of 
     //all the loops used for synchronization
     private LinkedList<Future<ALoop>> futureList;
-    private LinkedList<ActionLoopManager<?>> childs;
+    private LinkedList<ActionLoopManager<?,?>> childs;
     
-	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads)
+	public ActionLoopManager(Class<ALoop> classOfLoop, Class<ActionType> classOfAction, int actionsToSplit, int maxThreads)
 	{
-		
-		constructor(classOfLoop, actionsToSplit, maxThreads);
+		constructor(classOfLoop, classOfAction, actionsToSplit, maxThreads);
 	}
 	
-	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads, ActionLoopManager<?> child)
+	public ActionLoopManager(Class<ALoop> classOfLoop, Class<ActionType> classOfAction, int actionsToSplit, int maxThreads, ActionLoopManager<?,?> child)
 	{
-		constructor(classOfLoop, actionsToSplit, maxThreads);
+		constructor(classOfLoop, classOfAction, actionsToSplit, maxThreads);
 		childs.add(child);
 	}
 	
-	public ActionLoopManager(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads, List<ActionLoopManager<?>> childs)
+	public ActionLoopManager(Class<ALoop> classOfLoop, Class<ActionType> classOfAction, int actionsToSplit, int maxThreads, List<ActionLoopManager<?,?>> childs)
 	{
-		constructor(classOfLoop, actionsToSplit, maxThreads);
+		constructor(classOfLoop, classOfAction, actionsToSplit, maxThreads);
 		this.childs.addAll(childs);
 	}
 	
-	private void constructor(Class<ALoop> classOfLoop, int actionsToSplit, int maxThreads)
+	private void constructor(Class<ALoop> classOfLoop, Class<ActionType> classOfAction, int actionsToSplit, int maxThreads)
 	{
 		this.classOfLoop = classOfLoop;
+		this.classOfActionType = classOfAction;
 		this.actionsToSplit = actionsToSplit;
 		this.maxThreads = maxThreads;
 		
@@ -127,6 +129,7 @@ class ActionLoopManager<ALoop extends ActionLoop>
 		resizeLoops();
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void resizeLoops()
 	{
 		//Calculate the required number of threads
@@ -164,7 +167,7 @@ class ActionLoopManager<ALoop extends ActionLoop>
     	int loopNumber = 0;
     	while(loopIterator.hasNext() && loopNumber < currentThreadNumber && !actions.isEmpty())
     	{
-    		ActionLoop loop = loopIterator.next();
+    		ActionLoop<ActionType> loop = (ActionLoop<ActionType>) loopIterator.next();
     		//Slice the list of actions in smaller lists
     		//equal in size for the loops and set the removeBuffer
     		if(loopNumber == 0)
@@ -179,49 +182,49 @@ class ActionLoopManager<ALoop extends ActionLoop>
     	}
 	}
 	
-	public void add(IEngineAction action)
+	public void add(ActionType action)
 	{
 		synchronized(addBuffer)
 		{
 			addBuffer.add(action);
-			readFromBuffers = true;
 		}
 		
 	}
-	public void add(LinkedList<IEngineAction> buffer) throws InterruptedException
+	public void add(LinkedList<ActionType> buffer) throws InterruptedException
 	{
 		synchronized(addBuffer)
 		{
 			addBuffer.addAll(buffer);
-			readFromBuffers = true;
 		}
 	}
-	public void remove(IEngineAction action)
+	@SuppressWarnings("unchecked")
+	public void remove(Object action)
 	{
 		synchronized(removeBuffer)
 		{
-			removeBuffer.add(action);
-			readFromBuffers = true;
+			removeBuffer.add((ActionType) action);
 		}
-		Iterator<ActionLoopManager<?>> iterator = childs.iterator();
+		Iterator<ActionLoopManager<?,?>> iterator = childs.iterator();
 		while(iterator.hasNext())
 		{
-			ActionLoopManager<?> manager = iterator.next();
-			manager.remove(action);
+			ActionLoopManager<?,?> manager = iterator.next();
+			if(manager.classOfActionType == this.classOfActionType)
+				manager.remove(action);
 		}
 	}
-	public void remove(LinkedList<IEngineAction> buffer)
+	@SuppressWarnings("unchecked")
+	public void removeAll(LinkedList<?> buffer)
 	{
 		synchronized(removeBuffer)
 		{
-			removeBuffer.addAll(buffer);
-			readFromBuffers = true;
+			removeBuffer.addAll((Collection<? extends ActionType>) buffer);
 		}
-		Iterator<ActionLoopManager<?>> iterator = childs.iterator();
+		Iterator<ActionLoopManager<?,?>> iterator = childs.iterator();
 		while(iterator.hasNext())
 		{
-			ActionLoopManager<?> manager = iterator.next();
-			manager.remove(buffer);
+			ActionLoopManager<?,?> manager = iterator.next();
+			if(manager.classOfActionType == this.classOfActionType)
+				manager.removeAll(buffer);
 		}
 	}
 	
@@ -281,5 +284,4 @@ class ActionLoopManager<ALoop extends ActionLoop>
     	}
     	futureList.clear();
     }
-
 }

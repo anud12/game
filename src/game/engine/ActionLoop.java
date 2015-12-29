@@ -4,16 +4,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-abstract class ActionLoop implements Runnable{
+abstract class ActionLoop<AL> implements Runnable{
 	//Action list
-	private List<IEngineAction> actions;
+	private List<AL> actions;
 	
 	//Iterator used for navigating the list
-	private Iterator<IEngineAction>iterator;
+	private Iterator<AL> iterator;
 	//Time passed from the last loop
 	private float deltaTime;
 	//Returning list of deleted actions
-	private ActionLoopManager<?> manager;
+	private ActionLoopManager<?,?> manager;
 	//Object used to sleep and awake the loop
 	public Object monitor;
 	
@@ -22,12 +22,12 @@ abstract class ActionLoop implements Runnable{
 		monitor = new Object();
 	}
 	
-	public void setActions(List<IEngineAction> actions)
+	public void setActions(List<AL> actions)
 	{
 		this.actions = actions;
 		iterator =  actions.iterator();
 	}
-	public void setManager(ActionLoopManager<?> manager)
+	public void setManager(ActionLoopManager<?,?> manager)
 	{
 		this.manager = manager;
 	}
@@ -48,7 +48,7 @@ abstract class ActionLoop implements Runnable{
 				while(iterator.hasNext())
 				{					
 					//Get iterator
-					IEngineAction action = iterator.next();
+					AL action = iterator.next();
 					
 					execute(action, deltaTime);
 				}
@@ -62,6 +62,6 @@ abstract class ActionLoop implements Runnable{
 		manager.remove(action);
 	}
 	
-	protected abstract void execute(IEngineAction action, float delatTime);
+	protected abstract void execute(AL action, float delatTime);
 
 }

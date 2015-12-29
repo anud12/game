@@ -1,78 +1,34 @@
 package game.engine;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class Engine implements Runnable
 {	    
     //Time measurements
     private long time;
     private float deltaTime;
     int minimumDeltaTime;
-    // MultiThread //
     
-    //Number of actions when a new loop will be created
-    private int actionsToSplit; 
-    //Number of maximum running parallel loops
-    private int maxThreads;
+    //   Managers used to process the engine phases   //
     
-    private int currentThreadNumber;
-    //Size of the sublist to be sent
-    private int subListSize;
+    // Planning manager used to calculate what the actions will do
+    private ActionLoopManager<PlanActionLoop, IEngineAction> planningManager;
+    // Execution manager used to do the action
+    private ActionLoopManager<ExecuteActionLoop, IEngineAction> executionManager;
+    // Update manager used to update the variables
+	private ActionLoopManager<UpdateActionLoop, IEngineVariable> variableManager;
     
-    //Utility to launch, cache
-    //and synchronize the threads
-    private ExecutorService executor;
-    
-    //List to keep the future states of 
-    //all the loops used for synchronization
-    private LinkedList<Future<ActionLoop>> futureList;
-    
-    //Buffer list used in modifying  actions
-    //in between the loop iterations
-    private LinkedList<IEngineAction> addBuffer;
-    private LinkedList<IEngineAction> removeBuffer;
-    
-    //
-    private ActionLoopManager<PlanActionLoop> planningManager;
-    private ActionLoopManager<ExecuteActionLoop> executionManager;
-    
+	//Options
+	private boolean isPause;
+	 
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
     {
     	minimumDeltaTime = 1;
+    	                     
+    	isPause = false;
     	
-    	//If actions is 0 make it infinite
-    	if(actionsToSplit == 0)
-    		this.actionsToSplit = Integer.MAX_VALUE;
-    	else
-    		this.actionsToSplit = actionsToSplit;
-    	
-    	//If the number of threads is 0
-    	//query the OS with the number
-    	//of virtual processors available
-    	if(maxThreads == 0)
-        	this.maxThreads = Runtime.getRuntime().availableProcessors();
-    	else
-    		this.maxThreads = maxThreads; 	
-    	
-        //Buffer lists
-        addBuffer = new LinkedList<IEngineAction>();
-        removeBuffer = new LinkedList<IEngineAction>();
-        
-        //Utility to launch, cache
-        //and synchronize the threads
-        executor = Executors.newFixedThreadPool(maxThreads);
-        //List to keep the future states of 
-        //all the loops used for synchronization
-        futureList = new LinkedList<Future<ActionLoop>>();
-                
-        planningManager = new ActionLoopManager<PlanActionLoop>(PlanActionLoop.class, actionsToSplit, maxThreads);
-        executionManager = new ActionLoopManager<ExecuteActionLoop>(ExecuteActionLoop.class, actionsToSplit, maxThreads, planningManager);
+        planningManager = new ActionLoopManager<PlanActionLoop, IEngineAction>(PlanActionLoop.class, IEngineAction.class, actionsToSplit, maxThreads);
+        executionManager = new ActionLoopManager<ExecuteActionLoop, IEngineAction>(ExecuteActionLoop.class, IEngineAction.class, actionsToSplit, maxThreads, planningManager);
+        variableManager = new ActionLoopManager<UpdateActionLoop, IEngineVariable>(UpdateActionLoop.class, IEngineVariable.class, actionsToSplit, maxThreads);
     }
     
     //   Getters   //
@@ -84,7 +40,6 @@ public class Engine implements Runnable
     {    	
     	return executionManager.getActionsSize();
     }
-    
     public int getAddBufferSizeExecute()
     {
     	return executionManager.getAddBufferSize();
@@ -97,12 +52,10 @@ public class Engine implements Runnable
     {
     	return executionManager.getCurrentThreadNumberPlan();
     }
-    
     public int getActionsSizePlan()
     {    	
     	return planningManager.getActionsSize();
     }
-    
     public int getAddBufferSizePlan()
     {
     	return planningManager.getAddBufferSize();
@@ -121,6 +74,14 @@ public class Engine implements Runnable
     	planningManager.add(action);
     	executionManager.add(action);
     }
+    public void addVariable(IEngineVariable variable)
+    {
+    	variableManager.add(variable);
+    }
+    public void pause(boolean pause)
+    {
+    	isPause = pause;
+    }
      
     //Start engine loop
     @Override
@@ -137,7 +98,6 @@ public class Engine implements Runnable
     	}
     }
     
-    @SuppressWarnings("unchecked")
 	//Update the game
     void update() throws InterruptedException
     {
@@ -172,7 +132,14 @@ public class Engine implements Runnable
     		{
     		}
     	}
+    	
+    	if(isPause)
+    	{
+    		deltaTime = 0;
+    	}
+    	
     	planningManager.run(deltaTime);
     	executionManager.run(deltaTime);
+    	variableManager.run(deltaTime);
     }
 }
