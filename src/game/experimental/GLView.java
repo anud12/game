@@ -71,7 +71,7 @@ public class GLView implements Runnable{
 	    GL11.glLoadIdentity();
 	    GL11.glOrtho(0, 800, 0, 600, 1, -1);
 	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
-	    GL11.glClearColor(0, 0, 0, 0.5f);
+	    GL11.glClearColor(1, 1, 1, 1f);
 	    while (!Display.isCloseRequested()) {
 	        // Clear the screen and depth buffer
 	    	
@@ -97,11 +97,11 @@ public class GLView implements Runnable{
 			        	float blue = color.getBlue() / 255f;
 			        	float green = color.getGreen() / 255f;
 			        	
-			        	red = red / 4f;
-			        	green = green / 4f;
-			        	blue = blue / 4f;
+			        	red = red / 2f;
+			        	green = green / 2f;
+			        	blue = blue / 2f;
 			        	
-			        	GL11.glColor3d(red, green, blue);
+			        	GL11.glColor4d(red, green, blue, 1f);
 			        	
 			        	//GL11.glBegin(GL11.GL_TRIANGLES);
 			        	GL11.glBegin(GL11.GL_LINE_LOOP);
@@ -129,9 +129,9 @@ public class GLView implements Runnable{
 	        	float blue = ((Color) ent.get(AttributeSelector.color())).getBlue() / 255f;
 	        	float green = ((Color) ent.get(AttributeSelector.color())).getGreen() / 255f;
 	        	
-	        	red = red / 0.5f;
-	        	green = green / 0.5f;
-	        	blue = blue / 0.5f;
+	        	red = red ;// 0.5f;
+	        	green = green ;// 0.5f;
+	        	blue = blue ;// 0.5f;
 	        	
 	        	GL11.glColor3d(red, green, blue);
 	        	

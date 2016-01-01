@@ -17,10 +17,12 @@ import game.graphicalUserInterface.MainFrame;
 import game.graphicalUserInterface.panels.EngineJPanel;
 import game.graphicalUserInterface.panels.PanelSelector;
 import game.library.Entity;
+import game.library.NameCollection;
 import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.pawn.behaviour.Harvest;
 import game.library.pawn.order.Move;
+import game.library.player.Player;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
 import game.library.world.sector.SectorGrid;
@@ -44,6 +46,13 @@ public class InteractiveTest
 		
 		IWorld world = new ExperimentalWorld();
 		
+		NameCollection<Player> players = new NameCollection<Player>();
+		
+		Player player = new Player();
+		player.setName("DUNA");
+		
+		players.add(player);
+		
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
 		PointF point;
@@ -60,7 +69,7 @@ public class InteractiveTest
     	
     	point = new PointF(70,100);
     	
-    	pawn = new Pawn(20, 20, point, world);
+    	pawn = new Pawn(20, 20, point, world, player);
     	pawn.set(AttributeSelector.movementSpeed(), 0.005f);
     	pawn.addKeyword("dropOff");
     	pawn.set(AttributeSelector.color(), Color.gray);
@@ -78,11 +87,11 @@ public class InteractiveTest
 		
 		point = new PointF(0,0);
     	
-    	pawn = new Pawn(10, 10, point, world);
+    	pawn = new Pawn(10, 10, point, world, player);
     	pawn.set(AttributeSelector.movementSpeed(), 0.01f);
     	//pawn.getController().setOrder(new Move(pawn, new PointF(50,200)));
     	pawn.getController().setBehaviour(new Harvest(pawn));
-    	pawn.set(AttributeSelector.color(), Color.white);
+    	pawn.set(AttributeSelector.color(), Color.black);
 		
 		inter = new TextInterface(pawn, executor);
 		selector.addPanel(pawn.get(AttributeSelector.ID()).toString(), inter);
@@ -119,7 +128,7 @@ public class InteractiveTest
 		Server server = new Server();
 		server.addService(new ChatService());
 		server.addService(new TextDisplayService());
-		server.addService(new WorldControlService(world));
+		server.addService(new WorldControlService(world, players));
 		server.addService(new EngineControlService(engine));
 		
 		executor.execute(server);

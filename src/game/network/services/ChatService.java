@@ -43,6 +43,12 @@ public class ChatService extends Service
 					}
 					break;
 				}
+				case"LOGOUT":
+				{
+					session.write("Logging out\n");
+					logoutSession(session);
+					break;
+				}
 				case"LIST_ALL":
 				{
 					StringBuilder response = new StringBuilder();
@@ -58,10 +64,7 @@ public class ChatService extends Service
 						response.append("] - ");
 						response.append(users.get(name).getAddress());
 						
-						if(iterator.hasNext())
-						{
-							response.append("\n");
-						}
+						response.append("\n");
 						i++;
 					}
 					session.write(response.toString());
@@ -89,15 +92,21 @@ public class ChatService extends Service
 		
 		
 	}
-
-	@Override
-	public void onDisconnect(Session session) {
+	
+	public void logoutSession(Session session)
+	{
 		users.values().remove(session);
-		
 	}
 	
 	@Override
-	protected byte[] setHead() {
+	public void onDisconnect(Session session) 
+	{		
+		logoutSession(session);
+	}
+	
+	@Override
+	protected byte[] setHead() 
+	{
 		// TODO Auto-generated method stub
 		return "CHAT".getBytes();
 	}

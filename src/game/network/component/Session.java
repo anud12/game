@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import game.library.attribute.Attributes;
 import game.network.Server;
 
 public class Session implements Runnable	
@@ -29,8 +30,9 @@ public class Session implements Runnable
 	//List of messages
 	protected List<Byte> message;
 	
-	//Client address
+	//Attributes
 	protected SocketAddress address;
+	protected Attributes attributes;
 	
 	public Session(Socket socket, Server server) throws IOException
 	{
@@ -41,7 +43,7 @@ public class Session implements Runnable
 		this.inBufferStream = socket.getInputStream();
 		
 		this.address = socket.getRemoteSocketAddress();
-		
+		this.attributes = new Attributes();
 		server.onConnect(this);
 		
 		message = new LinkedList<Byte>();
@@ -122,6 +124,10 @@ public class Session implements Runnable
 	{
 		return server;
 	}
+	public Attributes getAttributes()
+	{
+		return attributes;
+	}
 	//Send message to the client 
 	public void write(String string)
 	{
@@ -142,6 +148,19 @@ public class Session implements Runnable
 			server.onDisconnect(this);
 		}
 		
+	}
+	public OutputStream getStream()
+	{
+		try
+		{
+			return socket.getOutputStream();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

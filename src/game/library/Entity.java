@@ -30,10 +30,12 @@ import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
 import game.library.attribute.AttributeSelector;
 import game.library.attribute.Attributes;
+import game.library.player.IHasName;
+import game.library.player.Player;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
 
-public class Entity
+public class Entity implements IHasName
 {
 
     //Attributes:
@@ -42,13 +44,25 @@ public class Entity
     private List<String> keywords;
     private IWorld world;
     protected Color color;
-    
+    protected Player player;
+    protected String name;
     
     protected Attributes attributes;
     
     //constructor Entity
     
     public Entity(int width, int heigth, PointF origin, IWorld world)
+    {
+    	constructor(width, heigth, origin, world);
+    }
+    public Entity(int width, int heigth, PointF origin, IWorld world, Player player)
+    {
+    	constructor(width, heigth, origin, world);
+    	this.player = player;
+    	player.addEntity(this);
+    }
+    
+    private void constructor(int width, int heigth, PointF origin, IWorld world)
     {
     	attributes = new Attributes();
     	
@@ -91,6 +105,15 @@ public class Entity
     }
     
     //Methods:
+    public void setName(String name)
+    {
+    	this.name = name;
+    }
+	@Override
+	public String getName()
+	{
+		return name;
+	}
     public void set(AttributeSelector selector, Object value)
 	{    	
 		attributes.set(selector, value);
@@ -98,6 +121,10 @@ public class Entity
 	public Object get(AttributeSelector selector)
 	{
 		return attributes.get(selector);
+	}
+	public Player getPlayer()
+	{
+		return player;
 	}
     //get/set rectangle 
     public Rectangle getRectangle()
@@ -153,4 +180,6 @@ public class Entity
 	}
 	}
 	*/
+    
+    
 }

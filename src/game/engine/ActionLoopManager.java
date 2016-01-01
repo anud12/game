@@ -1,6 +1,7 @@
 package game.engine;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -172,11 +173,11 @@ class  ActionLoopManager<ALoop extends ActionLoop<?>, ActionType>
     		//equal in size for the loops and set the removeBuffer
     		if(loopNumber == 0)
     		{
-    			loop.setActions( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) ;
+    			loop.setActions( Collections.synchronizedList( actions.subList( subListSize * loopNumber, subListSize * (loopNumber + 1) ) ) );
     		}
     		else
     		{
-    			loop.setActions( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) );
+    			loop.setActions( Collections.synchronizedList( actions.subList( subListSize * loopNumber + 1, subListSize * (loopNumber + 1) ) ) );
     		}
     		loopNumber++;
     	}
@@ -267,21 +268,27 @@ class  ActionLoopManager<ALoop extends ActionLoop<?>, ActionType>
 	}
 	public void waitForLoops() throws InterruptedException
     {
-    	Iterator<Future<ALoop>> iterator = futureList.iterator();
-    	while(iterator.hasNext())
-    	{
-    		Future<ALoop> loop = iterator.next();
-    		
-    		try 
-    		{
-    			//Wait until the loop is finished
-				loop.get();
-			} catch (ExecutionException e) 
-    		{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-    	futureList.clear();
+		synchronized (futureList)
+		{
+			Iterator<Future<ALoop>> iterator = futureList.iterator();
+	    	
+	    	while(iterator.hasNext())
+	    	{
+	    		Future<ALoop> loop = iterator.next();
+	    		
+	    		try 
+	    		{
+	    			//Wait until the loop is finished
+					loop.get();
+				} catch (ExecutionException e) 
+	    		{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	}
+	    	futureList.clear();
+		}
+		
+    	
     }
 }

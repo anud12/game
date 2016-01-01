@@ -15,6 +15,11 @@ public class Attributes
 	{
 		selector.set(attributes, value);
 	}
+	public void set(String key, Object value)
+	{
+		attributes.put(key, value);
+	}
+	
 	public Object get(AttributeSelector selector)
 	{
 		return selector.select(attributes);

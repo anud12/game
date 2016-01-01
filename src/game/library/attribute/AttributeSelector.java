@@ -23,13 +23,22 @@ public abstract class AttributeSelector
 	}
 	
 	
-	
 	public static AttributeSelector movementSpeed()
 	{
 		String key = "movementSpeed";
 		if(!attributesSelectors.containsKey(key))
 		{
 			attributesSelectors.put(key, new MovementSpeedAttribute());
+		}
+		
+		return attributesSelectors.get(key);
+	}
+	public static AttributeSelector name()
+	{
+		String key = "name";
+		if(!attributesSelectors.containsKey(key))
+		{
+			attributesSelectors.put(key, new nameAttribute());
 		}
 		
 		return attributesSelectors.get(key);

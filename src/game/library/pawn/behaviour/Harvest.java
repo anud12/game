@@ -2,6 +2,7 @@ package game.library.pawn.behaviour;
 
 import game.engine.IEngineAction;
 import game.library.Entity;
+import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.pawn.order.Move;
 
@@ -78,7 +79,31 @@ public class Harvest extends PawnBehaviour
 	@Override
 	public void onComplete(IEngineAction action) 
 	{
-		isLoaded = !isLoaded;	
+		StringBuilder message = new StringBuilder();
+		
+		if(isLoaded)
+		{
+			message.append(this.pawn.get(AttributeSelector.ID()));
+			message.append(" unloaded at ");
+			message.append(this.dropOffEntity.get(AttributeSelector.ID()));
+			message.append(" moving at ");
+			message.append((this.resourceEntity.get(AttributeSelector.ID())));
+			message.append("\n");
+			message.append((char)0);
+		}
+		else
+		{
+			message.append(this.pawn.get(AttributeSelector.ID()));
+			message.append(" loaded at ");
+			message.append((this.resourceEntity.get(AttributeSelector.ID())));
+			message.append(" moving at ");
+			message.append(this.dropOffEntity.get(AttributeSelector.ID()));
+			message.append("\n");
+			message.append((char)0);
+		}
+		if(pawn.getPlayer() != null)
+			pawn.getPlayer().write(message.toString().getBytes());
+		isLoaded = !isLoaded;
 	}
 	
 

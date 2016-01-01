@@ -1,13 +1,16 @@
 package game.network.services;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import game.geom.classes.PointF;
 import game.library.Entity;
+import game.library.NameCollection;
 import game.library.attribute.AttributeSelector;
 import game.library.pawn.Pawn;
 import game.library.pawn.order.PawnOrderInterface;
+import game.library.player.Player;
 import game.library.world.EntityPositionContainer;
 import game.library.world.IWorld;
 import game.network.component.Session;
@@ -15,11 +18,15 @@ import game.network.component.Session;
 public class WorldControlService extends Service{
 
 	protected IWorld world;
+	protected HashMap<String, Session> users;
+	protected NameCollection<Player> players;
 	
-	public WorldControlService(IWorld world)
+	public WorldControlService(IWorld world, NameCollection players)
 	{
 		super();
 		this.world = world;
+		this.players = players;
+		users = new HashMap<String, Session>();
 	}
 	@Override
 	protected void process(byte[] array, Session session) 
@@ -62,6 +69,60 @@ public class WorldControlService extends Service{
 					}
 					
 					pawn.getController().getOrderInterface().stop();
+					break;
+				}
+				case"LOGIN":
+				{
+					if(words.length > 1)
+					{
+						String name = words[1];
+						if(players.contains(name))
+						{
+							users.put(session.getAddress().toString(), session);
+							
+							StringBuilder response = new StringBuilder();
+							
+							response.append("Welcome to ");
+							response.append(world.toString());
+							response.append("\nYou are now logged in as ");
+							response.append(name);
+							response.append("\n");
+							
+							session.write(response.toString());
+							
+							players.get(name).addOutputStream(session.getStream());
+							
+							session.getAttributes().set("bWorldLoggedIn", true);
+						}
+						else
+						{
+							session.write("Player not found\n");
+						}
+						
+					}
+					break;
+				}
+				case"LOGOUT":
+				{
+					session.write("Logging out\n");
+					logoutSession(session);
+					
+					break;
+				}
+				case "LIST_ALL_PLAYERS":
+				{
+					StringBuilder response = new StringBuilder();
+					
+					Iterator<Player> iterator = players.iterator();
+					response.append(players.size());
+					response.append(" players:\n");
+					while(iterator.hasNext())
+					{
+						Player player = iterator.next();
+						response.append(player.getName());
+						response.append("\n");
+					}
+					session.write(response.toString());
 					break;
 				}
 				case "LIST_ALL_X":
@@ -116,10 +177,16 @@ public class WorldControlService extends Service{
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void logoutSession(Session session)
+	{
+		session.getAttributes().set("bWorldLoggedIn", false);
+		users.values().remove(session);
+	}
+	
 	@Override
 	public void onDisconnect(Session session) {
-		// TODO Auto-generated method stub
+		logoutSession(session);
 		
 	}
 

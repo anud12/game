@@ -5,7 +5,6 @@ import game.engine.IEngineAction;
 public abstract class PawnOrder implements IEngineAction
 {
 	protected float unusedDeltaTime;
-	
 	@Override
 	public final boolean isRemovable(IEngineAction action) {
 		// TODO Auto-generated method stub
@@ -15,5 +14,9 @@ public abstract class PawnOrder implements IEngineAction
 	public float getUnusedDeltaTime()
 	{
 		return unusedDeltaTime;
+	}
+	@Override
+	public void onComplete(IEngineAction action) 
+	{
 	}
 }

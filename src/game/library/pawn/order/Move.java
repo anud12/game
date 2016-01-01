@@ -108,8 +108,8 @@ public class Move extends PawnOrder
 	}
 	
 	@Override
-	public void onComplete(IEngineAction action) {
-		
+	public void onComplete(IEngineAction action) 
+	{
 	}
 	
 		
