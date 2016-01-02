@@ -19,14 +19,17 @@ public class WorldControlService extends Service{
 
 	protected IWorld world;
 	protected HashMap<String, Session> users;
+	protected HashMap<Session, Player> loggedInUsers;
 	protected NameCollection<Player> players;
 	
-	public WorldControlService(IWorld world, NameCollection players)
+	public WorldControlService(IWorld world, NameCollection<Player> players)
 	{
 		super();
 		this.world = world;
 		this.players = players;
+		
 		users = new HashMap<String, Session>();
+		loggedInUsers = new HashMap<>();
 	}
 	@Override
 	protected void process(byte[] array, Session session) 
@@ -78,21 +81,22 @@ public class WorldControlService extends Service{
 						String name = words[1];
 						if(players.contains(name))
 						{
-							users.put(session.getAddress().toString(), session);
-							
+							Player player = players.get(name);
 							StringBuilder response = new StringBuilder();
+							
+							users.put(session.getAddress().toString(), session);
+							loggedInUsers.put(session, player);
+							
+							player.addOutputStream(session.getStream());
 							
 							response.append("Welcome to ");
 							response.append(world.toString());
-							response.append("\nYou are now logged in as ");
+							response.append("\n");
+							response.append("You are now logged in as ");
 							response.append(name);
 							response.append("\n");
 							
 							session.write(response.toString());
-							
-							players.get(name).addOutputStream(session.getStream());
-							
-							session.getAttributes().set("bWorldLoggedIn", true);
 						}
 						else
 						{
@@ -132,18 +136,19 @@ public class WorldControlService extends Service{
 					synchronized(container)
 					{
 						Iterator<Entity> iterator = container.iterator();
-						
+						StringBuilder response = new StringBuilder();
 						while(iterator.hasNext())
 						{
 							Entity ent = iterator.next();
 							
-							session.write("ID :");
-							session.write(ent.get(AttributeSelector.ID()).toString());
-							session.write("\n");
+							response.append("ID :");
+							response.append(ent.get(AttributeSelector.ID()).toString());
+							response.append("\n");
 							
-							session.write(ent.getCenter().toString());
-							session.write("\n");
+							response.append(ent.getCenter().toString());
+							response.append("\n");
 						}
+						session.write(response.toString());
 					}
 					
 					break;
@@ -180,7 +185,7 @@ public class WorldControlService extends Service{
 	
 	public void logoutSession(Session session)
 	{
-		session.getAttributes().set("bWorldLoggedIn", false);
+		loggedInUsers.get(session).removeOutputStream(session.getStream());
 		users.values().remove(session);
 	}
 	
