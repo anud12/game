@@ -30,7 +30,6 @@ import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
 import game.library.attribute.AttributeSelector;
 import game.library.attribute.Attributes;
-import game.library.player.IHasName;
 import game.library.player.Player;
 import game.library.world.IWorld;
 import game.util.ISerializableXML;
