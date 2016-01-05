@@ -1,4 +1,4 @@
-package game.library.player;
+package game.library;
 
 public interface IHasName
 {
