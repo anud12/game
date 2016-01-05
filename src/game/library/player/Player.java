@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import game.library.Entity;
+import game.library.IHasName;
 import game.library.attribute.AttributeSelector;
 import game.library.attribute.Attributes;
 
