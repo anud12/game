@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import game.library.player.IHasName;
-
 
 @SuppressWarnings("serial")
 public class NameCollection<E extends IHasName> extends HashSet<E>
