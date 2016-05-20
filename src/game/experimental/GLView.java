@@ -13,9 +13,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import game.geom.classes.PointF;
-import game.geom.classes.Triangle;
-import game.library.Entity;
+import game.geom.classes.RightTriangle;
 import game.library.attribute.AttributeSelector;
+import game.library.entity.Entity;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
 import game.library.world.sector.cell.TriangleCell;
@@ -37,7 +37,7 @@ public class GLView implements Runnable{
 	
 	boolean keyMinusClicked = false;
 	boolean minusAfterClick = true;
-	float zoom = 1;
+	protected float zoom = 1;
 	
 	Point2D.Float previousPosition;
 	private boolean untilClickFirstRun = true;
@@ -59,7 +59,7 @@ public class GLView implements Runnable{
 	@Override
 	public void run() {
 	 try {
-	        Display.setDisplayMode(new DisplayMode(800,600));
+	        Display.setDisplayMode(new DisplayMode(800,400));
 	        Display.create();
 	    } catch (LWJGLException e) {
 	        e.printStackTrace();
@@ -69,26 +69,45 @@ public class GLView implements Runnable{
 	    // init OpenGL
 	    GL11.glMatrixMode(GL11.GL_PROJECTION);
 	    GL11.glLoadIdentity();
-	    GL11.glOrtho(0, 800, 0, 600, 1, -1);
+	    GL11.glOrtho(0, 800, 0, 400, 1, -1);
 	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
-	    GL11.glClearColor(1, 1, 1, 1f);
-	    while (!Display.isCloseRequested()) {
-	        // Clear the screen and depth buffer
-	    	
-	        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);  
+	    GL11.glClearColor(0, 0, 0, 1f);
+	    while (!Display.isCloseRequested()) 
+	    {    
+	    	clear();
+	    	draw();
+	        input();
+	        Display.update();
+	    }
+	  
+	    Display.destroy();
+	}
+	
+	protected void clear()
+	{
+		// Clear the screen and depth buffer
+    	
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);  
+        
+        // set the color of the quad (R,G,B,A)
+	}
+	
+	protected void draw()
+	{
+        synchronized(sectors)
+        {
+        	Iterator<Sector> sectorsListIterator = sectors.iterator();
 	        
-	        // set the color of the quad (R,G,B,A)
-	        synchronized(sectors)
+	        while(sectorsListIterator.hasNext())
 	        {
-	        	Iterator<Sector> sectorsListIterator = sectors.iterator();
-		        
-		        while(sectorsListIterator.hasNext())
-		        {
-		        	Sector sector = sectorsListIterator.next();
-		        	Iterator<TriangleCell> sectorTriangles = sector.getList().iterator();
+	        	Sector sector = sectorsListIterator.next();
+	        	List<RightTriangle> triangleList = sector.getList();
+	        	synchronized(triangleList)
+	        	{
+	        		Iterator<RightTriangle> sectorTriangles = triangleList.iterator();
 			        while(sectorTriangles.hasNext())
 			        {
-			        	Triangle triangle = sectorTriangles.next();
+			        	RightTriangle triangle = sectorTriangles.next();
 			        	Iterator<PointF> points = triangle.getPoints().iterator();
 			        	
 			        	Color color = sector.getColor();
@@ -97,14 +116,37 @@ public class GLView implements Runnable{
 			        	float blue = color.getBlue() / 255f;
 			        	float green = color.getGreen() / 255f;
 			        	
-			        	red = red / 2f;
-			        	green = green / 2f;
-			        	blue = blue / 2f;
 			        	
-			        	GL11.glColor4d(red, green, blue, 1f);
+			        	float red2 = red / 8f;
+			        	float green2 = green / 8f;
+			        	float blue2 = blue / 8f;
+			        	
+			        	GL11.glColor3d(red2, green2, blue2);
+			        	
+			        	GL11.glBegin(GL11.GL_TRIANGLES);
+			        	//GL11.glBegin(GL11.GL_LINE_LOOP);
+			        	
+			        	while(points.hasNext())
+			        	{
+			        		PointF point = points.next();
+			        		
+			        		GL11.glVertex2f(
+				        			(point.x + position.x) * zoom ,
+				        			(point.y + position.y) * zoom);
+			        		
+			        	}
+			        	GL11.glEnd();
+			        	
+			        	points = triangle.getPoints().iterator();
+			        	float red1 = red2 * 8f;
+			        	float green1 = green2 * 8f;
+			        	float blue1 = blue2 * 8f;
+			        	
+			        	GL11.glColor3d(red1, green1, blue1);
 			        	
 			        	//GL11.glBegin(GL11.GL_TRIANGLES);
 			        	GL11.glBegin(GL11.GL_LINE_LOOP);
+			        	
 			        	while(points.hasNext())
 			        	{
 			        		PointF point = points.next();
@@ -116,49 +158,64 @@ public class GLView implements Runnable{
 			        	}
 			        	GL11.glEnd();
 			        }
-		        }
-	        }
-	        
-	        
-	        Iterator<Entity> iterator = world.getIterator();
-	        while(iterator.hasNext())
-	        {
-	        	
-	        	Entity ent = iterator.next();
-	        	float red = ((Color) ent.get(AttributeSelector.color())).getRed() / 255f;
-	        	float blue = ((Color) ent.get(AttributeSelector.color())).getBlue() / 255f;
-	        	float green = ((Color) ent.get(AttributeSelector.color())).getGreen() / 255f;
-	        	
-	        	red = red ;// 0.5f;
-	        	green = green ;// 0.5f;
-	        	blue = blue ;// 0.5f;
-	        	
-	        	GL11.glColor3d(red, green, blue);
-	        	
-	        	GL11.glBegin(GL11.GL_POINTS);
-        		GL11.glVertex2f((ent.getCenter().x  + position.x) * zoom, (ent.getCenter().y  + position.y)  * zoom);
-        		GL11.glEnd();
-	        	
-	        	//GL11.glBegin(GL11.GL_QUADS);
-	        	GL11.glBegin(GL11.GL_LINE_LOOP);
-	        	Iterator<PointF> points = ent.getRectangle().getPoints().iterator();
-	        	
-	        	while(points.hasNext())
-	        	{
-	        		PointF point = points.next();
-	        		GL11.glVertex2f(
-		        			(point.x + position.x) * zoom ,
-		        			(point.y + position.y) * zoom);
-	        		
 	        	}
-	        	GL11.glEnd();
+	        	
 	        }
-	        input();
-	        Display.update();
-	    }
-	  
-	    Display.destroy();
+        }
+        
+        
+        Iterator<Entity> iterator = world.getIterator();
+        while(iterator.hasNext())
+        {
+        	
+        	Entity ent = iterator.next();
+        	float red = ((Color) ent.get(AttributeSelector.color())).getRed() / 255f;
+        	float blue = ((Color) ent.get(AttributeSelector.color())).getBlue() / 255f;
+        	float green = ((Color) ent.get(AttributeSelector.color())).getGreen() / 255f;
+        	
+        	red = red ;// 0.5f;
+        	green = green ;// 0.5f;
+        	blue = blue ;// 0.5f;
+        	
+        	GL11.glColor3d(red, green, blue);
+        	
+        	GL11.glBegin(GL11.GL_POINTS);
+    		GL11.glVertex2f((ent.getCenter().x  + position.x) * zoom, (ent.getCenter().y  + position.y)  * zoom);
+    		GL11.glEnd();
+        	
+        	//GL11.glBegin(GL11.GL_QUADS);
+        	GL11.glBegin(GL11.GL_LINE_LOOP);
+        	Iterator<PointF> points = ent.getRectangle().getPoints().iterator();
+        	
+        	while(points.hasNext())
+        	{
+        		PointF point = points.next();
+        		GL11.glVertex2f(
+	        			(point.x + position.x) * zoom ,
+	        			(point.y + position.y) * zoom);
+        		
+        	}
+        	GL11.glEnd();
+        	
+        	
+        	GL11.glBegin(GL11.GL_LINE_LOOP);
+        	float radius = ent.getSightRadius();
+        	
+        	float twicePi = (float)Math.PI;
+        	
+        	int lines = (int)radius;
+    		for(int i = 0; i <= lines;i++) 
+    		{ 
+    			GL11.glVertex2f(
+    			    (((ent.getCenter().x + position.x) * zoom) + (float)(radius * zoom * Math.cos(i * twicePi / (lines / 2)) )), 
+    			    (((ent.getCenter().y + position.y) * zoom) + (float)(radius * zoom * Math.sin(i * twicePi / (lines / 2)) ))
+    			);
+    		}
+    		GL11.glEnd();
+    		
+        }
 	}
+	
 	protected void input()
 	{
 		int x = 0;
@@ -171,17 +228,17 @@ public class GLView implements Runnable{
 		if(Mouse.isButtonDown(0) && untilClickFirstRun)
 		{
 			untilClickFirstRun = false;
-			holdPointX = (int) (Mouse.getX() - position.x);
-			holdPointY = (int) (Mouse.getY() - position.y);
+			holdPointX = (int) (Mouse.getX() - position.x * zoom);
+			holdPointY = (int) (Mouse.getY() - position.y * zoom);
 		}
 		
 		if(Mouse.isButtonDown(0))
 		{
-			x = (int) (Mouse.getX() - (holdPointX) );
-			y = (int) (Mouse.getY() - (holdPointY) );
+			x = (int) (Mouse.getX() - (holdPointX));
+			y = (int) (Mouse.getY() - (holdPointY));
 			
-			this.position.x = x;
-			this.position.y = y;
+			this.position.x =  x / zoom;
+			this.position.y =  y / zoom;
 			
 			afterClickFirstRun = true;
 			clickedFirstRun = false;

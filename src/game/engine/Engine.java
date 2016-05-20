@@ -1,5 +1,17 @@
 package game.engine;
 
+import game.engine.actionLoop.EntityAliveCheckActionLoop;
+import game.engine.actionLoop.EntityExecuteActionLoop;
+import game.engine.actionLoop.EntityPlanActionLoop;
+import game.engine.actionLoop.EngineRemovalLoop;
+import game.engine.actionLoop.RelatedActionLoop;
+import game.engine.actionLoop.UnrelatedActionLoop;
+import game.engine.actions.IEngineEntityAliveCheck;
+import game.engine.actions.IEngineEntityExecution;
+import game.engine.actions.IEngineRelatedUpdate;
+import game.engine.actions.IEngineRemoval;
+import game.engine.actions.IEngineUnrelatedUpdate;
+
 public class Engine implements Runnable
 {	    
     //Time measurements
@@ -10,25 +22,31 @@ public class Engine implements Runnable
     //   Managers used to process the engine phases   //
     
     // Planning manager used to calculate what the actions will do
-    private ActionLoopManager<PlanActionLoop, IEngineAction> planningManager;
+    private ActionLoopManager<EntityPlanActionLoop, IEngineEntityExecution> entityPlanningManager;
     // Execution manager used to do the action
-    private ActionLoopManager<ExecuteActionLoop, IEngineAction> executionManager;
-    // Update manager used to update the variables
-	private ActionLoopManager<UpdateActionLoop, IEngineVariable> variableManager;
-    
+    private ActionLoopManager<EntityExecuteActionLoop, IEngineEntityExecution> entityExecutionManager;
+    // Update manager used to update the game containers
+	private ActionLoopManager<UnrelatedActionLoop, IEngineUnrelatedUpdate> unrelatedUpdateManager;
+    // Manager used to resolve the results of the actions
+	private ActionLoopManager<RelatedActionLoop, IEngineRelatedUpdate> relatedUpdateManager;
+	private ActionLoopManager<EntityAliveCheckActionLoop, IEngineEntityAliveCheck> entityAliveCheckManager;
+	private ActionLoopManager<EngineRemovalLoop, IEngineRemoval> engineRemovalManager;
 	//Options
 	private boolean isPause;
 	 
     //Initializations
     public Engine(int actionsToSplit, int maxThreads)
     {
-    	minimumDeltaTime = 1;
+    	minimumDeltaTime = 15;
     	                     
     	isPause = false;
     	
-        planningManager = new ActionLoopManager<PlanActionLoop, IEngineAction>(PlanActionLoop.class, IEngineAction.class, actionsToSplit, maxThreads);
-        executionManager = new ActionLoopManager<ExecuteActionLoop, IEngineAction>(ExecuteActionLoop.class, IEngineAction.class, actionsToSplit, maxThreads, planningManager);
-        variableManager = new ActionLoopManager<UpdateActionLoop, IEngineVariable>(UpdateActionLoop.class, IEngineVariable.class, actionsToSplit, maxThreads);
+        entityPlanningManager = new ActionLoopManager<EntityPlanActionLoop, IEngineEntityExecution>(EntityPlanActionLoop.class, IEngineEntityExecution.class, actionsToSplit, maxThreads);
+        entityExecutionManager = new ActionLoopManager<EntityExecuteActionLoop, IEngineEntityExecution>(EntityExecuteActionLoop.class, IEngineEntityExecution.class, actionsToSplit, maxThreads);
+        entityAliveCheckManager = new ActionLoopManager<EntityAliveCheckActionLoop, IEngineEntityAliveCheck>(EntityAliveCheckActionLoop.class, IEngineEntityAliveCheck.class, actionsToSplit, maxThreads);
+        unrelatedUpdateManager = new ActionLoopManager<UnrelatedActionLoop, IEngineUnrelatedUpdate>(UnrelatedActionLoop.class, IEngineUnrelatedUpdate.class, actionsToSplit, maxThreads);
+        relatedUpdateManager = new ActionLoopManager<RelatedActionLoop, IEngineRelatedUpdate>(RelatedActionLoop.class, IEngineRelatedUpdate.class, actionsToSplit, maxThreads);
+        engineRemovalManager = new ActionLoopManager<>(EngineRemovalLoop.class, IEngineRemoval.class, actionsToSplit, maxThreads);
     }
     
     //   Getters   //
@@ -36,47 +54,65 @@ public class Engine implements Runnable
     {
     	return deltaTime;
     }
-    public int getActionsSizeExecute()
-    {    	
-    	return executionManager.getActionsSize();
-    }
-    public int getAddBufferSizeExecute()
+    @SuppressWarnings("rawtypes")
+	public ActionLoopManager getEntityPlanningManager()
     {
-    	return executionManager.getAddBufferSize();
+    	return entityPlanningManager;
     }
-    public int getRemoveBufferSizeExecute()
+    @SuppressWarnings("rawtypes")
+	public ActionLoopManager getEntityExecutionManager()
     {
-    	return executionManager.getRemoveBufferSize();
+    	return entityExecutionManager;
     }
-    public int getCurrentThreadNumberExecute()
+    @SuppressWarnings("rawtypes")
+	public ActionLoopManager getUnrelatedUpdateManager()
     {
-    	return executionManager.getCurrentThreadNumberPlan();
+    	return unrelatedUpdateManager;
     }
-    public int getActionsSizePlan()
-    {    	
-    	return planningManager.getActionsSize();
-    }
-    public int getAddBufferSizePlan()
+    @SuppressWarnings("rawtypes")
+	public ActionLoopManager getRelatedUpdateManager()
     {
-    	return planningManager.getAddBufferSize();
+    	return relatedUpdateManager;
     }
-    public int getRemoveBufferSizePlan()
+    @SuppressWarnings("rawtypes")
+	public ActionLoopManager getEntityAliveCheckManager()
     {
-    	return planningManager.getRemoveBufferSize();
-    }
-    public int getCurrentThreadNumberPlan()
-    {
-    	return planningManager.getCurrentThreadNumberPlan();
+    	return entityAliveCheckManager;
     }
     //Add to stack
-    public void addAction(IEngineAction action)
+    public void addAction(IEngineEntityExecution action)
     {
-    	planningManager.add(action);
-    	executionManager.add(action);
+    	entityPlanningManager.add(action);
+    	entityExecutionManager.add(action);
     }
-    public void addVariable(IEngineVariable variable)
+    public void addAliveCheckAction(IEngineEntityAliveCheck action)
     {
-    	variableManager.add(variable);
+    	entityAliveCheckManager.add(action);
+    }
+    public void removeAction(IEngineEntityExecution action)
+    {
+    	entityPlanningManager.remove(action);
+    	entityExecutionManager.remove(action);
+    }
+    public void addUnrelated(IEngineUnrelatedUpdate variable)
+    {
+    	unrelatedUpdateManager.add(variable);
+    }
+    public void removeUnrelated(IEngineUnrelatedUpdate variable)
+    {
+    	unrelatedUpdateManager.remove(variable);
+    }
+    public void addRelated(IEngineRelatedUpdate variable)
+    {
+    	relatedUpdateManager.add(variable);
+    }
+    public void removeRelated(IEngineRelatedUpdate variable)
+    {
+    	relatedUpdateManager.remove(variable);
+    }
+    public void addEngineRemoval(IEngineRemoval variable)
+    {
+    	engineRemovalManager.add(variable);
     }
     public void pause(boolean pause)
     {
@@ -137,9 +173,14 @@ public class Engine implements Runnable
     	{
     		deltaTime = 0;
     	}
+    	//Run the loops
+    	entityPlanningManager.run(deltaTime);
+    	entityExecutionManager.run(deltaTime);
+    	entityAliveCheckManager.run(deltaTime);
     	
-    	planningManager.run(deltaTime);
-    	executionManager.run(deltaTime);
-    	variableManager.run(deltaTime);
+    	unrelatedUpdateManager.run(deltaTime);
+    	relatedUpdateManager.run(deltaTime);
+    	
+    	engineRemovalManager.run(deltaTime);
     }
 }

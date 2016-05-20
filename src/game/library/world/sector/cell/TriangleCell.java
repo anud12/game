@@ -3,9 +3,9 @@ package game.library.world.sector.cell;
 import java.util.List;
 
 import game.geom.classes.PointF;
-import game.geom.classes.Triangle;
+import game.geom.classes.RightTriangle;
 
-public class TriangleCell extends Triangle implements Cell
+public class TriangleCell extends RightTriangle implements Cell
 {
 	private static final long serialVersionUID = 7797483000487840848L;
 	protected SquareCell parent;

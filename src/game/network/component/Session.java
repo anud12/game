@@ -131,23 +131,23 @@ public class Session implements Runnable
 	//Send message to the client 
 	public void write(String string)
 	{
-		
+		write(string.getBytes());
+	}
+	public void write(byte[] message)
+	{
 		try 
 		{
-			//Write the message
-			textOut.write(string);
-			
-			textOut.flush();
-			//Write end character
+			byteOut.write(message);
 			byteOut.write(0);
 			byteOut.flush();
-		} 
+			
+			System.out.println(message);
+		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 			server.onDisconnect(this);
 		}
-		
 	}
 	public OutputStream getStream()
 	{

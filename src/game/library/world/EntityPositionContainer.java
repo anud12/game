@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.ListIterator;
 
-
-import game.library.Entity;
+import game.library.entity.Entity;
 
 public class EntityPositionContainer<E extends Entity> implements Collection<E>
 {
@@ -125,13 +125,13 @@ public class EntityPositionContainer<E extends Entity> implements Collection<E>
 		return xAxis.isEmpty();
 	}
 	@Override
-	public Iterator<E> iterator()
+	public ListIterator<E> iterator()
 	{
-		return xAxis.iterator();
+		return (ListIterator<E>) xAxis.iterator();
 	}
-	public Iterator<E> iteratorY()
+	public ListIterator<E> iteratorY()
 	{
-		return yAxis.iterator();
+		return (ListIterator<E>) yAxis.iterator();
 	}
 	@Override
 	public boolean remove(Object arg0)

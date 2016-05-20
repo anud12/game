@@ -1,6 +1,5 @@
 package game.experimental;
 
-import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ExecutorService;
@@ -8,28 +7,25 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.JTextField;
 
 import game.geom.classes.PointF;
-import game.library.Entity;
-import game.library.attribute.AttributeSelector;
-import game.library.pawn.Pawn;
-import game.library.pawn.behaviour.Harvest;
-import game.library.pawn.behaviour.Idle;
-import game.library.pawn.order.Move;
-import game.library.pawn.order.None;
+import game.library.entity.Entity;
+import game.library.entity.behaviour.Harvest;
+import game.library.entity.behaviour.Idle;
+import game.library.entity.order.Move;
+import game.library.entity.order.None;
 import game.library.world.IWorld;
-import game.tests.InteractiveTest;
 
 public class InputReader extends KeyAdapter
 {
 	JTextField field;
-	Pawn pawn;
+	Entity entity;
 	IWorld world;
 	ExecutorService executor;
 	
 	
-	public InputReader (JTextField field, Pawn pawn, IWorld world, ExecutorService executor)
+	public InputReader (JTextField field, Entity entity, IWorld world, ExecutorService executor)
 	{
 		this.field = field;
-		this.pawn = pawn;
+		this.entity = entity;
 		this.world = world;
 		
 		this.executor = executor;
@@ -46,8 +42,8 @@ public class InputReader extends KeyAdapter
 				{
 					case "stop":
 					{
-						pawn.getController().setOrder(new None());
-						pawn.getController().setBehaviour(new Idle());
+						entity.getController().setOrder(new None());
+						entity.getController().setBehaviour(new Idle());
 						field.setText("");
 						break;
 					}
@@ -59,7 +55,7 @@ public class InputReader extends KeyAdapter
 							float y = Float.parseFloat(text[2]);
 							
 							PointF point2d = new PointF(x, y);
-							pawn.getController().setOrder(new Move(pawn, point2d));
+							entity.getController().getOrderInterface().move(point2d);
 							field.setText("");
 						}
 						break;
@@ -67,55 +63,8 @@ public class InputReader extends KeyAdapter
 					}
 					case "harvest":
 					{
-						pawn.getController().setBehaviour(new Harvest(pawn));
+						entity.getController().setBehaviour(new Harvest(entity));
 						field.setText("");
-						break;
-					}
-					case "spawn":
-					{
-						if(text.length > 3)
-						{
-							float x = Float.parseFloat(text[2]);
-							float y = Float.parseFloat(text[3]);
-							switch(text[1])
-							{
-								case "resource":
-								{
-									Entity ent = new Entity(2, 2, new PointF(x,y), world);
-									
-									ent.addKeyword("resource");
-									ent.set(AttributeSelector.color(), new Color(139,69,19));
-									break;
-								}
-								case "smallShip":
-								{
-									Pawn pawn = new Pawn(10, 10, new PointF(x,y), world);
-							    	pawn.set(AttributeSelector.movementSpeed(), 0.010f);
-							    	pawn.set(AttributeSelector.color(), Color.white);
-							    	
-									TextInterface inter = new TextInterface(pawn, executor);
-									
-									executor.execute(inter);
-									
-									InteractiveTest.engine.addAction(pawn.getController());
-									break;
-								}
-								case "dropOff":
-								{
-							    	Pawn pawn = new Pawn(20, 20, new PointF(x,y), world);
-							    	pawn.set(AttributeSelector.movementSpeed(), 0.005f);
-							    	pawn.addKeyword("dropOff");
-							    	pawn.set(AttributeSelector.color(), Color.gray);
-							    	
-									TextInterface inter = new TextInterface(pawn, executor);
-									
-									executor.execute(inter);
-									break;
-								}
-								
-							}
-							field.setText("");
-						}
 						break;
 					}
 				}

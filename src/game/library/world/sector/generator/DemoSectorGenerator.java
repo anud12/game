@@ -8,7 +8,7 @@ import java.util.Set;
 
 import game.geom.classes.PointF;
 import game.geom.classes.PointI;
-import game.geom.classes.Triangle;
+import game.geom.classes.RightTriangle;
 import game.library.world.sector.Sector;
 import game.library.world.sector.SectorGrid;
 import game.library.world.sector.cell.Cell;
@@ -75,7 +75,7 @@ public class DemoSectorGenerator
 		//Add the list to sector
 		sector.addTriangle(triangleList);
 		//Tell the grid that these triangles are in use
-		grid.occupyTriangle(sector.getList());
+		grid.occupyTriangle(triangleList);
 		
 		//Return the sector
 		return sector;
@@ -111,23 +111,27 @@ public class DemoSectorGenerator
 			PointI origin = grid.getGridCoordinate(startSquare);
 			
 			//Populate the list with the triangles requested from the grid
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getTopTriangle());
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getRightTriangle());
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getBottomTriangle());
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getLeftTriangle());
-			
-			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getLeftTriangle());
-			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getBottomTriangle());
 			
 			triangleList.add(grid.getSquareByGrid(origin.x - 1, origin.y).getRightTriangle());
 			triangleList.add(grid.getSquareByGrid(origin.x - 1, origin.y).getTopTriangle());
 			
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y - 1).getBottomTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getTopTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getLeftTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getRightTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getBottomTriangle());
 			
 			triangleList.add(grid.getSquareByGrid(origin.x, origin.y + 1).getTopTriangle());
 			triangleList.add(grid.getSquareByGrid(origin.x, origin.y + 1).getRightTriangle());
 			
+			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getLeftTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getBottomTriangle());
+						
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y - 1).getBottomTriangle());
+			
+			
+			
 			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y + 1).getLeftTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y + 1).getTopTriangle());
 			
 			//Check if the triangles are not used
 			synchronized(triangleList)
@@ -142,7 +146,7 @@ public class DemoSectorGenerator
 		//Add the list to sector
 		sector.addTriangle(triangleList);
 		//Tell the grid that these triangles are in use
-		grid.occupyTriangle(sector.getList());
+		grid.occupyTriangle(triangleList);
 		
 		//Return the sector
 		return sector;
@@ -178,11 +182,15 @@ public class DemoSectorGenerator
 			PointI origin = grid.getGridCoordinate(startSquare);
 			
 			//Populate the list with the triangles requested from the grid
+			
+			//triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getLeftTriangle());
 			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getRightTriangle());
-			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getTopTriangle());
 			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getBottomTriangle());
+			triangleList.add(grid.getSquareByGrid(origin.x, origin.y).getTopTriangle());
 			
 			triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getLeftTriangle());
+			//triangleList.add(grid.getSquareByGrid(origin.x + 1, origin.y).getBottomTriangle());
+			
 			
 			//Check if the triangles are not used
 			synchronized(triangleList)
@@ -197,7 +205,7 @@ public class DemoSectorGenerator
 		//Add the list to sector
 		sector.addTriangle(triangleList);
 		//Tell the grid that these triangles are in use
-		grid.occupyTriangle(sector.getList());
+		grid.occupyTriangle(triangleList);
 		
 		//Return the sector
 		return sector;

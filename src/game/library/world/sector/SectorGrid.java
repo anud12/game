@@ -7,7 +7,7 @@ import java.util.Set;
 
 import game.geom.classes.PointF;
 import game.geom.classes.PointI;
-import game.geom.classes.Triangle;
+import game.geom.classes.RightTriangle;
 import game.library.world.sector.cell.Cell;
 import game.library.world.sector.cell.SquareCell;
 import game.library.world.sector.cell.TriangleCell;
@@ -23,8 +23,8 @@ public class SectorGrid {
 	
 	//List to save the grid
 	protected HashMap<PointF, SquareCell> squareList;
-	protected HashMap<PointF, Triangle> triangleList;
-	protected HashMap<PointF, Triangle> occupiedTriangle;
+	protected HashMap<PointF, RightTriangle> triangleList;
+	protected HashMap<PointF, RightTriangle> occupiedTriangle;
 	protected HashMap<PointF, SquareCell> occupiedSquare;
 	
 	public HashMap<PointF, SquareCell> getOccupySquare()
@@ -42,8 +42,8 @@ public class SectorGrid {
 		
 		//List to save the grid
 		squareList = new HashMap<PointF, SquareCell>();
-		triangleList = new HashMap<PointF, Triangle>();
-		occupiedTriangle = new HashMap<PointF, Triangle>();
+		triangleList = new HashMap<PointF, RightTriangle>();
+		occupiedTriangle = new HashMap<PointF, RightTriangle>();
 		occupiedSquare = new HashMap<PointF, SquareCell>();
 	}
 	
@@ -87,7 +87,7 @@ public class SectorGrid {
 			}
 		}
 	}
-	public boolean isTriangleFree(Triangle triangle)
+	public boolean isTriangleFree(RightTriangle triangle)
 	{
 		PointF point = triangle.getCenter();
 		if(occupiedTriangle.containsKey(point))

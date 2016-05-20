@@ -2,24 +2,24 @@ package game.network.services;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import game.geom.classes.PointF;
-import game.library.Entity;
 import game.library.NameCollection;
 import game.library.attribute.AttributeSelector;
-import game.library.pawn.Pawn;
-import game.library.pawn.order.PawnOrderInterface;
+import game.library.entity.Entity;
+import game.library.entity.order.ControllerOrderInterface;
 import game.library.player.Player;
 import game.library.world.EntityPositionContainer;
 import game.library.world.IWorld;
 import game.network.component.Session;
+import game.network.worldControl.User;
 
 public class WorldControlService extends Service{
 
 	protected IWorld world;
-	protected HashMap<String, Session> users;
-	protected HashMap<Session, Player> loggedInUsers;
+	protected HashMap<Session, User> users;
 	protected NameCollection<Player> players;
 	
 	public WorldControlService(IWorld world, NameCollection<Player> players)
@@ -28,50 +28,40 @@ public class WorldControlService extends Service{
 		this.world = world;
 		this.players = players;
 		
-		users = new HashMap<String, Session>();
-		loggedInUsers = new HashMap<>();
+		users = new HashMap<Session, User>();
 	}
 	@Override
 	protected void process(byte[] array, Session session) 
 	{
-		try 
+		if(users.containsKey(session))
+		{
+			processLoggedIn(array, session);
+		}
+		
+		processNotLoggedIn(array, session);
+	}
+	protected void processNotLoggedIn(byte[] array, Session session)
+	{
+		try
 		{
 			String[] words = new String(array, "ASCII").trim().split(" ");
-			
+	
 			switch(words[0])
 			{
-				case"MOVE":
+				case "LIST_ALL_PLAYERS":
 				{
+					StringBuilder response = new StringBuilder();
 					
-					String id = words[1];
-					
-					Pawn pawn = (Pawn)world.getEntityByID(Integer.parseInt(id));
-					if(pawn == null)
+					Iterator<Player> iterator = players.iterator();
+					response.append(players.size());
+					response.append(" players:\n");
+					while(iterator.hasNext())
 					{
-						return;
+						Player player = iterator.next();
+						response.append(player.getName());
+						response.append("\n");
 					}
-					
-					int x = Integer.parseInt(words[2]);
-					int y = Integer.parseInt(words[3]);
-					PointF destination = new PointF(x , y);
-					//pawn.getController().setOrder(new Move(pawn, destination));
-					PawnOrderInterface inter =  pawn.getController().getOrderInterface();
-					
-					inter.move(destination);
-					
-					break;
-				}
-				case"STOP":
-				{
-					String id = words[1];
-					
-					Pawn pawn = (Pawn)world.getEntityByID(Integer.parseInt(id));
-					if(pawn == null)
-					{
-						return;
-					}
-					
-					pawn.getController().getOrderInterface().stop();
+					session.write(response.toString());
 					break;
 				}
 				case"LOGIN":
@@ -84,10 +74,11 @@ public class WorldControlService extends Service{
 							Player player = players.get(name);
 							StringBuilder response = new StringBuilder();
 							
-							users.put(session.getAddress().toString(), session);
-							loggedInUsers.put(session, player);
+							User user = new User(session);
 							
-							player.addOutputStream(session.getStream());
+							users.put(session, user);
+							
+							player.addUser(user);
 							
 							response.append("Welcome to ");
 							response.append(world.toString());
@@ -106,27 +97,59 @@ public class WorldControlService extends Service{
 					}
 					break;
 				}
-				case"LOGOUT":
+			}
+		}
+		catch(UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	protected void processLoggedIn(byte[] array, Session session)
+	{
+		try 
+		{
+			String[] words = new String(array, "ASCII").trim().split(" ");
+			
+			switch(words[0])
+			{
+				case"MOVE":
 				{
-					session.write("Logging out\n");
-					logoutSession(session);
+					
+					String id = words[1];
+					
+					Entity pawn = world.getEntityByID(Integer.parseInt(id));
+					if(pawn == null)
+					{
+						return;
+					}
+					
+					int x = Integer.parseInt(words[2]);
+					int y = Integer.parseInt(words[3]);
+					PointF destination = new PointF(x , y);
+					//pawn.getController().setOrder(new Move(pawn, destination));
+					ControllerOrderInterface inter =  pawn.getController().getOrderInterface();
+					
+					inter.move(destination);
 					
 					break;
 				}
-				case "LIST_ALL_PLAYERS":
+				case"STOP":
 				{
-					StringBuilder response = new StringBuilder();
+					String id = words[1];
 					
-					Iterator<Player> iterator = players.iterator();
-					response.append(players.size());
-					response.append(" players:\n");
-					while(iterator.hasNext())
+					Entity pawn = world.getEntityByID(Integer.parseInt(id));
+					if(pawn == null)
 					{
-						Player player = iterator.next();
-						response.append(player.getName());
-						response.append("\n");
+						return;
 					}
-					session.write(response.toString());
+					
+					pawn.getController().getOrderInterface().stop();
+					break;
+				}
+				case"LOGOUT":
+				{
+					logoutSession(session);
+					
 					break;
 				}
 				case "LIST_ALL_X":
@@ -185,14 +208,14 @@ public class WorldControlService extends Service{
 	
 	public void logoutSession(Session session)
 	{
-		loggedInUsers.get(session).removeOutputStream(session.getStream());
+		users.get(session).getPlayer().removeOutputStream(session.getStream());
 		users.values().remove(session);
+		session.write("Logged out\n");
 	}
 	
 	@Override
 	public void onDisconnect(Session session) {
 		logoutSession(session);
-		
 	}
 
 

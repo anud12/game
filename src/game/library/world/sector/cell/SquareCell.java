@@ -5,7 +5,7 @@ import java.util.List;
 
 import game.geom.classes.PointF;
 import game.geom.classes.Rectangle;
-import game.geom.classes.Triangle;
+import game.geom.classes.RightTriangle;
 
 public class SquareCell extends Rectangle implements Cell
 {

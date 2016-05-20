@@ -1,15 +1,14 @@
 package game.library.player;
 
-import java.io.IOException;
+
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import game.library.Entity;
 import game.library.IHasName;
-import game.library.attribute.AttributeSelector;
-import game.library.attribute.Attributes;
+import game.library.entity.Entity;
+import game.network.worldControl.User;
 
 public class Player implements IHasName
 {
@@ -17,7 +16,9 @@ public class Player implements IHasName
 	
 	protected HashSet<Entity> ownedEntities;
 	
-	protected HashSet<OutputStream> outputStreams;
+	protected HashSet<User> networkUsers;
+	
+	protected Vision vision;
 		
 	// Constructor //
 	public Player()
@@ -28,9 +29,15 @@ public class Player implements IHasName
 	private void initialize()
 	{
 		ownedEntities = new HashSet<Entity>();
-		outputStreams = new HashSet<>();
+		networkUsers = new HashSet<>();
+		vision = new Vision();
 	}
 	
+	// Getters //
+	public Vision getVision()
+	{
+		return vision;
+	}
 	// Adders //
 	public boolean addEntity(Entity entity)
 	{
@@ -40,13 +47,13 @@ public class Player implements IHasName
 	{
 		return ownedEntities.addAll(entityCollection);
 	}
-	public boolean addOutputStream(OutputStream stream)
+	public boolean addUser(User user)
 	{
-		return outputStreams.add(stream);
+		return networkUsers.add(user);
 	}
-	public boolean addOutputStream(Collection<OutputStream> streamCollection)
+	public boolean addUser(Collection<User> user)
 	{
-		return outputStreams.addAll(streamCollection);
+		return networkUsers.addAll(user);
 	}
 	
 	// Removers //
@@ -60,29 +67,29 @@ public class Player implements IHasName
 	}
 	public boolean removeOutputStream(OutputStream stream)
 	{
-		return outputStreams.remove(stream);
+		return networkUsers.remove(stream);
 	}
 	public boolean removeOutPutStream(Collection<OutputStream> stream)
 	{
-		return outputStreams.removeAll(stream);
+		return networkUsers.removeAll(stream);
 	}
 	
 	// Functions //
 	public void write(byte[] message)
 	{
-		Iterator<OutputStream> iterator = outputStreams.iterator();
+		byte[] endMessage = new byte[message.length + 1];
+		for(int i = 0 ; i < message.length ; i++)
+		{
+			endMessage[i] = message[i];
+		}
+		endMessage[message.length] = 0;
+		
+		Iterator<User> iterator = networkUsers.iterator();
 		while(iterator.hasNext())
 		{
-			OutputStream stream = iterator.next();
+			User user = iterator.next();
 			
-			try
-			{
-				stream.write(message);
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			user.write(endMessage);
 		}
 	}
 

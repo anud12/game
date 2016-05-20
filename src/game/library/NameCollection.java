@@ -9,12 +9,12 @@ import java.util.Iterator;
 @SuppressWarnings("serial")
 public class NameCollection<E extends IHasName> extends HashSet<E>
 {
-	protected HashMap<String, E> players = new HashMap<>();
+	protected HashMap<String, E> elements = new HashMap<>();
 	
 	@Override
 	public boolean add(E e)
 	{
-		players.put(e.getName(), e);
+		elements.put(e.getName(), e);
 		return super.add(e);
 	}
 	public boolean addAll(Collection<? extends E> c)
@@ -25,14 +25,14 @@ public class NameCollection<E extends IHasName> extends HashSet<E>
 		{
 			E e = iterator.next();
 			
-			players.put(e.getName(), e);
+			elements.put(e.getName(), e);
 		}
 		return super.addAll(c);
 	}
 	public boolean remove(E o)
 	{	
 		
-		players.remove(o.getName());
+		elements.remove(o.getName());
 		return super.remove(o);
 		
 	}
@@ -46,17 +46,22 @@ public class NameCollection<E extends IHasName> extends HashSet<E>
 		{
 			E e = iterator.next();
 			
-			players.remove(e.getName());
+			elements.remove(e.getName());
 		}
 		return super.removeAll(c);
 	}
 	
 	public boolean contains(String name)
 	{
-		return players.containsKey(name);
+		return elements.containsKey(name);
 	}
 	public E get(String name)
 	{
-		return players.get(name);
+		return elements.get(name);
+	}
+	public void clear()
+	{
+		elements.clear();
+		this.clear();
 	}
 }

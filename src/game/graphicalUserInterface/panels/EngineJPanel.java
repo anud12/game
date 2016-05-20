@@ -83,15 +83,15 @@ public class EngineJPanel extends JPanel implements Runnable
 	{
 		deltaTime.setValue(engine.getDeltaTime() + " ms");
 		
-		executeActionsSize.setValue(engine.getActionsSizeExecute() + "");
-		executeAddBufferSize.setValue(engine.getAddBufferSizeExecute()+ "");
-		executeCurrentThreadNumber.setValue(engine.getCurrentThreadNumberExecute()+ "");
-		executeRemoveBufferSize.setValue(engine.getRemoveBufferSizeExecute()+ "");
+		executeActionsSize.setValue(engine.getEntityExecutionManager().getActionsSize() + "");
+		executeAddBufferSize.setValue(engine.getEntityExecutionManager().getAddBufferSize() + "");
+		executeCurrentThreadNumber.setValue(engine.getEntityExecutionManager().getCurrentThreadNumberPlan() + "");
+		executeRemoveBufferSize.setValue(engine.getEntityExecutionManager().getRemoveBufferSize()+ "");
 		
-		planActionsSize.setValue(engine.getActionsSizePlan() + "");
-		planAddBufferSize.setValue(engine.getAddBufferSizePlan()+ "");
-		planCurrentThreadNumber.setValue(engine.getCurrentThreadNumberPlan()+ "");
-		planRemoveBufferSize.setValue(engine.getRemoveBufferSizePlan()+ "");
+		planActionsSize.setValue(engine.getEntityPlanningManager().getActionsSize() + "");
+		planAddBufferSize.setValue(engine.getEntityPlanningManager().getAddBufferSize() + "");
+		planCurrentThreadNumber.setValue(engine.getEntityPlanningManager().getCurrentThreadNumberPlan() + "");
+		planRemoveBufferSize.setValue(engine.getEntityExecutionManager().getRemoveBufferSize()+ "");
 	}
 
 	@Override

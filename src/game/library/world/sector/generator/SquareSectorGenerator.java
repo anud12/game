@@ -59,7 +59,7 @@ public class SquareSectorGenerator {
 		while(loop);
 		
 		sector.addTriangle(triangleList);
-		grid.occupyTriangle(sector.getList());
+		grid.occupyTriangle(triangleList);
 		return sector;
 	}
 }

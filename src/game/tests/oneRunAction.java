@@ -1,8 +1,9 @@
 package game.tests;
 
-import game.engine.IEngineAction;
+import game.engine.actions.IEngineEntityExecution;
+import game.engine.actions.IEngineEntityPlan;
 
-public class oneRunAction implements IEngineAction
+public class oneRunAction implements IEngineEntityExecution, IEngineEntityPlan
 {
 	int i;
 	int target;
@@ -21,25 +22,24 @@ public class oneRunAction implements IEngineAction
 	}
 	
 	@Override
-	public IEngineAction execute() {
+	public void execute() {
 		i++;
-		return this;
 	}
 
 	@Override
-	public boolean isCompleted(IEngineAction action) {
+	public boolean isCompleted() {
 		if(i > target)
 			return true;
 		return false;
 	}
 
 	@Override
-	public boolean isRemovable(IEngineAction action) {
-		return true;
+	public boolean isRemovable() {
+		return isCompleted();
 	}
 
 	@Override
-	public void onComplete(IEngineAction action) {
+	public void onComplete() {
 		
 	}
 	

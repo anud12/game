@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import game.engine.Engine;
-import game.engine.IEngineAction;
+import game.engine.actions.IEngineEntityExecution;
 
 public class EngineQueueStressTest 
 {	
@@ -31,7 +31,7 @@ public class EngineQueueStressTest
 			{				
 				i = 0;
 			}
-			if(engine.getActionsSizeExecute() > 10000000)
+			if(engine.getEntityExecutionManager().getActionsSize() > 10000000)
 			{
 				add = false;
 				try {
@@ -43,7 +43,7 @@ public class EngineQueueStressTest
 			}
 			if(add)
 			{
-				engine.addAction(new oneRunAction(random.nextInt((15) + 15000)));
+				engine.addAction(new oneRunAction(random.nextInt((15) + 150)));
 			}
 			i++;
 			try {
