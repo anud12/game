@@ -12,7 +12,7 @@ public interface IWorld extends IEngineUnrelatedUpdate
 {
 	public void addEntity(Entity ent);
 	public void removeEntity(Entity ent);
-	public Entity getClosest(String type);
+	public Entity getClosest(Entity ent, String type);
 	public Iterator<Entity> getIterator();
 	public int getSize();
 	public Entity getEntityByID(int id);

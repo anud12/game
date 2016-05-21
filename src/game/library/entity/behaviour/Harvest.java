@@ -15,57 +15,43 @@ public class Harvest extends EntityBehaviour
 	protected Move move;
 	
 	protected boolean isLoaded;
-	protected boolean hasDropOff;
-	protected boolean hasResource;
+	protected boolean isStopped;
 	
 	public  Harvest (Entity entity)
 	{
 		this.entity = entity;
 		isLoaded = false;
 		
-		resourceEntity = entity.getWorld().getClosest("resource");
-		dropOffEntity = entity.getWorld().getClosest("dropOff");
-		
-		hasResource = true;
-		hasDropOff = true;
+		resourceEntity = entity.getWorld().getClosest(entity, "resource");
+		dropOffEntity = entity.getWorld().getClosest(entity, "dropOff");
 		
 		if(resourceEntity == null)
 		{
-			hasResource = false;
+			isStopped = true;
 		}
-		if(dropOffEntity == null)
+		if(resourceEntity == null)
 		{
-			hasDropOff = false;
+			isStopped = true;
 		}
 		
-		move = new Move(entity, resourceEntity.getCenter());
+		move = new Move(entity, resourceEntity.getData().getCenter());
 		
 	}
 	
 	@Override
 	public void plan(double deltaTime) 
 	{
+		if(isStopped)
+		{
+			searchEntity();
+		}
 		if(isLoaded)
 		{
-			if(hasDropOff)
-			{
-				if(!dropOffEntity.isAlive())
-				{
-					dropOffEntity = entity.getWorld().getClosest("dropOff");
-				}
-				move.setDestination(dropOffEntity.getCenter());
-			}
+			move.setDestination(dropOffEntity.getData().getCenter());
 		}
 		else
 		{
-			if(hasResource)
-			{
-				if(!resourceEntity.isAlive())
-				{
-					resourceEntity = entity.getWorld().getClosest("resource");
-				}
-				move.setDestination(resourceEntity.getCenter());
-			}
+			move.setDestination(resourceEntity.getData().getCenter());
 		}
 
 		move.plan(deltaTime);
@@ -74,48 +60,84 @@ public class Harvest extends EntityBehaviour
 	@Override
 	public void execute() 
 	{
+		if(isStopped)
+		{
+			return;
+		}
 		move.execute();
 	}
 
 	@Override
 	public boolean isCompleted() 
 	{
+		if(isStopped)
+		{
+			return true;
+		}
 		return move.isCompleted();
 	}
 
 	@Override
 	public void onComplete() 
 	{
+		searchEntity();
+		
+		if(isStopped)
+		{
+			return;
+		}
+			
 		StringBuilder message = new StringBuilder();
 		
 		if(isLoaded)
 		{
-			message.append(this.entity.get(AttributeSelector.ID()));
+			message.append(this.entity.getData().get(AttributeSelector.ID()));
 			message.append(" unloaded at ");
-			message.append(this.dropOffEntity.get(AttributeSelector.ID()));
+			message.append(this.dropOffEntity.getData().get(AttributeSelector.ID()));
 			message.append(" moving at ");
-			message.append((this.resourceEntity.get(AttributeSelector.ID())));
+			message.append((this.resourceEntity.getData().get(AttributeSelector.ID())));
 			message.append("\n");
 		}
 		else
 		{
 			Item item = resourceEntity.getWorld().getItemType("RESOURCE 1");
-			message.append(this.entity.get(AttributeSelector.ID()));
+			message.append(this.entity.getData().get(AttributeSelector.ID()));
 			message.append(" loaded at ");
-			message.append((this.resourceEntity.get(AttributeSelector.ID())));
+			message.append((this.resourceEntity.getData().get(AttributeSelector.ID())));
 			message.append(" has ");
 			message.append((this.resourceEntity.getInventory().getQuantity(item)));
 			message.append(" ");
 			message.append(item.getName());
 			message.append(" remaining, now moving at ");
-			message.append(this.dropOffEntity.get(AttributeSelector.ID()));
+			message.append(this.dropOffEntity.getData().get(AttributeSelector.ID()));
 			message.append("\n");
 			
 			resourceEntity.getInventory().removeItem(item, 1);
 		}
-		if(entity.getPlayer() != null)
+		if(entity.getData().getPlayer() != null)
 			entity.getController().writeToPlayers(message.toString().getBytes());
 		isLoaded = !isLoaded;
+		
+		
+	}
+	
+	protected void searchEntity()
+	{
+		resourceEntity = entity.getWorld().getClosest(entity, "resource");
+		dropOffEntity = entity.getWorld().getClosest(entity, "dropOff");
+		isStopped = false;
+		if(resourceEntity == null)
+		{
+			isStopped = true;
+		}
+		if(resourceEntity == null)
+		{
+			isStopped = true;
+		}
+		if(isStopped)
+		{
+			return;
+		}
 	}
 	
 

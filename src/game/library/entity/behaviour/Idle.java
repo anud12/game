@@ -1,7 +1,5 @@
 package game.library.entity.behaviour;
 
-import game.engine.actions.IEngineEntityExecution;
-import game.engine.actions.IEngineEntityPlan;
 
 public class Idle extends EntityBehaviour{
 

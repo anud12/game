@@ -18,7 +18,6 @@ import game.library.attribute.AttributeSelector;
 import game.library.entity.Entity;
 import game.library.world.IWorld;
 import game.library.world.sector.Sector;
-import game.library.world.sector.cell.TriangleCell;
 
 public class GLView implements Runnable{
 	
@@ -94,7 +93,87 @@ public class GLView implements Runnable{
 	
 	protected void draw()
 	{
-        synchronized(sectors)
+		//drawSectors();
+        drawEntity();
+	}
+	protected void drawEntity()
+	{
+		Iterator<Entity> iterator = world.getIterator();
+        while(iterator.hasNext())
+        {
+        	
+        	Entity ent = iterator.next();
+        	float red = ((Color) ent.getData().get(AttributeSelector.color())).getRed() / 255f;
+        	float blue = ((Color) ent.getData().get(AttributeSelector.color())).getBlue() / 255f;
+        	float green = ((Color) ent.getData().get(AttributeSelector.color())).getGreen() / 255f;
+        	
+        	//red = red ;// 0.5f;
+        	//green = green ;// 0.5f;
+        	//blue = blue ;// 0.5f;
+        	
+        	Iterator<PointF> points = ent.getData().getRectangle().getPoints().iterator();
+    		float red2 = red / 2.5f;
+        	float green2 = green / 2.5f;
+        	float blue2 = blue / 2.5f;
+        	
+        	GL11.glColor3d(red2, green2, blue2);
+        	
+        	GL11.glBegin(GL11.GL_QUADS);
+        	//GL11.glBegin(GL11.GL_LINE_LOOP);
+        	
+        	while(points.hasNext())
+        	{
+        		PointF point = points.next();
+        		
+        		GL11.glVertex2f(
+	        			(point.x + position.x) * zoom ,
+	        			(point.y + position.y) * zoom);
+        		
+        	}
+        	GL11.glEnd();
+        	
+        	GL11.glColor3d(red, green, blue);
+        	
+        	GL11.glBegin(GL11.GL_POINTS);
+    		GL11.glVertex2f((ent.getData().getCenter().x  + position.x) * zoom, (ent.getData().getCenter().y  + position.y)  * zoom);
+    		GL11.glEnd();
+        	
+        	//GL11.glBegin(GL11.GL_QUADS);
+        	GL11.glBegin(GL11.GL_LINE_LOOP);
+        	GL11.glColor3d(red, green, blue);
+        	points = ent.getData().getRectangle().getPoints().iterator();
+        	
+        	while(points.hasNext())
+        	{
+        		PointF point = points.next();
+        		GL11.glVertex2f(
+	        			(point.x + position.x) * zoom ,
+	        			(point.y + position.y) * zoom);
+        		
+        	}
+        	GL11.glEnd();
+        	
+        	
+        	GL11.glBegin(GL11.GL_LINE_LOOP);
+        	float radius = ent.getSightRadius();
+        	
+        	float twicePi = (float)Math.PI;
+        	
+        	int lines = (int)radius;
+    		for(int i = 0; i <= lines;i++) 
+    		{ 
+    			GL11.glVertex2f(
+    			    (((ent.getData().getCenter().x + position.x) * zoom) + (float)(radius * zoom * Math.cos(i * twicePi / (lines / 2)) )), 
+    			    (((ent.getData().getCenter().y + position.y) * zoom) + (float)(radius * zoom * Math.sin(i * twicePi / (lines / 2)) ))
+    			);
+    		}
+    		GL11.glEnd();
+    		
+        }
+	}
+	protected void drawSectors()
+	{
+		synchronized(sectors)
         {
         	Iterator<Sector> sectorsListIterator = sectors.iterator();
 	        
@@ -162,66 +241,12 @@ public class GLView implements Runnable{
 	        	
 	        }
         }
-        
-        
-        Iterator<Entity> iterator = world.getIterator();
-        while(iterator.hasNext())
-        {
-        	
-        	Entity ent = iterator.next();
-        	float red = ((Color) ent.get(AttributeSelector.color())).getRed() / 255f;
-        	float blue = ((Color) ent.get(AttributeSelector.color())).getBlue() / 255f;
-        	float green = ((Color) ent.get(AttributeSelector.color())).getGreen() / 255f;
-        	
-        	red = red ;// 0.5f;
-        	green = green ;// 0.5f;
-        	blue = blue ;// 0.5f;
-        	
-        	GL11.glColor3d(red, green, blue);
-        	
-        	GL11.glBegin(GL11.GL_POINTS);
-    		GL11.glVertex2f((ent.getCenter().x  + position.x) * zoom, (ent.getCenter().y  + position.y)  * zoom);
-    		GL11.glEnd();
-        	
-        	//GL11.glBegin(GL11.GL_QUADS);
-        	GL11.glBegin(GL11.GL_LINE_LOOP);
-        	Iterator<PointF> points = ent.getRectangle().getPoints().iterator();
-        	
-        	while(points.hasNext())
-        	{
-        		PointF point = points.next();
-        		GL11.glVertex2f(
-	        			(point.x + position.x) * zoom ,
-	        			(point.y + position.y) * zoom);
-        		
-        	}
-        	GL11.glEnd();
-        	
-        	
-        	GL11.glBegin(GL11.GL_LINE_LOOP);
-        	float radius = ent.getSightRadius();
-        	
-        	float twicePi = (float)Math.PI;
-        	
-        	int lines = (int)radius;
-    		for(int i = 0; i <= lines;i++) 
-    		{ 
-    			GL11.glVertex2f(
-    			    (((ent.getCenter().x + position.x) * zoom) + (float)(radius * zoom * Math.cos(i * twicePi / (lines / 2)) )), 
-    			    (((ent.getCenter().y + position.y) * zoom) + (float)(radius * zoom * Math.sin(i * twicePi / (lines / 2)) ))
-    			);
-    		}
-    		GL11.glEnd();
-    		
-        }
 	}
 	
 	protected void input()
 	{
 		int x = 0;
 		int y = 0;
-		
-		
 		
 		clickedFirstRun = true;
 		
@@ -249,9 +274,7 @@ public class GLView implements Runnable{
 			afterClickFirstRun = false;
 			untilClickFirstRun = true;
 			
-			
-			
-			System.out.println("GLView position : " + position.x + " " + position.y);
+			//System.out.println("GLView position : " + position.x + " " + position.y);
 		}
 		
 		plusAfterClick = true;
@@ -262,14 +285,13 @@ public class GLView implements Runnable{
 		}
 		if(plusAfterClick && keyPlusClicked)
 		{
-			System.out.println("++" + zoom);
-			
 			keyPlusClicked = false;
 			zoom = zoom *  2;
 			
 		}
 		
 		minusAfterClick = true;
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT))
 		{
 			this.minusAfterClick = false;
@@ -277,8 +299,6 @@ public class GLView implements Runnable{
 		}
 		if(minusAfterClick && keyMinusClicked)
 		{
-			System.out.println("++" + zoom);
-			
 			keyMinusClicked = false;
 			zoom = zoom / 2.0f;
 		}

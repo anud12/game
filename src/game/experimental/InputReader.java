@@ -10,7 +10,6 @@ import game.geom.classes.PointF;
 import game.library.entity.Entity;
 import game.library.entity.behaviour.Harvest;
 import game.library.entity.behaviour.Idle;
-import game.library.entity.order.Move;
 import game.library.entity.order.None;
 import game.library.world.IWorld;
 

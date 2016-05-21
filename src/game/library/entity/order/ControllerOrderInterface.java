@@ -15,7 +15,7 @@ public class ControllerOrderInterface
 	{
 		this.pawnController = pawn;
 		
-		move = new Move(pawn.getEntity(), new PointF(0,0));
+		move = new Move(pawn.getEntity());
 		none = new None();
 	}
 	
@@ -23,7 +23,7 @@ public class ControllerOrderInterface
 	{
 		StringBuilder message = new StringBuilder();
 		
-		message.append(this.pawnController.getEntity().get(AttributeSelector.ID()));
+		message.append(this.pawnController.getEntity().getData().get(AttributeSelector.ID()));
 		message.append(" moving to");
 		message.append(" X :");
 		message.append(destination.x);
@@ -40,12 +40,12 @@ public class ControllerOrderInterface
 	{
 		StringBuilder message = new StringBuilder();
 		
-		message.append(this.pawnController.getEntity().get(AttributeSelector.ID()));
+		message.append(this.pawnController.getEntity().getData().get(AttributeSelector.ID()));
 		message.append(" stopped at");
 		message.append(" X :");
-		message.append(pawnController.getEntity().getCenter().x);
+		message.append(pawnController.getEntity().getData().getCenter().x);
 		message.append(" Y :");
-		message.append(pawnController.getEntity().getCenter().y);
+		message.append(pawnController.getEntity().getData().getCenter().y);
 		message.append("\n");
 		message.append((char) 0);
 		this.pawnController.writeToPlayers(message.toString().getBytes());

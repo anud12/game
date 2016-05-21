@@ -1,7 +1,5 @@
 package game.library.entity.order;
 
-import game.engine.actions.IEngineEntityExecution;
-import game.engine.actions.IEngineEntityPlan;
 import game.geom.IVector;
 import game.geom.classes.PointF;
 import game.geom.classes.Vector;
@@ -24,7 +22,13 @@ public class Move extends ControllerOrder
 	protected boolean overshoot;
 	
 	//Constructors
-	
+	public Move(Entity entity)
+	{
+		this.entity = entity;
+		
+		direction = new Vector();
+		step = new Vector();
+	}
 	public Move(Entity entity, PointF destination)
 	{
 		this.entity = entity;
@@ -38,12 +42,12 @@ public class Move extends ControllerOrder
 	public void setDestination(PointF destination)
 	{		
 		noLenght = false;
-		if(entity.getCenter() != destination)
+		if(entity.getData().getCenter() != destination)
 		{
 			this.destination = destination;
 			//Calculate the direction
-			direction.setX(destination.getX() - entity.getCenter().getX());
-			direction.setY(destination.getY() - entity.getCenter().getY());
+			direction.setX(destination.getX() - entity.getData().getCenter().getX());
+			direction.setY(destination.getY() - entity.getData().getCenter().getY());
 			direction.normalize();
 		}
 		else
@@ -64,10 +68,10 @@ public class Move extends ControllerOrder
 			
 		//Calculate the next step to go towards  the destination
 		step.equal(direction);
-		step.multiplyByScalar((float)entity.get(AttributeSelector.movementSpeed()) * deltaTime);
+		step.multiplyByScalar((float)entity.getData().get(AttributeSelector.movementSpeed()) * deltaTime);
 				
 		//Calculate the overshoot distance
-		float extraDistance = (float) (step.getLength() - entity.getCenter().distance(this.destination));
+		float extraDistance = (float) (step.getLength() - entity.getData().getCenter().distance(this.destination));
 		
 		
 		if(extraDistance > 0)
@@ -75,8 +79,6 @@ public class Move extends ControllerOrder
 			overshoot = true;
 			//Calculate the unused delta time
 			this.unusedDeltaTime = (float) ((extraDistance * deltaTime) / step.getLength());
-			System.out.println("Step " + step.getLength() + " Extra Distance " + extraDistance + "\nextraTime : " + unusedDeltaTime + " full: " + deltaTime);
-			System.out.print("");
 		}
 	}
 	
@@ -88,20 +90,20 @@ public class Move extends ControllerOrder
 		
 		if(overshoot)
 		{
-			entity.getRectangle().setLocation(destination);
+			entity.getData().getRectangle().setLocation(destination);
 			
 		}
 		else
 		{
 			//Make the step
-			entity.setCenter(entity.getCenter().x + (float)step.getX(), entity.getCenter().y + (float)step.getY());
+			entity.getData().setCenter(entity.getData().getCenter().x + (float)step.getX(), entity.getData().getCenter().y + (float)step.getY());
 		}
 	}
 	
 	@Override
 	public boolean isCompleted() 
 	{
-		if(entity.getCenter().distance(this.destination) == 0 || direction.getLength() == 0)
+		if(entity.getData().getCenter().distance(this.destination) == 0 || direction.getLength() == 0)
 			return true;
 		return false;
 	}

@@ -1,7 +1,5 @@
 package game.library.entity.order;
 
-import game.engine.actions.IEngineEntityExecution;
-import game.engine.actions.IEngineEntityPlan;
 import game.library.entity.Entity;
 import game.library.inventory.item.Item;
 
@@ -42,7 +40,7 @@ public class TransferResourceToEntity extends ControllerOrder
 	{
 		ok = true;
 		
-		double distance = from.getCenter().distance(to.getCenter());
+		double distance = from.getData().getCenter().distance(to.getData().getCenter());
 		if( distance > minimumDistance && distance < maximumDistance)
 		{
 			ok = false;

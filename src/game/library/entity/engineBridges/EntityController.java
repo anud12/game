@@ -1,5 +1,6 @@
 package game.library.entity.engineBridges;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -81,7 +82,7 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 	{
 		if(!finished)
 		{
-			finished = !entity.isAlive();
+			finished = !entity.getData().isAlive();
 		}
 		if(finished)
 		{
@@ -101,7 +102,7 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 	{
 		if(!finished)
 		{
-			finished = !entity.isAlive();
+			finished = !entity.getData().isAlive();
 		}
 		if(finished)
 		{
@@ -150,12 +151,33 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 	}
 	public void writeToPlayers(byte[] message)
 	{
-		this.entity.getPlayer().write(message);
+		this.entity.getData().getPlayer().write(message);
 		
 		Iterator<Player> iter = entity.getVision().getPlayers().iterator();
+		
+		writeToConsole(message);
+		
 		while(iter.hasNext())
 		{
 			iter.next().write(message);
+		}
+	}
+	protected void writeToConsole(byte[] message)
+	{
+		byte[] endMessage = new byte[message.length + 1];
+		for(int i = 0 ; i < message.length ; i++)
+		{
+			endMessage[i] = message[i];
+		}
+		try
+		{
+			String stringMessage = new String(endMessage, "ASCII");
+			System.out.println(stringMessage);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

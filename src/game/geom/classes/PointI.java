@@ -2,6 +2,7 @@ package game.geom.classes;
 
 import java.awt.Point;
 
+@SuppressWarnings("serial")
 public class PointI extends Point {
 
 	public PointI() {

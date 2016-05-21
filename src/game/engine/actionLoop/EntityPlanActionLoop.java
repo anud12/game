@@ -1,6 +1,5 @@
 package game.engine.actionLoop;
 
-import game.engine.actions.IEngineEntityExecution;
 import game.engine.actions.IEngineEntityPlan;
 
 public class EntityPlanActionLoop extends ActionLoop<IEngineEntityPlan>

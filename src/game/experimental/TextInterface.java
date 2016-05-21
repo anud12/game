@@ -27,20 +27,18 @@ public class TextInterface extends JPanel implements Runnable
 	private JPanel panel;
 	private JScrollPane scroll;
 	private JTextArea textArea;
-	private int inputNr;
 	private StringBuffer buffer;
 	
 	private Entity target;
 	
+	@SuppressWarnings("unused")
 	private ExecutorService executor;
 	
 	public TextInterface (Entity target, ExecutorService executor)
 	{
 		this.target = target;
 		this.executor = executor;
-		
-		inputNr = 0;
-		
+				
 		panel = new JPanel();
 		panel.setVisible(true);
 		
@@ -82,28 +80,28 @@ public class TextInterface extends JPanel implements Runnable
 			buffer = buffer.delete(0, buffer.length());
 			
 			buffer.append("Name : ");
-			buffer.append(target.get(AttributeSelector.ID()));
+			buffer.append(target.getData().get(AttributeSelector.ID()));
 			buffer.append("\n");
 			buffer.append("\n");
 			
 			buffer.append("Alive : ");
-			buffer.append(target.isAlive());
+			buffer.append(target.getData().isAlive());
 			buffer.append("\n");
 			buffer.append("\n");
 			
 			buffer.append("Location :\n");
 			
 			buffer.append("	X : ");
-			buffer.append(Float.toString(target.getCenter().x));
+			buffer.append(Float.toString(target.getData().getCenter().x));
 			buffer.append("\n");
 			
 			buffer.append("	Y : ");
-			buffer.append(Float.toString(target.getCenter().y));
+			buffer.append(Float.toString(target.getData().getCenter().y));
 			buffer.append("\n");
 			buffer.append("\n");
 			
 			buffer.append("Speed : ");
-			buffer.append(target.get(AttributeSelector.movementSpeed()).toString());
+			buffer.append(target.getData().get(AttributeSelector.movementSpeed()).toString());
 			buffer.append("\n");
 			
 			buffer.append("\n");

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import game.library.NameCollection;
 import game.library.attribute.AttributeSelector;
@@ -44,14 +43,41 @@ public class ExperimentalWorld implements IWorld
 		locationList.remove(ent);
 	}
 	@Override
-	public Entity getClosest(String type) {
+	public Entity getClosest(Entity entity, String type) 
+	{		
+		int indexX = locationList.indexOf(entity);
+		int indexY = locationList.indexOfY(entity);
 		
-		ListIterator<Entity> iterator = list.listIterator();
-		while(iterator.hasNext())
+		boolean found = false;
+		int spread = 0;
+		while(!found)
 		{
-			Entity ent = iterator.next();
-			if(ent.containsKeyword(type))
-				return ent;
+			if(locationList.containsIndex(indexX + spread))
+			{
+				Entity ent = locationList.get(indexX + spread);
+				if(ent.getData().containsKeyword(type))
+					return ent;
+			}
+			if(locationList.containsIndex(indexX - spread))
+			{
+				Entity ent = locationList.get(indexX - spread);
+				if(ent.getData().containsKeyword(type))
+					return ent;
+			}
+			if(locationList.containsIndexY(indexY + spread))
+			{
+				Entity ent = locationList.getY(indexX + spread);
+				if(ent.getData().containsKeyword(type))
+					return ent;
+			}
+			if(locationList.containsIndexY(indexY - spread))
+			{
+				Entity ent = locationList.getY(indexX - spread);
+				if(ent.getData().containsKeyword(type))
+					return ent;
+			}
+			
+			spread++;
 		}
 		
 		return null;
@@ -76,7 +102,7 @@ public class ExperimentalWorld implements IWorld
 		while(iterator.hasNext())
 		{
 			Entity ent = iterator.next();
-			if((ent.get(AttributeSelector.ID()).equals(id)))
+			if((ent.getData().get(AttributeSelector.ID()).equals(id)))
 			{
 				return ent;
 			}

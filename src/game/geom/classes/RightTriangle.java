@@ -1,14 +1,12 @@
 package game.geom.classes;
 
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.util.vector.Vector2f;
 
 import game.geom.Geom;
 
@@ -48,9 +46,10 @@ public class RightTriangle
 	
 	public void print()
 	{
-		Iterator iter = points.iterator();
+		Iterator<PointF> iter = points.iterator();
 		while(iter.hasNext())
 		{
+			@SuppressWarnings("unused")
 			Object obj = iter.next();
 			//System.out.println(obj);
 		}

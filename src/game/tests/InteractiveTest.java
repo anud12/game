@@ -85,12 +85,12 @@ public class InteractiveTest
     	
 		point = new PointF(150,200);
 		entity = new Entity(20, 20, point, world, new NoSpaceInventory(), new VisionCircle(150,10), playerCollector);
-    	entity.set(AttributeSelector.movementSpeed(), 0.005f);
-    	entity.addKeyword("dropOff");
-    	entity.set(AttributeSelector.color(), Color.gray);
+    	entity.getData().set(AttributeSelector.movementSpeed(), 0.005f);
+    	entity.getData().addKeyword("dropOff");
+    	entity.getData().set(AttributeSelector.color(), Color.gray);
     	
 		inter = new TextInterface(entity, executor);
-		selector.addPanel(entity.get(AttributeSelector.ID()).toString(), inter);
+		selector.addPanel(entity.getData().get(AttributeSelector.ID()).toString(), inter);
 		
 		executor.execute(inter);
 		
@@ -98,16 +98,24 @@ public class InteractiveTest
 		engine.addRelated(entity.getUpdate());
 		
 		entity= new Entity(2, 2, new PointF(50,20), world, new BottomlessInventory(), new VisionCircle(0,0), neutral);
-		entity.set(AttributeSelector.color(), new Color(139,69,19));
-		entity.addKeyword("resource");
+		entity.getData().set(AttributeSelector.color(), new Color(139,69,19));
+		entity.getData().addKeyword("resource");
 		
 		entity.getInventory().addItem(resource1, 5);
 		entity.getRemovalChecker().addCondition(new RemoveResourceEqualLess(resource1, 0));
 		engine.addAliveCheckAction(entity.getRemovalChecker());
 
-
+		entity= new Entity(2, 2, new PointF(100,40), world, new BottomlessInventory(), new VisionCircle(0,0), neutral);
+		entity.getData().set(AttributeSelector.color(), new Color(139,69,19));
+		entity.getData().addKeyword("resource");
+		
+		entity.getInventory().addItem(resource1, 5);
+		entity.getRemovalChecker().addCondition(new RemoveResourceEqualLess(resource1, 0));
+		engine.addAliveCheckAction(entity.getRemovalChecker());
+		
+		
 		inter = new TextInterface(entity, executor);
-		selector.addPanel(entity.get(AttributeSelector.ID()).toString(), inter);
+		selector.addPanel(entity.getData().get(AttributeSelector.ID()).toString(), inter);
 		
 		executor.execute(inter);
 		
@@ -118,13 +126,13 @@ public class InteractiveTest
 		point = new PointF(0,0);
     	
     	entity = new Entity(10, 10, point, world, new BottomlessInventory(), new VisionCircle(50,10), playerHarvester);
-    	entity.set(AttributeSelector.movementSpeed(), 0.05f);
+    	entity.getData().set(AttributeSelector.movementSpeed(), 0.05f);
     	entity.getController().setBehaviour(new Harvest(entity));
-    	entity.set(AttributeSelector.color(), Color.gray);
+    	entity.getData().set(AttributeSelector.color(), Color.gray);
     	
     	
 		inter = new TextInterface(entity, executor);
-		selector.addPanel(entity.get(AttributeSelector.ID()).toString(), inter);
+		selector.addPanel(entity.getData().get(AttributeSelector.ID()).toString(), inter);
 		
 		executor.execute(inter);
 		
@@ -153,7 +161,7 @@ public class InteractiveTest
 			point = new PointF(-10,-10);
 	    	
 	    	entity = new Entity(10, 40, point, world2, new NoSpaceInventory(), new VisionCircle(100,100), neutral);
-	    	entity.set(AttributeSelector.movementSpeed(), 0.00001f);
+	    	entity.getData().set(AttributeSelector.movementSpeed(), 0.00001f);
 	    	point = new PointF(Float.MAX_VALUE , Float.MAX_VALUE);
 	    	entity.getController().setOrder(new Move(entity, point));
 	    	
@@ -183,8 +191,6 @@ public class InteractiveTest
 		server.addService(new EngineControlService(engine));
 		
 		executor.execute(server);
-		
-		
 		
 		Random rand = new Random();
 		for(int i = 0 ; i < 100; i++)

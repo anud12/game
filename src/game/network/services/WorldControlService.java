@@ -165,10 +165,10 @@ public class WorldControlService extends Service{
 							Entity ent = iterator.next();
 							
 							response.append("ID :");
-							response.append(ent.get(AttributeSelector.ID()).toString());
+							response.append(ent.getData().get(AttributeSelector.ID()).toString());
 							response.append("\n");
 							
-							response.append(ent.getCenter().toString());
+							response.append(ent.getData().getCenter().toString());
 							response.append("\n");
 						}
 						session.write(response.toString());
@@ -189,10 +189,10 @@ public class WorldControlService extends Service{
 							Entity ent = iterator.next();
 							
 							session.write("ID :");
-							session.write(ent.get(AttributeSelector.ID()).toString());
+							session.write(ent.getData().get(AttributeSelector.ID()).toString());
 							session.write("\n");
 							
-							session.write(ent.getCenter().toString());
+							session.write(ent.getData().getCenter().toString());
 							session.write("\n");
 						}
 					}

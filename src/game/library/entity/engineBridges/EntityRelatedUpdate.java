@@ -13,14 +13,14 @@ public class EntityRelatedUpdate implements IEngineRelatedUpdate, IEngineRemoval
 	public EntityRelatedUpdate(Entity entity)
 	{
 		this.entity = entity;
-		finished = !entity.isAlive();
+		finished = !entity.getData().isAlive();
 	}
 	@Override
 	public void relatedUpdate()
 	{
 		if(!finished)
 		{
-			finished = !entity.isAlive();
+			finished = !entity.getData().isAlive();
 		}
 		if(finished)
 		{

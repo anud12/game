@@ -17,11 +17,11 @@ public class EntityPositionContainer<E extends Entity> implements Collection<E>
 		@Override
 		public int compare(T o1, T o2)
 		{
-			if(o1.getCenter().x > o2.getCenter().x)
+			if(o1.getData().getCenter().x > o2.getData().getCenter().x)
 			{
 				return 1;
 			}
-			if(o1.getCenter().x < o2.getCenter().x)
+			if(o1.getData().getCenter().x < o2.getData().getCenter().x)
 			{
 				return -1;
 			}
@@ -34,11 +34,11 @@ public class EntityPositionContainer<E extends Entity> implements Collection<E>
 		@Override
 		public int compare(T o1, T o2)
 		{
-			if(o1.getCenter().y > o2.getCenter().y)
+			if(o1.getData().getCenter().y > o2.getData().getCenter().y)
 			{
 				return 1;
 			}
-			if(o1.getCenter().y < o2.getCenter().y)
+			if(o1.getData().getCenter().y < o2.getData().getCenter().y)
 			{
 				return -1;
 			}
@@ -70,7 +70,14 @@ public class EntityPositionContainer<E extends Entity> implements Collection<E>
 	{
 		return Collections.binarySearch(yAxis, e, new yAxisComparator<E>());
 	}
-	
+	public boolean containsIndex(int index)
+	{
+		return (xAxis.size() > index && index >= 0);
+	}
+	public boolean containsIndexY(int index)
+	{
+		return (yAxis.size() > index && index >= 0);
+	}
 	public E get(int index)
 	{
 		return xAxis.get(index);

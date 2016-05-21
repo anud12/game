@@ -26,7 +26,6 @@ public class Server implements Runnable
 		server.run();
 		server.addService(new ChatService());
 		server.addService(new TextDisplayService());
-		
 	}
 	
 	public Server()

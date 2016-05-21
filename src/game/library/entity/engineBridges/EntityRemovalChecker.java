@@ -23,9 +23,9 @@ public class EntityRemovalChecker implements IEngineEntityAliveCheck, IUseEntity
 	
 	protected void remove(Entity entity)
 	{
-		entity.setAlive(false);
+		entity.getData().setAlive(false);
 		entity.getWorld().removeEntity(entity);
-		entity.getPlayer().removeEntity(entity);
+		entity.getData().getPlayer().removeEntity(entity);
 	}
 	
 	@Override

@@ -47,19 +47,19 @@ public class VisionCircle extends Vision
 		while(iterator.hasNext())
 		{
 			Entity target = iterator.next();
-			double distance = entity.getCenter().distance(target.getCenter());
+			double distance = entity.getData().getCenter().distance(target.getData().getCenter());
 			if(distance > radius)
 			{
 				removeBuffer.add(target);
 				
 				StringBuilder string = new StringBuilder();
-				string.append(entity.get(AttributeSelector.ID()));
+				string.append(entity.getData().get(AttributeSelector.ID()));
 				string.append(" lost vision on ");
-				string.append(target.get(AttributeSelector.ID()));
+				string.append(target.getData().get(AttributeSelector.ID()));
 				string.append("\n");
-				entity.getPlayer().write(string.toString().getBytes());
+				entity.getData().getPlayer().write(string.toString().getBytes());
 				
-				Player player = target.getPlayer();
+				Player player = target.getData().getPlayer();
 				
 				if(players.containsKey(player))
 				{
@@ -90,15 +90,15 @@ public class VisionCircle extends Vision
 		if(distance < radius && !entities.contains(target) && target!=entity  && (visionSize < maxTargets))
 		{
 			StringBuilder string = new StringBuilder();
-			string.append(entity.get(AttributeSelector.ID()));
+			string.append(entity.getData().get(AttributeSelector.ID()));
 			string.append(" gained vision on ");
-			string.append(target.get(AttributeSelector.ID()));
+			string.append(target.getData().get(AttributeSelector.ID()));
 			string.append("\n");
-			entity.getPlayer().write(string.toString().getBytes());
+			entity.getData().getPlayer().write(string.toString().getBytes());
 			
 			entities.add(target);
 			
-			Player player = target.getPlayer();
+			Player player = target.getData().getPlayer();
 			
 			if(players.containsKey(player))
 			{
@@ -145,7 +145,7 @@ public class VisionCircle extends Vision
 			{
 				
 				Entity target = container.get(positiveX);
-				distance = entity.getCenter().distance(target.getCenter());
+				distance = entity.getData().getCenter().distance(target.getData().getCenter());
 				
 				visionAdd(entity, target, distance);
 			}
@@ -158,7 +158,7 @@ public class VisionCircle extends Vision
 			{
 				
 				Entity target = container.get(negativeX);
-				distance = entity.getCenter().distance(target.getCenter());
+				distance = entity.getData().getCenter().distance(target.getData().getCenter());
 			
 				visionAdd(entity, target, distance);
 			}
@@ -171,7 +171,7 @@ public class VisionCircle extends Vision
 			{
 				
 				Entity target = container.getY(positiveY);
-				distance = entity.getCenter().distance(target.getCenter());
+				distance = entity.getData().getCenter().distance(target.getData().getCenter());
 				
 				visionAdd(entity, target, distance);
 			}
@@ -184,7 +184,7 @@ public class VisionCircle extends Vision
 			{
 				
 				Entity target = container.getY(negativeY);
-				distance = entity.getCenter().distance(target.getCenter());
+				distance = entity.getData().getCenter().distance(target.getData().getCenter());
 				
 				visionAdd(entity, target, distance);
 			}
