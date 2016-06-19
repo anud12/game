@@ -15,42 +15,49 @@ public class Harvest extends EntityBehaviour
 	protected Move move;
 	
 	protected boolean isLoaded;
-	protected boolean isStopped;
+	protected boolean noDropOff;
+	protected boolean noResource;
 	
 	public  Harvest (Entity entity)
 	{
 		this.entity = entity;
 		isLoaded = false;
 		
-		resourceEntity = entity.getWorld().getClosest(entity, "resource");
-		dropOffEntity = entity.getWorld().getClosest(entity, "dropOff");
+		resourceEntity = entity.getData().getPlayer().getVision().getWorld().getClosest(entity, "resource");
+		dropOffEntity = entity.getData().getPlayer().getVision().getWorld().getClosest(entity, "dropOff");
 		
 		if(resourceEntity == null)
 		{
-			isStopped = true;
+			noResource = true;
 		}
-		if(resourceEntity == null)
+		if(dropOffEntity == null)
 		{
-			isStopped = true;
+			noDropOff = true;
 		}
 		
-		move = new Move(entity, resourceEntity.getData().getCenter());
+		move = new Move(entity);
 		
 	}
 	
 	@Override
 	public void plan(double deltaTime) 
 	{
-		if(isStopped)
-		{
-			searchEntity();
-		}
 		if(isLoaded)
 		{
+			if(noDropOff)
+			{
+				searchEntity();
+				return;
+			}
 			move.setDestination(dropOffEntity.getData().getCenter());
 		}
 		else
 		{
+			if(noResource)
+			{
+				searchEntity();
+				return;
+			}
 			move.setDestination(resourceEntity.getData().getCenter());
 		}
 
@@ -60,7 +67,7 @@ public class Harvest extends EntityBehaviour
 	@Override
 	public void execute() 
 	{
-		if(isStopped)
+		if(noDropOff || noResource)
 		{
 			return;
 		}
@@ -70,7 +77,7 @@ public class Harvest extends EntityBehaviour
 	@Override
 	public boolean isCompleted() 
 	{
-		if(isStopped)
+		if(noDropOff || noResource)
 		{
 			return true;
 		}
@@ -82,7 +89,7 @@ public class Harvest extends EntityBehaviour
 	{
 		searchEntity();
 		
-		if(isStopped)
+		if(noDropOff || noResource)
 		{
 			return;
 		}
@@ -123,20 +130,19 @@ public class Harvest extends EntityBehaviour
 	
 	protected void searchEntity()
 	{
-		resourceEntity = entity.getWorld().getClosest(entity, "resource");
-		dropOffEntity = entity.getWorld().getClosest(entity, "dropOff");
-		isStopped = false;
+		resourceEntity = entity.getData().getPlayer().getVision().getWorld().getClosest(entity, "resource");
+		dropOffEntity = entity.getData().getPlayer().getVision().getWorld().getClosest(entity, "dropOff");
+		noResource = false;
+		noDropOff = false;
 		if(resourceEntity == null)
 		{
-			isStopped = true;
+			//System.out.println("NO RESOURCE FOR : " + entity.getData().get(AttributeSelector.ID()));
+			noResource = true;
 		}
-		if(resourceEntity == null)
+		if(dropOffEntity == null)
 		{
-			isStopped = true;
-		}
-		if(isStopped)
-		{
-			return;
+			//System.out.println("NO DROP FOR : " + entity.getData().get(AttributeSelector.ID()));
+			noDropOff = true;
 		}
 	}
 	

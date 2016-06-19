@@ -59,6 +59,10 @@ public class VisionCircle extends Vision
 				string.append("\n");
 				entity.getData().getPlayer().write(string.toString().getBytes());
 				
+				System.out.println(string.toString());
+				
+				entity.getData().getPlayer().getVision().removeEntity(target);
+				
 				Player player = target.getData().getPlayer();
 				
 				if(players.containsKey(player))
@@ -96,7 +100,10 @@ public class VisionCircle extends Vision
 			string.append("\n");
 			entity.getData().getPlayer().write(string.toString().getBytes());
 			
+			System.out.println(string.toString());
+			
 			entities.add(target);
+			entity.getData().getPlayer().getVision().addEntity(target);
 			
 			Player player = target.getData().getPlayer();
 			

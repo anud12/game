@@ -28,6 +28,7 @@ public class Entity implements IHasInventory
     public Entity(int width, int heigth, PointF origin, IWorld world, Inventory inventory, Vision vision, Player player)
     {   	
     	this.world = world;
+    	
     	this.vision = vision;
     	this.inventory = inventory;
     	
@@ -39,7 +40,9 @@ public class Entity implements IHasInventory
     	removalChecker = new EntityRemovalChecker(this);
     	
     	//World dependency initialization
+    	
     	world.addEntity(this);
+    	player.addEntity(this);
     }
     
     

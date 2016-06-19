@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import game.library.IHasName;
 import game.library.entity.Entity;
+import game.library.vision.Vision;
 import game.network.worldControl.User;
 
 public class Player implements IHasName
@@ -18,7 +19,7 @@ public class Player implements IHasName
 	
 	protected HashSet<User> networkUsers;
 	
-	protected Vision vision;
+	protected PlayerVision vision;
 		
 	// Constructor //
 	public Player()
@@ -30,21 +31,24 @@ public class Player implements IHasName
 	{
 		ownedEntities = new HashSet<Entity>();
 		networkUsers = new HashSet<>();
-		vision = new Vision();
+		vision = new PlayerVision(this);
+		name = "";
 	}
 	
 	// Getters //
-	public Vision getVision()
+	public PlayerVision getVision()
 	{
 		return vision;
 	}
 	// Adders //
 	public boolean addEntity(Entity entity)
 	{
+		vision.addEntity(entity);
 		return ownedEntities.add(entity);
 	}
 	public boolean addEntity(Collection<Entity> entityCollection)
 	{
+		vision.addEntity(entityCollection);
 		return ownedEntities.addAll(entityCollection);
 	}
 	public boolean addUser(User user)
@@ -59,10 +63,12 @@ public class Player implements IHasName
 	// Removers //
 	public boolean removeEntity(Entity entity)
 	{
+		vision.removeEntity(entity);
 		return ownedEntities.remove(entity);
 	}
 	public boolean removeEntity(Collection<Entity> entityCollection)
 	{
+		vision.removeEntity(entityCollection);
 		return ownedEntities.removeAll(entityCollection);
 	}
 	public boolean removeOutputStream(OutputStream stream)

@@ -62,11 +62,11 @@ public class Sector
 			PointF testPoint1 = points1.next();
 			
 			points2 = triangle2.getPoints().iterator();
-			System.out.println("\t\tTESTING :" + testPoint1 );
+			//System.out.println("\t\tTESTING :" + testPoint1 );
 			while(points2.hasNext())
 			{
 				PointF testPoint2 = points2.next();
-				System.out.println(testPoint2 + " : " + testPoint2.equals(testPoint1));
+				//System.out.println(testPoint2 + " : " + testPoint2.equals(testPoint1));
 				if(testPoint2.equals(testPoint1))
 				{
 					linePoints.add(testPoint1);
@@ -206,7 +206,7 @@ public class Sector
 		}
 		
 		triangleList.add(triangle);
-		System.out.println(triangleList.size());
+		//System.out.println(triangleList.size());
 		
 	}
 	public void addTriangle(List<RightTriangle> list)

@@ -50,7 +50,7 @@ public class ExperimentalWorld implements IWorld
 		
 		boolean found = false;
 		int spread = 0;
-		while(!found)
+		while(!found && spread < locationList.size() )
 		{
 			if(locationList.containsIndex(indexX + spread))
 			{
@@ -66,13 +66,13 @@ public class ExperimentalWorld implements IWorld
 			}
 			if(locationList.containsIndexY(indexY + spread))
 			{
-				Entity ent = locationList.getY(indexX + spread);
+				Entity ent = locationList.getY(indexY + spread);
 				if(ent.getData().containsKeyword(type))
 					return ent;
 			}
 			if(locationList.containsIndexY(indexY - spread))
 			{
-				Entity ent = locationList.getY(indexX - spread);
+				Entity ent = locationList.getY(indexY - spread);
 				if(ent.getData().containsKeyword(type))
 					return ent;
 			}

@@ -69,7 +69,6 @@ public class EntityData implements IHasName
     	
     	//Entity dependency initialization
     	this.player = player;
-    	player.addEntity(entity);
     }
     
   //Methods:

@@ -84,7 +84,7 @@ public class InteractiveTest
     	executor.execute(enginePanel);
     	
 		point = new PointF(150,200);
-		entity = new Entity(20, 20, point, world, new NoSpaceInventory(), new VisionCircle(150,10), playerCollector);
+		entity = new Entity(20, 20, point, world, new NoSpaceInventory(), new VisionCircle(250,10), playerCollector);
     	entity.getData().set(AttributeSelector.movementSpeed(), 0.005f);
     	entity.getData().addKeyword("dropOff");
     	entity.getData().set(AttributeSelector.color(), Color.gray);
@@ -123,9 +123,9 @@ public class InteractiveTest
 		engine.addRelated(entity.getUpdate());
 		
 		
-		point = new PointF(0,0);
+		point = new PointF(10,10);
     	
-    	entity = new Entity(10, 10, point, world, new BottomlessInventory(), new VisionCircle(50,10), playerHarvester);
+    	entity = new Entity(10, 10, point, world, new BottomlessInventory(), new VisionCircle(50,10), playerCollector);
     	entity.getData().set(AttributeSelector.movementSpeed(), 0.05f);
     	entity.getController().setBehaviour(new Harvest(entity));
     	entity.getData().set(AttributeSelector.color(), Color.gray);
