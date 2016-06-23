@@ -16,12 +16,6 @@ public class Idle extends EntityBehaviour{
 	}
 
 	@Override
-	public boolean isCompleted() 
-	{
-		return false;
-	}
-
-	@Override
 	public void onComplete() 
 	{
 		

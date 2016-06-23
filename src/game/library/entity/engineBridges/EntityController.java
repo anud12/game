@@ -25,9 +25,10 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 	public EntityController(Entity entity)
 	{
 		this.entity = entity;
-		orders = new ArrayList<ControllerOrder>();
 		
 		orderInterface = new ControllerOrderInterface(this);
+		
+		orders = orderInterface.getOrders();
 		
 		finished = false;
 		
@@ -35,17 +36,6 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 		behaviour = new Idle();
 	}
 	//Setter Getters
-	
-	public void queueOrder(ControllerOrder order)
-	{
-		orders.add(order);
-	}
-	
-	public void setOrder (ControllerOrder order)
-	{
-		orders.clear();
-		orders.add(order);
-	}
 	
 	public ControllerOrder getFirst()
 	{
@@ -100,6 +90,7 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 	@Override
 	public void execute() 
 	{
+		
 		if(!finished)
 		{
 			finished = !entity.getData().isAlive();
@@ -116,14 +107,18 @@ public class EntityController implements IEngineEntityExecution, IEngineEntityPl
 			return;
 		}
 		orders.get(0).execute();
+		
+		if(isCompleted())
+		{
+			onComplete();
+		}
 	}
 
-	@Override
 	public boolean isCompleted() 
 	{
 		if(orders.isEmpty())
 		{
-			return behaviour.isCompleted();
+			return false;
 		}
 			
 		return orders.get(0).isCompleted();

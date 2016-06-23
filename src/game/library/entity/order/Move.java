@@ -108,10 +108,6 @@ public class Move extends ControllerOrder
 		return false;
 	}
 	
-	@Override
-	public void onComplete() 
-	{
-	}
 	
 		
 

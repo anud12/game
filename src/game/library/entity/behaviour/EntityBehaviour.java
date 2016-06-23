@@ -10,6 +10,7 @@ public abstract class EntityBehaviour implements IEngineEntityExecution, IEngine
 	public boolean isRemovable() {
 		return false;
 	}
+	
 
 
 }

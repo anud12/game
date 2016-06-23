@@ -163,7 +163,7 @@ public class InteractiveTest
 	    	entity = new Entity(10, 40, point, world2, new NoSpaceInventory(), new VisionCircle(100,100), neutral);
 	    	entity.getData().set(AttributeSelector.movementSpeed(), 0.00001f);
 	    	point = new PointF(Float.MAX_VALUE , Float.MAX_VALUE);
-	    	entity.getController().setOrder(new Move(entity, point));
+	    	entity.getController().getOrderInterface().move(point);
 	    	
 			engine.addAction(entity.getController());
 			engine.addRelated(entity.getUpdate());

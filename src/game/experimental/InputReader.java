@@ -41,7 +41,7 @@ public class InputReader extends KeyAdapter
 				{
 					case "stop":
 					{
-						entity.getController().setOrder(new None());
+						entity.getController().getOrderInterface().stop();
 						entity.getController().setBehaviour(new Idle());
 						field.setText("");
 						break;

@@ -72,9 +72,13 @@ public class Harvest extends EntityBehaviour
 			return;
 		}
 		move.execute();
+		
+		if(isCompleted())
+		{
+			onComplete();
+		}
 	}
 
-	@Override
 	public boolean isCompleted() 
 	{
 		if(noDropOff || noResource)

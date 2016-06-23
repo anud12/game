@@ -11,11 +11,6 @@ public class EntityExecuteActionLoop extends ActionLoop<IEngineEntityExecution>
 		//Execute current action and grab the returned executed action
 		action.execute();
 		
-		if(action.isCompleted())
-		{
-        	action.onComplete();
-        	
-        }
 		if(action.isRemovable())
     	{
     		//Single access on removeBuffer

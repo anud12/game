@@ -14,9 +14,6 @@ public interface IEngineEntityExecution extends IEngineRemoval
 	//To do each frame and return the action which
 	//has executed
     public void execute();
-            
-    //Check if the action that returned from executed is completed
-    public boolean isCompleted();
     
     //Actions to do when its completed
     public void onComplete();
